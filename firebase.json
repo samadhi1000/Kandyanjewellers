@@ -11,7 +11,29 @@
       "kandyan supabase password.txt"
     ],
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "redirects": [
+      {
+        "source": "/products.html",
+        "destination": "/admin/products.html",
+        "type": 301
+      },
+      {
+        "source": "/settings.html",
+        "destination": "/admin/settings.html",
+        "type": 301
+      },
+      {
+        "source": "/orders.html",
+        "destination": "/admin/orders.html",
+        "type": 301
+      },
+      {
+        "source": "/admin",
+        "destination": "/admin/",
+        "type": 301
+      }
+    ]
   },
   "firestore": {
     "rules": "firestore.rules"
