@@ -1,0 +1,13 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      // Allow public read access to all files
+      allow read: if true;
+
+      // Allow write/delete only for authenticated users who are admins
+      allow write, delete: if request.auth != null && 
+        firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super-admin'];
+    }
+  }
+}

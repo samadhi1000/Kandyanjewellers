@@ -412,8 +412,9 @@
             renderOrders();
         }
 
-        function exportOrders() {
-            const data = JSON.stringify(KGJ.getOrders(), null, 2);
+        async function exportOrders() {
+            const orders = await KGJ.getOrders();
+            const data = JSON.stringify(orders, null, 2);
             const blob = new Blob([data], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = 'orders.json'; a.click();

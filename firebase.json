@@ -30,12 +30,15 @@
       },
       {
         "source": "/admin",
-        "destination": "/admin/",
+        "destination": "/admin/index.html",
         "type": 301
       }
     ]
   },
   "firestore": {
     "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
