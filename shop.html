@@ -181,20 +181,34 @@
     </section>
 
     <div id="footer-placeholder"></div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="js/db.js"></script>
     <script src="js/store.js"></script>
     <script src="js/scroll.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/components.js"></script>
     <script>
-        Components.init('shop');
-
         let allProducts = [];
         let displayedCount = 0;
         const PAGE_SIZE = 9;
         let activeFilters = { category: [], metal: [], gem: [], maxPrice: 900000 };
 
+        async function initPage() {
+            await KGJ.init();
+            Components.init('shop');
+
+            allProducts = KGJ.getProducts();
+            buildFilters();
+            applyFilters();
+        }
+        initPage();
+
         function getFilteredSorted() {
             let list = allProducts.filter(p => p.inStock);
+            // ... (rest of the functions remain same)
             if (activeFilters.category.length) list = list.filter(p => activeFilters.category.includes(p.category));
             if (activeFilters.metal.length) list = list.filter(p => activeFilters.metal.some(m => p.metal && p.metal.includes(m)));
             if (activeFilters.gem.length) list = list.filter(p => activeFilters.gem.some(g => p.gemstone && p.gemstone.includes(g)));

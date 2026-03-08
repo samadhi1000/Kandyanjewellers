@@ -168,7 +168,8 @@
                             <div class="checkout-panel">
                                 <h3
                                     style="font-family:var(--font-serif);font-size:1.35rem;color:var(--gold-400);margin-bottom:1.75rem">
-                                    <i class="fas fa-user" style="margin-right:0.5rem"></i>Delivery Details</h3>
+                                    <i class="fas fa-user" style="margin-right:0.5rem"></i>Delivery Details
+                                </h3>
                                 <form id="details-form" style="display:flex;flex-direction:column;gap:1.25rem">
                                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
                                         <div class="form-group"><label class="form-label">First Name *</label><input
@@ -202,7 +203,8 @@
                             <div class="checkout-panel">
                                 <h3
                                     style="font-family:var(--font-serif);font-size:1.35rem;color:var(--gold-400);margin-bottom:1.75rem">
-                                    <i class="fas fa-credit-card" style="margin-right:0.5rem"></i>Payment Method</h3>
+                                    <i class="fas fa-credit-card" style="margin-right:0.5rem"></i>Payment Method
+                                </h3>
                                 <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem">
                                     <div class="payment-method-tab active" id="tab-cod" onclick="selectPayment('cod')">
                                         <i class="fas fa-money-bill-wave"></i>
@@ -285,7 +287,8 @@
                             <div class="checkout-panel">
                                 <h3
                                     style="font-family:var(--font-serif);font-size:1.35rem;color:var(--gold-400);margin-bottom:1.75rem">
-                                    <i class="fas fa-check-circle" style="margin-right:0.5rem"></i>Review & Confirm</h3>
+                                    <i class="fas fa-check-circle" style="margin-right:0.5rem"></i>Review & Confirm
+                                </h3>
                                 <div id="review-details"
                                     style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem"></div>
                                 <div style="display:flex;gap:0.75rem">
@@ -317,14 +320,27 @@
     </div>
 
     <div id="footer-placeholder"></div>
+    <div id="footer-placeholder"></div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="js/db.js"></script>
     <script src="js/store.js"></script>
     <script src="js/scroll.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/components.js"></script>
     <script>
-        Components.init('');
         let currentStep = 1;
         let paymentMethod = 'cod';
+
+        async function initPage() {
+            await KGJ.init();
+            Components.init('');
+            if (Cart.getCount() === 0) window.location.href = 'shop.html';
+            renderSummary();
+        }
+        initPage();
 
         function renderSummary() {
             const items = Cart.getItems();
@@ -363,12 +379,15 @@
             if (n === 3) renderReview();
             currentStep = n;
             [1, 2, 3].forEach(i => {
-                document.getElementById(`form-step-${i}`).style.display = i === n ? 'block' : 'none';
+                const formEl = document.getElementById(`form-step-${i}`);
+                if (formEl) formEl.style.display = i === n ? 'block' : 'none';
                 const stepEl = document.getElementById(`step-${i}`);
-                stepEl.classList.remove('active', 'done');
-                if (i < n) stepEl.classList.add('done');
-                else if (i === n) stepEl.classList.add('active');
-                stepEl.querySelector('.step-num').innerHTML = i < n ? '<i class="fas fa-check" style="font-size:0.7rem"></i>' : i;
+                if (stepEl) {
+                    stepEl.classList.remove('active', 'done');
+                    if (i < n) stepEl.classList.add('done');
+                    else if (i === n) stepEl.classList.add('active');
+                    stepEl.querySelector('.step-num').innerHTML = i < n ? '<i class="fas fa-check" style="font-size:0.7rem"></i>' : i;
+                }
             });
         }
 
@@ -378,7 +397,6 @@
             const phone = document.getElementById('phone')?.value;
             const addr = document.getElementById('address')?.value;
             const notes = document.getElementById('notes')?.value;
-            const settings = KGJ.getSettings();
             const total = Cart.getTotal();
 
             document.getElementById('review-details').innerHTML = `
@@ -413,22 +431,25 @@
         function formatCard(el) {
             let v = el.value.replace(/\D/g, '').slice(0, 16);
             el.value = v.replace(/(.{4})/g, '$1 ').trim();
-            document.getElementById('card-display').textContent = (v + '................').slice(0, 16).replace(/(.{4})/g, '$1 ').trim().replace(/\d/g, '•');
+            const display = document.getElementById('card-display');
+            if (display) display.textContent = (v + '................').slice(0, 16).replace(/(.{4})/g, '$1 ').trim().replace(/\d/g, '•');
         }
 
         function formatExp(el) {
             let v = el.value.replace(/\D/g, '');
             if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2, 4);
             el.value = v;
-            document.getElementById('card-exp-display').textContent = v || 'MM/YY';
+            const display = document.getElementById('card-exp-display');
+            if (display) display.textContent = v || 'MM/YY';
         }
 
-        function placeOrder() {
+        async function placeOrder() {
             const btn = document.getElementById('place-order-btn');
+            if (btn.disabled) return;
             btn.disabled = true;
             btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px;margin:0 auto"></div>';
 
-            setTimeout(() => {
+            try {
                 const order = {
                     customer: {
                         name: `${document.getElementById('fn').value} ${document.getElementById('ln').value}`,
@@ -445,21 +466,24 @@
                     subtotal: Cart.getSubtotal(),
                     total: Cart.getTotal(),
                     paymentMethod,
+                    status: 'pending'
                 };
 
-                const saved = KGJ.saveOrder(order);
+                const saved = await KGJ.saveOrder(order);
                 Cart.clear();
 
                 document.getElementById('checkout-form-area').style.display = 'none';
                 const success = document.getElementById('success-screen');
                 success.classList.add('show');
                 document.getElementById('order-id-display').textContent = `Order ID: ${saved.id}`;
-            }, 2000);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (err) {
+                console.error(err);
+                Cart.showToast('Failed to place order. Please try again.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-lock"></i> Place Order';
+            }
         }
-
-        // Redirect if cart empty
-        if (Cart.getCount() === 0) window.location.href = 'shop.html';
-        renderSummary();
     </script>
 </body>
 

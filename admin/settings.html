@@ -331,7 +331,7 @@
         <nav style="padding:1rem 0;flex:1">
             <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
             <a href="products.html" class="nav-item"><i class="fas fa-gem"></i>Products</a>
-            <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="orders.html" class="nav-item admin-only"><i class="fas fa-shopping-bag"></i>Orders</a>
             <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i>Settings</a>
             <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
                     class="fas fa-external-link-alt"></i>View Site</a>
@@ -447,27 +447,74 @@
                 <div class="success-msg" id="msg-delivery"><i class="fas fa-check-circle"></i> Saved successfully!</div>
             </div>
 
-            <!-- ── 7. ADMIN CREDENTIALS ── -->
-            <div class="settings-card">
-                <h3><i class="fas fa-lock"></i>Change Admin Password</h3>
-                <div class="desc">Update your admin login credentials.</div>
-                <div class="form-grid" style="margin-bottom:1.25rem">
-                    <div class="form-group"><label class="form-label">New Username</label><input type="text"
-                            class="form-input" id="s-admin-user"></div>
-                    <div class="form-group"><label class="form-label">New Password</label><input type="password"
-                            class="form-input" id="s-admin-pass" placeholder="Min 6 characters"></div>
-                </div>
-                <button class="btn-gold" onclick="saveCreds()"><i class="fas fa-key"></i>Update Credentials</button>
-                <div class="success-msg" id="msg-creds"><i class="fas fa-check-circle"></i> Credentials updated! Please
-                    log in again.</div>
+            <!-- ── 8. USER MANAGEMENT ── -->
+            <div class="settings-card admin-only">
+                <h3><i class="fas fa-users"></i>User Management</h3>
+                <div class="desc">Add or manage other admin/editor accounts. Note: Users must be registered in Firebase
+                    Authentication first.</div>
+                <div id="users-list" style="margin-bottom:1.5rem"></div>
+                <button class="btn-gold" onclick="createNewUser()"><i class="fas fa-user-plus"></i>Add User
+                    Profile</button>
             </div>
 
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="../js/db.js"></script>
     <script src="../js/store.js"></script>
     <script>
-        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
+        async function initPage() {
+            await KGJ.init();
+            if (!KGJ.isAdminLoggedIn() || KGJ.getUserRole() !== 'admin') {
+                window.location.href = 'index.html';
+                return;
+            }
+            renderBgGrid();
+            loadSettings();
+            loadUsers();
+        }
+        initPage();
+
+        async function loadUsers() {
+            if (KGJ.getUserRole() !== 'admin') return;
+            const users = await FB.getAllUsers();
+            const container = document.getElementById('users-list');
+            if (!container) return;
+            container.innerHTML = users.map(u => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;margin-bottom:0.75rem">
+                    <div>
+                        <div style="font-weight:600;color:var(--gold)">${u.name || 'User'}</div>
+                        <div style="font-size:0.75rem;opacity:0.6">${u.email} &bull; ${u.role}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function createNewUser() {
+            const email = prompt("Enter User Email:");
+            const pass = prompt("Enter Password (min 6 chars):");
+            const name = prompt("Enter User Name:");
+            const role = prompt("Enter Role (admin/editor):", "editor");
+
+            if (!email || !pass || !name) return;
+
+            try {
+                // Since Firebase Client SDK doesn't allow creating others without logging them in, 
+                // typically you'd use a Cloud Function. 
+                // For now, let's create a placeholder entry in Firestore.
+                // Note: The user still needs to be created in Firebase Auth manually or via Admin SDK.
+                // I will add a note about this.
+                alert("Note: New users must also be enabled in Firebase Auth via console. Adding profile to database...");
+                await FB.db.collection("users").add({ email, name, role });
+                loadUsers();
+            } catch (e) {
+                alert("Error adding user: " + e.message);
+            }
+        }
 
         // ── Background Image Manager ──
         const bgSections = [
@@ -479,7 +526,9 @@
 
         function renderBgGrid() {
             const s = KGJ.getSettings();
-            document.getElementById('bg-grid').innerHTML = bgSections.map(section => {
+            const grid = document.getElementById('bg-grid');
+            if (!grid) return;
+            grid.innerHTML = bgSections.map(section => {
                 const val = s[section.key] || '';
                 const previewSrc = val.startsWith('http') ? val : `../${val}`;
                 return `
@@ -487,14 +536,20 @@
           <img class="bg-preview" id="prev-${section.key}" src="${previewSrc}" onerror="this.src='../images/hero.jpg'" alt="${section.label}">
           <div class="bg-item-body">
             <div class="bg-label">${section.label}</div>
-            <div class="bg-input-row">
+            <div class="bg-input-row" style="gap:0.5rem">
               <input type="text" class="bg-input" id="bg-${section.key}" value="${val}" 
                 placeholder="Paste URL or path…" 
                 oninput="previewBg('${section.key}', this.value)" 
                 onkeydown="if(event.key==='Enter'){applyBg('${section.key}');event.target.blur()}">
-              <button class="btn-apply" onclick="applyBg('${section.key}')"><i class="fas fa-check"></i> Apply</button>
+              
+              <div style="background:rgba(255,255,255,0.06);padding:0;border-radius:6px;border:1px dashed var(--gold);flex:0 0 40px;height:38px;display:flex;align-items:center;justify-content:center">
+                  <label for="bg-file-${section.key}" style="cursor:pointer;font-size:0.85rem;width:100%;height:100%;display:flex;align-items:center;justify-content:center"><i class="fas fa-upload"></i></label>
+                  <input type="file" id="bg-file-${section.key}" style="display:none" accept="image/*" onchange="uploadAndApplyBg('${section.key}', this)">
+              </div>
+
+              <button class="btn-apply" id="btn-apply-${section.key}" onclick="applyBg('${section.key}')"><i class="fas fa-check"></i> Apply</button>
             </div>
-            <div class="bg-hint">${section.hint} — Press Apply or Enter to save</div>
+            <div class="bg-hint">${section.hint}</div>
           </div>
         </div>`;
             }).join('');
@@ -507,42 +562,70 @@
             img.src = src;
         }
 
-        function applyBg(key) {
-            const val = document.getElementById(`bg-${key}`).value.trim();
+        async function applyBg(key) {
+            const btn = document.getElementById(`btn-apply-${key}`);
+            const input = document.getElementById(`bg-${key}`);
+            const val = input.value.trim();
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
             const settings = KGJ.getSettings();
             settings[key] = val;
-            KGJ.saveSettings(settings);
+            await KGJ.saveSettings(settings);
             previewBg(key, val);
-            showMsg('bg-saved');
-            if (!document.getElementById('msg-bg-saved')) {
-                const msg = document.createElement('div');
-                msg.id = 'msg-bg-saved';
-                msg.className = 'success-msg show';
-                msg.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;background:rgba(26,92,56,0.9);border:1px solid rgba(26,92,56,0.5)';
-                msg.innerHTML = '<i class="fas fa-check-circle"></i> Background image updated! Refresh the site to see changes.';
-                document.body.appendChild(msg);
-                setTimeout(() => msg.remove(), 3500);
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Apply';
+            showFloatingMsg();
+        }
+
+        async function uploadAndApplyBg(key, input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const btn = document.getElementById(`btn-apply-${key}`);
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> UPLOADING...';
+
+            try {
+                const path = `settings/${key}_${Date.now()}_${file.name}`;
+                const url = await FB.uploadFile(file, path);
+                document.getElementById(`bg-${key}`).value = url;
+                await applyBg(key);
+            } catch (err) {
+                console.error(err);
+                alert("Upload failed.");
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Apply';
             }
+        }
+
+        function showFloatingMsg() {
+            if (document.getElementById('msg-bg-saved')) return;
+            const msg = document.createElement('div');
+            msg.id = 'msg-bg-saved';
+            msg.className = 'success-msg show';
+            msg.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;background:rgba(26,92,56,0.9);border:1px solid rgba(26,92,56,0.5)';
+            msg.innerHTML = '<i class="fas fa-check-circle"></i> Background image updated! Changes are live.';
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 3500);
         }
 
         // ── Load all settings into form fields ──
         function loadSettings() {
             const s = KGJ.getSettings();
-            document.getElementById('s-name').value = s.siteName || '';
-            document.getElementById('s-tagline').value = s.tagline || '';
-            document.getElementById('s-hero-title').value = s.heroTitle || '';
-            document.getElementById('s-hero-sub').value = s.heroSubtitle || '';
-            document.getElementById('s-hero-cta').value = s.heroCtaText || '';
-            document.getElementById('s-phone').value = s.phone || '';
-            document.getElementById('s-whatsapp').value = s.whatsapp || '';
-            document.getElementById('s-email').value = s.email || '';
-            document.getElementById('s-address').value = s.address || '';
-            document.getElementById('s-fb').value = s.facebook || '';
-            document.getElementById('s-ig').value = s.instagram || '';
-            document.getElementById('s-ticker').value = s.offerBanner || '';
-            document.getElementById('s-delivery').value = s.deliveryCharge || 350;
-            const creds = KGJ.getAdminCreds();
-            document.getElementById('s-admin-user').value = creds.username || 'admin';
+            const fields = {
+                's-name': s.siteName, 's-tagline': s.tagline, 's-hero-title': s.heroTitle,
+                's-hero-sub': s.heroSubtitle, 's-hero-cta': s.heroCtaText, 's-phone': s.phone,
+                's-whatsapp': s.whatsapp, 's-email': s.email, 's-address': s.address,
+                's-fb': s.facebook, 's-ig': s.instagram, 's-ticker': s.offerBanner,
+                's-delivery': s.deliveryCharge || 350
+            };
+            for (let id in fields) {
+                const el = document.getElementById(id);
+                if (el) el.value = fields[id] || '';
+            }
         }
 
         function showMsg(id) {
@@ -552,13 +635,13 @@
             setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        function patchAndSave(patch) {
+        async function patchAndSave(patch) {
             const s = KGJ.getSettings();
-            KGJ.saveSettings({ ...s, ...patch });
+            await KGJ.saveSettings({ ...s, ...patch });
         }
 
-        function saveSiteIdentity() {
-            patchAndSave({
+        async function saveSiteIdentity() {
+            await patchAndSave({
                 siteName: document.getElementById('s-name').value,
                 tagline: document.getElementById('s-tagline').value,
                 heroTitle: document.getElementById('s-hero-title').value,
@@ -568,8 +651,8 @@
             showMsg('msg-identity');
         }
 
-        function saveContact() {
-            patchAndSave({
+        async function saveContact() {
+            await patchAndSave({
                 phone: document.getElementById('s-phone').value,
                 whatsapp: document.getElementById('s-whatsapp').value,
                 email: document.getElementById('s-email').value,
@@ -578,37 +661,25 @@
             showMsg('msg-contact');
         }
 
-        function saveSocial() {
-            patchAndSave({
+        async function saveSocial() {
+            await patchAndSave({
                 facebook: document.getElementById('s-fb').value,
                 instagram: document.getElementById('s-ig').value,
             });
             showMsg('msg-social');
         }
 
-        function saveTicker() {
-            patchAndSave({ offerBanner: document.getElementById('s-ticker').value });
+        async function saveTicker() {
+            await patchAndSave({ offerBanner: document.getElementById('s-ticker').value });
             showMsg('msg-ticker');
         }
 
-        function saveDelivery() {
-            patchAndSave({ deliveryCharge: +document.getElementById('s-delivery').value });
+        async function saveDelivery() {
+            await patchAndSave({ deliveryCharge: +document.getElementById('s-delivery').value });
             showMsg('msg-delivery');
         }
 
-        function saveCreds() {
-            const user = document.getElementById('s-admin-user').value;
-            const pass = document.getElementById('s-admin-pass').value;
-            if (!user || !pass) { alert('Please enter both username and password.'); return; }
-            if (pass.length < 6) { alert('Password must be at least 6 characters.'); return; }
-            localStorage.setItem('kgj_admin', JSON.stringify({ username: user, password: pass }));
-            KGJ.adminLogout();
-            showMsg('msg-creds');
-            setTimeout(() => window.location.href = 'index.html', 2500);
-        }
 
-        renderBgGrid();
-        loadSettings();
     </script>
 </body>
 

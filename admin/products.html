@@ -406,8 +406,8 @@
         <nav style="padding:1rem 0;flex:1">
             <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
             <a href="products.html" class="nav-item active"><i class="fas fa-gem"></i>Products</a>
-            <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
-            <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i>Settings</a>
+            <a href="orders.html" class="nav-item admin-only"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="settings.html" class="nav-item admin-only"><i class="fas fa-cog"></i>Settings</a>
             <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
                     class="fas fa-external-link-alt"></i>View Site</a>
         </nav>
@@ -500,9 +500,17 @@
                             class="form-input" id="f-expiry"></div>
                     <div class="form-group" style="grid-column:1/-1"><label class="form-label">Product Image URL
                             *</label>
-                        <div style="display:flex;gap:1rem;align-items:center">
-                            <input type="url" class="form-input" id="f-image" placeholder="https://… or images/hero.jpg"
-                                oninput="updatePreview()">
+                        <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+                            <input type="url" class="form-input" id="f-image" placeholder="Image URL..."
+                                oninput="updatePreview()" style="flex:1;min-width:200px">
+                            <span style="opacity:0.5">OR</span>
+                            <div
+                                style="background:rgba(255,255,255,0.06);padding:0.5rem;border-radius:8px;border:1px dashed var(--gold);flex:1;min-width:200px;text-align:center">
+                                <label for="f-file" style="cursor:pointer;font-size:0.75rem"><i
+                                        class="fas fa-upload"></i> Upload File</label>
+                                <input type="file" id="f-file" style="display:none" accept="image/*"
+                                    onchange="handleFileUpload(this)">
+                            </div>
                             <img id="img-preview" class="img-preview" src="../images/hero.jpg" alt="Preview">
                         </div>
                         <p style="font-size:0.72rem;opacity:0.5;margin-top:0.35rem">Paste any image URL, or use local
@@ -529,21 +537,44 @@
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="../js/db.js"></script>
     <script src="../js/store.js"></script>
     <script>
-        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
-
         let allProducts = [];
         let editingId = null;
+
+        async function initPage() {
+            await KGJ.init();
+            if (!KGJ.isAdminLoggedIn()) {
+                window.location.href = 'index.html';
+                return;
+            }
+            applyRolePermissions();
+            loadProducts();
+        }
+        initPage();
+
+        function applyRolePermissions() {
+            const role = KGJ.getUserRole();
+            if (role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+        }
 
         function loadProducts() {
             allProducts = KGJ.getProducts();
             renderTable(allProducts);
-            document.getElementById('product-count').textContent = `${allProducts.length} Products`;
+            const countEl = document.getElementById('product-count');
+            if (countEl) countEl.textContent = `${allProducts.length} Products`;
         }
 
         function renderTable(products) {
             const tbody = document.getElementById('products-tbody');
+            if (!tbody) return;
             tbody.innerHTML = products.map(p => {
                 const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
                 const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
@@ -588,7 +619,7 @@
                 document.getElementById('f-gem').value = p.gemstone || '';
                 document.getElementById('f-weight').value = p.weight || '';
                 document.getElementById('f-price').value = p.price;
-                document.getElementById('f-disc').value = p.discountedPrice || '';
+                document.getElementById('f-disc').value = (p.discountedPrice === p.price) ? '' : p.discountedPrice;
                 document.getElementById('f-offer').value = p.specialOffer || '';
                 document.getElementById('f-expiry').value = p.offerExpiry || '';
                 document.getElementById('f-image').value = p.images[0] || '';
@@ -613,12 +644,42 @@
             }
         }
 
-        function saveProduct(e) {
+        async function handleFileUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = e => document.getElementById('img-preview').src = e.target.result;
+            reader.readAsDataURL(file);
+
+            // Note: We don't upload yet, we'll upload on Save
+        }
+
+        async function saveProduct(e) {
             e.preventDefault();
+            const btn = e.submitter;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
             const price = +document.getElementById('f-price').value;
             const discVal = document.getElementById('f-disc').value;
             const discountedPrice = discVal ? +discVal : price;
-            const imageUrl = document.getElementById('f-image').value;
+            let imageUrl = document.getElementById('f-image').value;
+
+            // Handle file upload if present
+            const fileInput = document.getElementById('f-file');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const path = `products/${Date.now()}_${file.name}`;
+                try {
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading Image...';
+                    imageUrl = await FB.uploadFile(file, path);
+                } catch (err) {
+                    console.error("Upload error:", err);
+                    alert("Image upload failed. Continuing with provided URL or default.");
+                }
+            }
 
             const data = {
                 name: document.getElementById('f-name').value,
@@ -638,18 +699,27 @@
             };
 
             const id = document.getElementById('edit-id').value;
-            if (id) KGJ.updateProduct(id, data);
-            else KGJ.addProduct(data);
-
-            closeModal();
-            loadProducts();
-            alert(id ? '✅ Product updated!' : '✅ Product added!');
+            try {
+                if (id) await KGJ.updateProduct(id, data);
+                else await KGJ.addProduct(data);
+                closeModal();
+                loadProducts();
+            } catch (err) {
+                alert('Error saving product: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Save Product';
+            }
         }
 
-        function deleteProduct(id, name) {
+        async function deleteProduct(id, name) {
             if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
-            KGJ.deleteProduct(id);
-            loadProducts();
+            try {
+                await KGJ.deleteProduct(id);
+                loadProducts();
+            } catch (err) {
+                alert('Error deleting product: ' + err.message);
+            }
         }
 
         function exportProducts() {
@@ -659,11 +729,9 @@
             const a = document.createElement('a'); a.href = url; a.download = 'products.json'; a.click();
         }
 
-        document.getElementById('product-modal').addEventListener('click', e => {
+        document.getElementById('product-modal')?.addEventListener('click', e => {
             if (e.target === document.getElementById('product-modal')) closeModal();
         });
-
-        loadProducts();
     </script>
 </body>
 

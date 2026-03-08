@@ -486,10 +486,16 @@
 
   <div id="footer-placeholder"></div>
 
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="js/db.js"></script>
   <script src="js/store.js"></script>
   <script>
     // ── Apply saved settings (backgrounds, hero text) immediately ──
-    (function applySettings() {
+    async function applyInitialSettings() {
+      await KGJ.init();
       const s = KGJ.getSettings();
       // Hero background
       if (s.heroBg) {
@@ -520,14 +526,20 @@
         const el = document.getElementById('hero-cta');
         if (el) el.innerHTML = `<i class="fas fa-gem"></i> ${s.heroCtaText}`;
       }
-    })();
+
+      // After settings are applied, init components and render context
+      Components.init('home');
+      renderCatNav();
+      renderFeatured();
+      renderOffers();
+      initCounters();
+    }
+    applyInitialSettings();
   </script>
   <script src="js/scroll.js"></script>
   <script src="js/cart.js"></script>
   <script src="js/components.js"></script>
   <script>
-    Components.init('home');
-
     /* ── Category Quick Nav ── */
     function renderCatNav() {
       const cats = ['All', ...KGJ.getCategories()];
@@ -628,11 +640,6 @@
       Cart.showToast('Thank you for subscribing! 💎', 'success');
       e.target.reset();
     }
-
-    renderCatNav();
-    renderFeatured();
-    renderOffers();
-    initCounters();
   </script>
 </body>
 

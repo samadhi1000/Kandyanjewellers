@@ -275,32 +275,50 @@
         </div>
     </section>
 
-    <div id="footer-placeholder"></div>
-    <script src="js/store.js"></script>
-    <script src="js/scroll.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/components.js"></script>
-    <script>
-        Components.init('shop');
+    <footer class="site-footer" id="footer-placeholder">
+        </div>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+        <script src="js/db.js"></script>
+        <script src="js/store.js"></script>
+        <script src="js/scroll.js"></script>
+        <script src="js/cart.js"></script>
+        <script src="js/components.js"></script>
+        <script>
+            let currentProduct;
+            let qty = 1;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
-        let currentProduct = null;
-        let qty = 1;
+            async function initPage() {
+                await KGJ.init();
+                Components.init('shop');
 
-        function renderProduct(p) {
-            currentProduct = p;
-            document.title = `${p.name} | Kandyan Gem & Jewellers`;
-            const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
-            const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('id');
+                if (productId) {
+                    const p = KGJ.getProduct(productId);
+                    if (p) { renderProduct(p); renderRelated(p); }
+                    else document.getElementById('product-layout').innerHTML = '<div style="text-align:center;padding:4rem;grid-column:1/-1;color:var(--cream-300)"><i class="fas fa-gem" style="font-size:3rem;display:block;margin-bottom:1rem"></i>Product not found. <a href="shop.html" style="color:var(--gold-400)">Browse our shop →</a></div>';
+                } else {
+                    window.location.href = 'shop.html';
+                }
+            }
+            initPage();
 
-            document.getElementById('breadcrumb').innerHTML = `
+            function renderProduct(p) {
+                currentProduct = p;
+                document.title = `${p.name} | Kandyan Gem & Jewellers`;
+                const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
+                const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
+
+                document.getElementById('breadcrumb').innerHTML = `
       <a href="index.html">Home</a><span class="sep">/</span>
       <a href="shop.html">Shop</a><span class="sep">/</span>
       <a href="shop.html?cat=${p.category}">${p.category}</a><span class="sep">/</span>
       <span style="color:var(--cream-100)">${p.name}</span>`;
 
-            document.getElementById('product-layout').innerHTML = `
+                document.getElementById('product-layout').innerHTML = `
       <!-- Images -->
       <div class="reveal-left">
         <img src="${p.images[0]}" alt="${p.name}" class="product-main-img" id="main-img">
@@ -372,59 +390,59 @@
         </div>
       </div>`;
 
-            updateWishBtn();
-            ScrollEngine.initReveal();
-        }
+                updateWishBtn();
+                ScrollEngine.initReveal();
+            }
 
-        function switchImg(src, el) {
-            document.getElementById('main-img').src = src;
-            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-        }
+            function switchImg(src, el) {
+                document.getElementById('main-img').src = src;
+                document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+            }
 
-        function switchTab(id, btn) {
-            document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-            document.getElementById(`tab-${id}`).classList.add('active');
-            btn.classList.add('active');
-        }
+            function switchTab(id, btn) {
+                document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                document.getElementById(`tab-${id}`).classList.add('active');
+                btn.classList.add('active');
+            }
 
-        function changeQty(delta) {
-            qty = Math.max(1, Math.min(10, qty + delta));
-            document.getElementById('qty-display').textContent = qty;
-        }
+            function changeQty(delta) {
+                qty = Math.max(1, Math.min(10, qty + delta));
+                document.getElementById('qty-display').textContent = qty;
+            }
 
-        function addToCart() {
-            if (!currentProduct) return;
-            for (let i = 0; i < qty; i++) Cart.addItem(currentProduct.id, 1);
-        }
+            function addToCart() {
+                if (!currentProduct) return;
+                for (let i = 0; i < qty; i++) Cart.addItem(currentProduct.id, 1);
+            }
 
-        function buyNow() {
-            addToCart();
-            Cart.closeDrawer();
-            window.location.href = 'checkout.html';
-        }
+            function buyNow() {
+                addToCart();
+                Cart.closeDrawer();
+                window.location.href = 'checkout.html';
+            }
 
-        function updateWishBtn() {
-            const btn = document.getElementById('wish-btn');
-            if (!btn || !currentProduct) return;
-            btn.style.color = KGJ.isWishlisted(currentProduct.id) ? 'var(--ruby)' : '';
-        }
+            function updateWishBtn() {
+                const btn = document.getElementById('wish-btn');
+                if (!btn || !currentProduct) return;
+                btn.style.color = KGJ.isWishlisted(currentProduct.id) ? 'var(--ruby)' : '';
+            }
 
-        function toggleWish() {
-            if (!currentProduct) return;
-            KGJ.toggleWishlist(currentProduct.id);
-            updateWishBtn();
-            Cart.showToast(KGJ.isWishlisted(currentProduct.id) ? 'Added to wishlist!' : 'Removed from wishlist');
-        }
+            function toggleWish() {
+                if (!currentProduct) return;
+                KGJ.toggleWishlist(currentProduct.id);
+                updateWishBtn();
+                Cart.showToast(KGJ.isWishlisted(currentProduct.id) ? 'Added to wishlist!' : 'Removed from wishlist');
+            }
 
-        function renderRelated(p) {
-            const related = KGJ.getByCategory(p.category).filter(r => r.id !== p.id).slice(0, 4);
-            const grid = document.getElementById('related-grid');
-            grid.innerHTML = related.map(r => {
-                const price = r.discountedPrice < r.price ? r.discountedPrice : r.price;
-                const disc = r.discountedPrice < r.price ? Math.round((1 - r.discountedPrice / r.price) * 100) : 0;
-                return `
+            function renderRelated(p) {
+                const related = KGJ.getByCategory(p.category).filter(r => r.id !== p.id).slice(0, 4);
+                const grid = document.getElementById('related-grid');
+                grid.innerHTML = related.map(r => {
+                    const price = r.discountedPrice < r.price ? r.discountedPrice : r.price;
+                    const disc = r.discountedPrice < r.price ? Math.round((1 - r.discountedPrice / r.price) * 100) : 0;
+                    return `
         <div class="product-card" onclick="window.location='product.html?id=${r.id}'">
           <div class="img-wrap">
             <img src="${r.images[0]}" alt="${r.name}">
@@ -439,19 +457,19 @@
             </div>
           </div>
         </div>`;
-            }).join('');
-            if (related.length === 0) document.querySelector('.related-section').style.display = 'none';
-        }
+                }).join('');
+                if (related.length === 0) document.querySelector('.related-section').style.display = 'none';
+            }
 
-        // Load product
-        if (productId) {
-            const p = KGJ.getProduct(productId);
-            if (p) { renderProduct(p); renderRelated(p); }
-            else document.getElementById('product-layout').innerHTML = '<div style="text-align:center;padding:4rem;grid-column:1/-1;color:var(--cream-300)"><i class="fas fa-gem" style="font-size:3rem;display:block;margin-bottom:1rem"></i>Product not found. <a href="shop.html" style="color:var(--gold-400)">Browse our shop →</a></div>';
-        } else {
-            window.location.href = 'shop.html';
-        }
-    </script>
+            // Load product
+            if (productId) {
+                const p = KGJ.getProduct(productId);
+                if (p) { renderProduct(p); renderRelated(p); }
+                else document.getElementById('product-layout').innerHTML = '<div style="text-align:center;padding:4rem;grid-column:1/-1;color:var(--cream-300)"><i class="fas fa-gem" style="font-size:3rem;display:block;margin-bottom:1rem"></i>Product not found. <a href="shop.html" style="color:var(--gold-400)">Browse our shop →</a></div>';
+            } else {
+                window.location.href = 'shop.html';
+            }
+        </script>
 </body>
 
 </html>

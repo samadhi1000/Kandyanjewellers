@@ -181,11 +181,22 @@
     </section>
 
     <div id="footer-placeholder"></div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="js/db.js"></script>
     <script src="js/store.js"></script>
     <script src="js/scroll.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/components.js"></script>
-    <script>Components.init('about');</script>
+    <script>
+        async function initPage() {
+            await KGJ.init();
+            Components.init('about');
+        }
+        initPage();
+    </script>
 </body>
 
 </html>

@@ -1,16 +1,23 @@
 /* =====================================================
-   KANDYAN GEM & JEWELLERS — Data Store (localStorage)
+   KANDYAN GEM & JEWELLERS — Data Store (Firebase & LocalStorage)
    ===================================================== */
 
 const KGJ = {
 
-  /* ── Keys ── */
+  /* ── Keys (Fallback) ── */
   KEYS: {
     products: 'kgj_products',
-    orders:   'kgj_orders',
+    orders: 'kgj_orders',
     settings: 'kgj_settings',
     wishlist: 'kgj_wishlist',
-    admin:    'kgj_admin',
+    admin: 'kgj_admin',
+  },
+
+  /* ── Cache ── */
+  _cache: {
+    products: [],
+    settings: null,
+    initialized: false
   },
 
   /* ── Currency ── */
@@ -20,42 +27,104 @@ const KGJ = {
     return `${this.currency} ${Number(amount).toLocaleString('en-LK')}`;
   },
 
-  /* ── Products ── */
-  getProducts() {
-    let raw = localStorage.getItem(this.KEYS.products);
-    if (!raw) { this._seed(); raw = localStorage.getItem(this.KEYS.products); }
-    return JSON.parse(raw);
+  /* ── INIT ── */
+  async init() {
+    if (this._cache.initialized) return;
+
+    if (window.FB) {
+      try {
+        FB.init();
+        const [products, settings] = await Promise.all([
+          FB.getProducts(),
+          FB.getSettings()
+        ]);
+        this._cache.products = products || [];
+        this._cache.settings = settings;
+        console.log("💎 KGJ Data Loaded from Firebase");
+      } catch (e) {
+        console.error("❌ Firebase Load Failed, falling back to LocalStorage:", e);
+      }
+    }
+
+    // Fallback/Seed if empty
+    if (!this._cache.products.length) {
+      let raw = localStorage.getItem(this.KEYS.products);
+      if (!raw) {
+        this._seed();
+        raw = localStorage.getItem(this.KEYS.products);
+      }
+      this._cache.products = JSON.parse(raw) || [];
+    }
+
+    this._cache.initialized = true;
   },
 
-  saveProducts(products) {
+  /* ── Products ── */
+  getProducts() {
+    return this._cache.products;
+  },
+
+  async saveProducts(products) {
+    this._cache.products = products;
     localStorage.setItem(this.KEYS.products, JSON.stringify(products));
+
+    if (window.FB) {
+      // Sync to Firestore (requires individual doc updates normally, but we keep it simple for now)
+      for (const p of products) {
+        await FB.db.collection("products").doc(p.id).set(p);
+      }
+    }
   },
 
   getProduct(id) {
     return this.getProducts().find(p => p.id === id) || null;
   },
 
-  addProduct(product) {
-    const products = this.getProducts();
+  async addProduct(product) {
     product.id = 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
     product.createdAt = new Date().toISOString();
+
+    const products = this.getProducts();
     products.unshift(product);
-    this.saveProducts(products);
+    this._cache.products = products;
+
+    if (window.FB) {
+      await FB.db.collection("products").doc(product.id).set(product);
+      await FB.addActivity({ action: 'add_product', details: `Added product: ${product.name}`, productId: product.id });
+    }
+
+    localStorage.setItem(this.KEYS.products, JSON.stringify(products));
     return product;
   },
 
-  updateProduct(id, data) {
+  async updateProduct(id, data) {
     const products = this.getProducts();
     const idx = products.findIndex(p => p.id === id);
     if (idx === -1) return false;
+
     products[idx] = { ...products[idx], ...data, updatedAt: new Date().toISOString() };
-    this.saveProducts(products);
+    this._cache.products = products;
+
+    if (window.FB) {
+      await FB.db.collection("products").doc(id).update(data);
+      const name = data.name || products[idx].name;
+      await FB.addActivity({ action: 'edit_product', details: `Updated product: ${name}`, productId: id });
+    }
+
+    localStorage.setItem(this.KEYS.products, JSON.stringify(products));
     return products[idx];
   },
 
-  deleteProduct(id) {
+  async deleteProduct(id) {
     const products = this.getProducts().filter(p => p.id !== id);
-    this.saveProducts(products);
+    this._cache.products = products;
+
+    if (window.FB) {
+      await FB.db.collection("products").doc(id).delete();
+      await FB.addActivity({ action: 'delete_product', details: `Deleted product ID: ${id}` });
+    }
+
+    localStorage.setItem(this.KEYS.products, JSON.stringify(products));
   },
 
   getFeatured() {
@@ -83,59 +152,84 @@ const KGJ = {
   },
 
   /* ── Orders ── */
-  getOrders() {
+  async getOrders() {
+    if (window.FB) {
+      const snapshot = await FB.db.collection("orders").orderBy("createdAt", "desc").get();
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    }
     return JSON.parse(localStorage.getItem(this.KEYS.orders) || '[]');
   },
 
-  saveOrder(order) {
-    const orders = this.getOrders();
+  async saveOrder(order) {
     order.id = 'ORD-' + Date.now().toString(36).toUpperCase();
-    order.createdAt = new Date().toISOString();
     order.status = 'pending';
-    orders.unshift(order);
-    localStorage.setItem(this.KEYS.orders, JSON.stringify(orders));
+
+    if (window.FB) {
+      order.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      const docRef = await FB.db.collection("orders").add(order);
+      order.id = docRef.id;
+    } else {
+      order.createdAt = new Date().toISOString();
+      const orders = JSON.parse(localStorage.getItem(this.KEYS.orders) || '[]');
+      orders.unshift(order);
+      localStorage.setItem(this.KEYS.orders, JSON.stringify(orders));
+    }
+
     return order;
   },
 
-  updateOrderStatus(id, status) {
-    const orders = this.getOrders();
-    const idx = orders.findIndex(o => o.id === id);
-    if (idx !== -1) {
-      orders[idx].status = status;
-      orders[idx].updatedAt = new Date().toISOString();
-      localStorage.setItem(this.KEYS.orders, JSON.stringify(orders));
+  async updateOrderStatus(id, status) {
+    if (window.FB) {
+      await FB.db.collection("orders").doc(id).update({
+        status: status,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } else {
+      const orders = JSON.parse(localStorage.getItem(this.KEYS.orders) || '[]');
+      const idx = orders.findIndex(o => o.id === id);
+      if (idx !== -1) {
+        orders[idx].status = status;
+        orders[idx].updatedAt = new Date().toISOString();
+        localStorage.setItem(this.KEYS.orders, JSON.stringify(orders));
+      }
     }
   },
 
   /* ── Settings ── */
   getSettings() {
     const defaults = {
-      siteName:       'Kandyan Gem & Jewellers',
-      tagline:        'Timeless Kandyan Craftsmanship Since 1985',
-      heroTitle:      'Where Every Gem Tells a Story',
-      heroSubtitle:   'Handcrafted Kandyan jewellery of unparalleled quality',
-      heroCtaText:    'Explore Collection',
-      phone:          '+94 81 234 5678',
-      whatsapp:       '+94 77 123 4567',
-      email:          'info@kandyangemandjewellers.lk',
-      address:        'No. 42, Peradeniya Road, Kandy 20000, Sri Lanka',
-      facebook:       'https://facebook.com',
-      instagram:      'https://instagram.com',
-      heroBg:         'images/hero.jpg',
-      gemsBg:         'images/gems-bg.jpg',
-      aboutBg:        'images/about-bg.jpg',
-      collectionBg:   'images/collection-banner.jpg',
-      offerBanner:    'Free shipping on orders over Rs. 15,000 | Certified Authentic Gems | 30-Day Returns',
+      siteName: 'Kandyan Gem & Jewellers',
+      tagline: 'Timeless Kandyan Craftsmanship Since 1985',
+      heroTitle: 'Where Every Gem Tells a Story',
+      heroSubtitle: 'Handcrafted Kandyan jewellery of unparalleled quality',
+      heroCtaText: 'Explore Collection',
+      phone: '+94 81 234 5678',
+      whatsapp: '+94 77 123 4567',
+      email: 'info@kandyangemandjewellers.lk',
+      address: 'No. 42, Peradeniya Road, Kandy 20000, Sri Lanka',
+      facebook: 'https://facebook.com',
+      instagram: 'https://instagram.com',
+      heroBg: 'images/hero.jpg',
+      gemsBg: 'images/gems-bg.jpg',
+      aboutBg: 'images/about-bg.jpg',
+      collectionBg: 'images/collection-banner.jpg',
+      offerBanner: 'Free shipping on orders over Rs. 15,000 | Certified Authentic Gems | 30-Day Returns',
       deliveryCharge: 350,
-      codAvailable:   true,
-      cardAvailable:  true,
+      codAvailable: true,
+      cardAvailable: true,
     };
-    const saved = JSON.parse(localStorage.getItem(this.KEYS.settings) || '{}');
+
+    const saved = this._cache.settings || JSON.parse(localStorage.getItem(this.KEYS.settings) || '{}');
     return { ...defaults, ...saved };
   },
 
-  saveSettings(settings) {
+  async saveSettings(settings) {
+    this._cache.settings = settings;
     localStorage.setItem(this.KEYS.settings, JSON.stringify(settings));
+    if (window.FB) {
+      await FB.saveSettings(settings);
+      await FB.addActivity({ action: 'update_settings', details: 'Updated site settings' });
+    }
   },
 
   /* ── Wishlist ── */
@@ -149,7 +243,7 @@ const KGJ = {
     if (idx === -1) list.push(productId);
     else list.splice(idx, 1);
     localStorage.setItem(this.KEYS.wishlist, JSON.stringify(list));
-    return idx === -1; // true = added
+    return idx === -1;
   },
 
   isWishlisted(productId) {
@@ -157,31 +251,36 @@ const KGJ = {
   },
 
   /* ── Admin Auth ── */
-  getAdminCreds() {
-    const raw = localStorage.getItem(this.KEYS.admin);
-    if (!raw) return { username: 'admin', password: 'kandyan2024' };
-    return JSON.parse(raw);
-  },
-
-  checkAdmin(username, password) {
-    const creds = this.getAdminCreds();
-    return creds.username === username && creds.password === password;
-  },
-
   isAdminLoggedIn() {
-    return sessionStorage.getItem('kgj_admin_auth') === 'true';
+    return !!sessionStorage.getItem('kgj_admin_uid');
   },
 
-  adminLogin(username, password) {
-    if (this.checkAdmin(username, password)) {
-      sessionStorage.setItem('kgj_admin_auth', 'true');
+  getUserRole() {
+    return sessionStorage.getItem('kgj_admin_role') || 'editor';
+  },
+
+  async adminLogin(email, password) {
+    if (!window.FB) return false;
+    try {
+      const res = await FB.auth.signInWithEmailAndPassword(email, password);
+      const profile = await FB.getUserProfile(res.user.uid);
+
+      sessionStorage.setItem('kgj_admin_uid', res.user.uid);
+      sessionStorage.setItem('kgj_admin_role', profile?.role || 'editor');
+      sessionStorage.setItem('kgj_admin_name', profile?.name || email.split('@')[0]);
+
       return true;
+    } catch (e) {
+      console.error("Login failed:", e);
+      return false;
     }
-    return false;
   },
 
   adminLogout() {
-    sessionStorage.removeItem('kgj_admin_auth');
+    sessionStorage.removeItem('kgj_admin_uid');
+    sessionStorage.removeItem('kgj_admin_role');
+    sessionStorage.removeItem('kgj_admin_name');
+    if (window.FB) FB.auth.signOut();
   },
 
   /* ── Seed Data ── */
@@ -234,55 +333,7 @@ const KGJ = {
         offerExpiry: '', images: ['images/gems-bg.jpg'],
         metal: '22K Gold', gemstone: "Cat's Eye Chrysoberyl", inStock: true, featured: false,
         createdAt: new Date().toISOString(), weight: '18g', rating: 4.5, reviews: 19
-      },
-      {
-        id: 'p_seed_7', name: 'Pearl Drop Earrings', category: 'Earrings',
-        description: 'Classic South Sea pearl drop earrings with 22k gold hooks adorned with seed diamonds and fine filigree.',
-        price: 75000, discountedPrice: 65000, specialOffer: '13% Off',
-        offerExpiry: '2026-04-20', images: ['images/hero.jpg'],
-        metal: '22K Gold', gemstone: 'South Sea Pearl', inStock: true, featured: false,
-        createdAt: new Date().toISOString(), weight: '4.5g', rating: 4.7, reviews: 38
-      },
-      {
-        id: 'p_seed_8', name: 'Blue Topaz Pendant', category: 'Necklaces',
-        description: 'Faceted Swiss Blue Topaz in a prong-set 18k gold pendant with a delicate box chain.',
-        price: 55000, discountedPrice: 48000, specialOffer: '',
-        offerExpiry: '', images: ['images/about-bg.jpg'],
-        metal: '18K Gold', gemstone: 'Swiss Blue Topaz', inStock: true, featured: false,
-        createdAt: new Date().toISOString(), weight: '5g', rating: 4.4, reviews: 12
-      },
-      {
-        id: 'p_seed_9', name: 'Amethyst Cluster Ring', category: 'Rings',
-        description: 'Stunning cluster ring with deep purple amethysts set in 18k white gold, an elegant everyday luxury.',
-        price: 68000, discountedPrice: 60000, specialOffer: 'New Arrival',
-        offerExpiry: '2026-05-01', images: ['images/collection-banner.jpg'],
-        metal: '18K White Gold', gemstone: 'Amethyst', inStock: true, featured: false,
-        createdAt: new Date().toISOString(), weight: '7g', rating: 4.5, reviews: 9
-      },
-      {
-        id: 'p_seed_10', name: 'Diamond Solitaire Ring', category: 'Rings',
-        description: 'Timeless 1ct G-VS2 diamond solitaire ring in a 6-prong platinum setting. The perfect engagement ring.',
-        price: 450000, discountedPrice: 420000, specialOffer: '',
-        offerExpiry: '', images: ['images/gems-bg.jpg'],
-        metal: 'Platinum', gemstone: 'Diamond', inStock: true, featured: true,
-        createdAt: new Date().toISOString(), weight: '5g', rating: 5.0, reviews: 67
-      },
-      {
-        id: 'p_seed_11', name: 'Gold Bangle Set', category: 'Bracelets',
-        description: 'Set of 4 traditional Kandyan plain gold bangles with fine engraved Kandyan border pattern, sold as a set.',
-        price: 95000, discountedPrice: 88000, specialOffer: '',
-        offerExpiry: '', images: ['images/hero.jpg'],
-        metal: '22K Gold', gemstone: 'None', inStock: true, featured: false,
-        createdAt: new Date().toISOString(), weight: '35g', rating: 4.6, reviews: 41
-      },
-      {
-        id: 'p_seed_12', name: 'Moonstone Silver Pendant', category: 'Necklaces',
-        description: 'Mystical rainbow moonstone set in fine sterling silver with oxidised Kandyan lotus detailing.',
-        price: 18500, discountedPrice: 15000, specialOffer: '19% Off',
-        offerExpiry: '2026-04-15', images: ['images/about-bg.jpg'],
-        metal: 'Sterling Silver', gemstone: 'Rainbow Moonstone', inStock: true, featured: false,
-        createdAt: new Date().toISOString(), weight: '3g', rating: 4.8, reviews: 55
-      },
+      }
     ];
     this.saveProducts(products);
   },

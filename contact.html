@@ -259,23 +259,32 @@
     </div>
 
     <div id="footer-placeholder" style="position:relative;z-index:1"></div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="js/db.js"></script>
     <script src="js/store.js"></script>
     <script src="js/scroll.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/components.js"></script>
     <script>
-        Components.init('contact');
+        async function initPage() {
+            await KGJ.init();
+            Components.init('contact');
 
-        // Load contact info from settings
-        const s = KGJ.getSettings();
-        const phoneEl = document.getElementById('contact-phone');
-        const waEl = document.getElementById('contact-wa');
-        const emailEl = document.getElementById('contact-email');
-        const addrEl = document.getElementById('contact-address');
-        if (phoneEl) { phoneEl.textContent = s.phone; phoneEl.href = `tel:${s.phone}`; }
-        if (waEl) { waEl.textContent = s.whatsapp; waEl.href = `https://wa.me/${s.whatsapp.replace(/\D/g, '')}`; }
-        if (emailEl) { emailEl.textContent = s.email; emailEl.href = `mailto:${s.email}`; }
-        if (addrEl) addrEl.textContent = s.address;
+            // Load contact info from settings
+            const s = KGJ.getSettings();
+            const phoneEl = document.getElementById('contact-phone');
+            const waEl = document.getElementById('contact-wa');
+            const emailEl = document.getElementById('contact-email');
+            const addrEl = document.getElementById('contact-address');
+            if (phoneEl) { phoneEl.textContent = s.phone; phoneEl.href = `tel:${s.phone}`; }
+            if (waEl) { waEl.textContent = s.whatsapp; waEl.href = `https://wa.me/${(s.whatsapp || '').replace(/\D/g, '')}`; }
+            if (emailEl) { emailEl.textContent = s.email; emailEl.href = `mailto:${s.email}`; }
+            if (addrEl) addrEl.textContent = s.address;
+        }
+        initPage();
 
         // Disable snap on mobile
         function adjustSnap() {

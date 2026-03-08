@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "api/**",
+      "*.php",
+      "kandyan supabase password.txt"
+    ],
+    "cleanUrls": true,
+    "trailingSlash": false
+  }
+}

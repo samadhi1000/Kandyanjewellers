@@ -515,14 +515,15 @@
         <div class="login-card">
             <h1>Admin Panel</h1>
             <div class="sub">Kandyan Gem & Jewellers CMS</div>
-            <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input"
-                    id="login-user" placeholder="admin" value="admin"></div>
+            <div class="form-group"><label class="form-label">Email Address</label><input type="email"
+                    class="form-input" id="login-email" placeholder="admin@kandyan.com"></div>
             <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input"
                     id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"></div>
-            <button class="btn-gold" onclick="doLogin()"><i class="fas fa-unlock"></i> Login</button>
-            <div class="login-error" id="login-error">Invalid username or password.</div>
-            <p style="font-size:0.72rem;color:var(--cream2);opacity:0.4;text-align:center;margin-top:1.5rem">Default:
-                admin / kandyan2024</p>
+            <button class="btn-gold" id="login-btn" onclick="doLogin()"><i class="fas fa-unlock"></i> Login</button>
+            <div class="login-error" id="login-error">Invalid email or password.</div>
+            <p style="font-size:0.75rem;color:var(--cream2);opacity:0.5;text-align:center;margin-top:1.5rem">
+                Please use your registered credentials to log in.
+            </p>
         </div>
     </div>
 
@@ -535,11 +536,11 @@
                 <div class="logo">Kandyan Gem & Jewellers</div>
                 <div class="sub">Admin Panel</div>
             </div>
-            <nav class="sidebar-nav">
+            <nav class="sidebar-nav" id="sidebar-nav">
                 <a href="index.html" class="nav-item active"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
                 <a href="products.html" class="nav-item"><i class="fas fa-gem"></i>Products</a>
-                <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
-                <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i>Settings</a>
+                <a href="orders.html" class="nav-item admin-only"><i class="fas fa-shopping-bag"></i>Orders</a>
+                <a href="settings.html" class="nav-item admin-only"><i class="fas fa-cog"></i>Settings</a>
                 <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
                         class="fas fa-external-link-alt"></i>View Site</a>
             </nav>
@@ -570,9 +571,10 @@
                 <div class="quick-links">
                     <a href="products.html" class="quick-link"><i class="fas fa-gem"></i><strong>Manage
                             Products</strong><span>Add, edit, delete jewellery items</span></a>
-                    <a href="orders.html" class="quick-link"><i class="fas fa-shipping-fast"></i><strong>Manage
+                    <a href="orders.html" class="quick-link admin-only"><i
+                            class="fas fa-shipping-fast"></i><strong>Manage
                             Orders</strong><span>View & update order statuses</span></a>
-                    <a href="settings.html" class="quick-link"><i class="fas fa-image"></i><strong>Background
+                    <a href="settings.html" class="quick-link admin-only"><i class="fas fa-image"></i><strong>Background
                             Images</strong><span>Change site background images</span></a>
                 </div>
 
@@ -598,46 +600,103 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Activity Log -->
+                <div class="table-card" style="margin-top:2rem">
+                    <div class="table-header">
+                        <h3><i class="fas fa-history" style="margin-right:0.5rem"></i>System Activity</h3>
+                    </div>
+                    <div style="padding:0.5rem 1.5rem">
+                        <div id="activity-list" style="display:flex;flex-direction:column;gap:1.25rem;padding:1rem 0">
+                            <div style="text-align:center;padding:2rem;opacity:0.5">Fetching activity...</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="../js/db.js"></script>
     <script src="../js/store.js"></script>
     <script>
-        function doLogin() {
-            const u = document.getElementById('login-user').value;
-            const p = document.getElementById('login-pass').value;
-            if (KGJ.adminLogin(u, p)) {
+        async function initPage() {
+            await KGJ.init();
+            if (KGJ.isAdminLoggedIn()) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-app').style.display = 'flex';
-                initDashboard();
+                applyRolePermissions();
+                await initDashboard();
+            }
+        }
+        initPage();
+
+        function applyRolePermissions() {
+            const role = KGJ.getUserRole();
+            if (role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+        }
+
+        async function doLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            const btn = document.getElementById('login-btn');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+
+            const success = await KGJ.adminLogin(email, pass);
+            if (success) {
+                window.location.reload();
             } else {
                 document.getElementById('login-error').style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-unlock"></i> Login';
             }
         }
 
         function doLogout() {
             KGJ.adminLogout();
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('admin-app').style.display = 'none';
+            window.location.reload();
         }
 
-        function initDashboard() {
+        async function initDashboard() {
+            const role = KGJ.getUserRole();
             const products = KGJ.getProducts();
-            const orders = KGJ.getOrders();
+            const orders = await KGJ.getOrders();
             const revenue = orders.reduce((s, o) => s + (o.total || 0), 0);
             const pending = orders.filter(o => o.status === 'pending').length;
 
-            document.getElementById('stats-row').innerHTML = [
+            const stats = [
                 { icon: 'fas fa-gem', bg: 'rgba(212,160,23,0.15)', color: 'var(--gold)', num: products.length, label: 'Total Products' },
-                { icon: 'fas fa-shopping-bag', bg: 'rgba(15,52,96,0.3)', color: '#4d9ef5', num: orders.length, label: 'Total Orders' },
-                { icon: 'fas fa-rupee-sign', bg: 'rgba(26,92,56,0.2)', color: '#4fc47c', num: KGJ.fmt(revenue), label: 'Total Revenue' },
-                { icon: 'fas fa-clock', bg: 'rgba(155,35,53,0.2)', color: '#e74c3a', num: pending, label: 'Pending Orders' },
-            ].map(s => `
+            ];
+
+            if (role === 'admin') {
+                stats.push(
+                    { icon: 'fas fa-shopping-bag', bg: 'rgba(15,52,96,0.3)', color: '#4d9ef5', num: orders.length, label: 'Total Orders' },
+                    { icon: 'fas fa-rupee-sign', bg: 'rgba(26,92,56,0.2)', color: '#4fc47c', num: KGJ.fmt(revenue), label: 'Total Revenue' },
+                    { icon: 'fas fa-clock', bg: 'rgba(155,35,53,0.2)', color: '#e74c3a', num: pending, label: 'Pending Orders' }
+                );
+            }
+
+            document.getElementById('stats-row').innerHTML = stats.map(s => `
       <div class="stat-card">
         <div class="icon" style="background:${s.bg};color:${s.color}"><i class="${s.icon}"></i></div>
         <div><div class="num">${s.num}</div><div class="label">${s.label}</div></div>
       </div>`).join('');
+
+            // Hide recent orders for editors
+            const ordersCard = document.querySelector('.table-card');
+            if (role !== 'admin' && ordersCard) {
+                ordersCard.style.display = 'none';
+                // Also hide activity for editors? Per conversation 134f46bb opinion.
+                document.querySelectorAll('.table-card')[1].style.display = 'none';
+                return;
+            }
 
             const tbody = document.getElementById('recent-orders-body');
             const recent = orders.slice(0, 7);
@@ -651,19 +710,30 @@
         <td style="opacity:0.6;font-size:0.8rem">${new Date(o.createdAt).toLocaleDateString('en-LK')}</td>
       </tr>`).join('') : '<tr><td colspan="6" style="text-align:center;padding:2rem;opacity:0.5">No orders yet.</td></tr>';
 
+            // Activity Log
+            const activityList = document.getElementById('activity-list');
+            const activity = await FB.getActivity(8);
+            activityList.innerHTML = activity.length ? activity.map(a => {
+                const date = a.timestamp?.toDate() || new Date();
+                const icon = a.action.includes('product') ? 'fas fa-gem' : (a.action.includes('settings') ? 'fas fa-cog' : 'fas fa-user-shield');
+                const color = a.action.includes('delete') ? 'var(--ruby)' : 'var(--gold)';
+                return `
+                <div style="display:flex;gap:1rem;align-items:flex-start">
+                    <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;color:${color};flex-shrink:0"><i class="${icon}"></i></div>
+                    <div style="flex:1">
+                        <div style="font-size:0.875rem;color:var(--cream)">${a.details}</div>
+                        <div style="font-size:0.75rem;opacity:0.5;margin-top:0.25rem">By ${a.adminName} &bull; ${date.toLocaleString('en-LK', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' })}</div>
+                    </div>
+                </div>`;
+            }).join('') : '<div style="text-align:center;padding:1rem;opacity:0.4">No recent activity.</div>';
+
             // Clock
             const updateTime = () => {
-                document.getElementById('admin-time').textContent = new Date().toLocaleString('en-LK', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const clockEl = document.getElementById('admin-time');
+                if (clockEl) clockEl.textContent = new Date().toLocaleString('en-LK', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
             };
             updateTime();
             setInterval(updateTime, 60000);
-        }
-
-        // Check session
-        if (KGJ.isAdminLoggedIn()) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('admin-app').style.display = 'flex';
-            initDashboard();
         }
     </script>
 </body>
