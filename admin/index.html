@@ -624,12 +624,19 @@
     <script src="../js/store.js"></script>
     <script>
         async function initPage() {
-            await KGJ.init();
+            await KGJ.initAdmin(async (type, data) => {
+                if (!KGJ.isAdminLoggedIn()) return;
+
+                if (type === 'orders') renderRecentOrders(data);
+                if (type === 'activity') renderActivity(data);
+                if (type === 'products') renderStats(); // Refresh stats if products change
+            });
+
             if (KGJ.isAdminLoggedIn()) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-app').style.display = 'flex';
                 applyRolePermissions();
-                await initDashboard();
+                initDashboard(); // Initial static render
             }
         }
         initPage();
@@ -665,6 +672,16 @@
         }
 
         async function initDashboard() {
+            renderStats();
+            const orders = await KGJ.getOrders();
+            renderRecentOrders(orders);
+            const activity = await FB.getActivity(8);
+            renderActivity(activity);
+
+            initClock();
+        }
+
+        async function renderStats() {
             const role = KGJ.getUserRole();
             const products = KGJ.getProducts();
             const orders = await KGJ.getOrders();
@@ -688,18 +705,20 @@
         <div class="icon" style="background:${s.bg};color:${s.color}"><i class="${s.icon}"></i></div>
         <div><div class="num">${s.num}</div><div class="label">${s.label}</div></div>
       </div>`).join('');
+        }
 
+        function renderRecentOrders(orders) {
+            const role = KGJ.getUserRole();
             // Hide recent orders for editors
             const ordersCard = document.querySelector('.table-card');
             if (role !== 'admin' && ordersCard) {
                 ordersCard.style.display = 'none';
-                // Also hide activity for editors? Per conversation 134f46bb opinion.
-                document.querySelectorAll('.table-card')[1].style.display = 'none';
                 return;
             }
 
             const tbody = document.getElementById('recent-orders-body');
-            const recent = orders.slice(0, 7);
+            if (!tbody) return;
+            const recent = (orders || []).slice(0, 7);
             tbody.innerHTML = recent.length ? recent.map(o => `
       <tr>
         <td style="color:var(--gold);font-size:0.8rem">${o.id}</td>
@@ -707,14 +726,22 @@
         <td style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1rem">${KGJ.fmt(o.total)}</td>
         <td style="text-transform:capitalize">${o.paymentMethod === 'cod' ? '🚚 COD' : '💳 Card'}</td>
         <td><span class="badge badge-${o.status}">${o.status}</span></td>
-        <td style="opacity:0.6;font-size:0.8rem">${new Date(o.createdAt).toLocaleDateString('en-LK')}</td>
+        <td style="opacity:0.6;font-size:0.8rem">${o.createdAt ? (o.createdAt.toDate ? o.createdAt.toDate() : new Date(o.createdAt)).toLocaleDateString('en-LK') : '—'}</td>
       </tr>`).join('') : '<tr><td colspan="6" style="text-align:center;padding:2rem;opacity:0.5">No orders yet.</td></tr>';
+        }
 
-            // Activity Log
+        function renderActivity(activity) {
+            const role = KGJ.getUserRole();
+            if (role !== 'admin') {
+                const activityCard = document.querySelectorAll('.table-card')[1];
+                if (activityCard) activityCard.style.display = 'none';
+                return;
+            }
+
             const activityList = document.getElementById('activity-list');
-            const activity = await FB.getActivity(8);
-            activityList.innerHTML = activity.length ? activity.map(a => {
-                const date = a.timestamp?.toDate() || new Date();
+            if (!activityList) return;
+            activityList.innerHTML = activity && activity.length ? activity.map(a => {
+                const date = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp);
                 const icon = a.action.includes('product') ? 'fas fa-gem' : (a.action.includes('settings') ? 'fas fa-cog' : 'fas fa-user-shield');
                 const color = a.action.includes('delete') ? 'var(--ruby)' : 'var(--gold)';
                 return `
@@ -726,8 +753,9 @@
                     </div>
                 </div>`;
             }).join('') : '<div style="text-align:center;padding:1rem;opacity:0.4">No recent activity.</div>';
+        }
 
-            // Clock
+        function initClock() {
             const updateTime = () => {
                 const clockEl = document.getElementById('admin-time');
                 if (clockEl) clockEl.textContent = new Date().toLocaleString('en-LK', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });

@@ -61,6 +61,20 @@ const FB = {
         }, error => console.error("Error listening to settings:", error));
     },
 
+    listenOrders(callback) {
+        return this.db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+            const orders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            callback(orders);
+        }, error => console.error("Error listening to orders:", error));
+    },
+
+    listenActivity(limit, callback) {
+        return this.db.collection("activity").orderBy("timestamp", "desc").limit(limit).onSnapshot(snapshot => {
+            const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            callback(logs);
+        }, error => console.error("Error listening to activity:", error));
+    },
+
     async addOrder(order) {
         order.createdAt = firebase.firestore.FieldValue.serverTimestamp();
         const docRef = await this.db.collection("orders").add(order);

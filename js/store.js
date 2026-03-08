@@ -83,6 +83,24 @@ const KGJ = {
     this._cache.initialized = true;
   },
 
+  async initAdmin(onUpdate) {
+    // Regular init first
+    await this.init(onUpdate);
+
+    if (window.FB && this.isAdminLoggedIn()) {
+      // Add real-time listeners for Admin-specific data
+      FB.listenOrders(orders => {
+        if (onUpdate) onUpdate('orders', orders);
+      });
+
+      FB.listenActivity(10, logs => {
+        if (onUpdate) onUpdate('activity', logs);
+      });
+
+      console.log("🛡️ Admin Real-time Listeners Active");
+    }
+  },
+
   /* ── Products ── */
   getProducts() {
     return this._cache.products;
