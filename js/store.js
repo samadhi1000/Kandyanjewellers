@@ -130,7 +130,9 @@ const KGJ = {
     this._cache.products = products;
 
     if (window.FB) {
-      await FB.db.collection("products").doc(id).update(data);
+      // Use set with merge: true instead of update. 
+      // This fixes the error where seed/local products don't exist in Firestore yet.
+      await FB.db.collection("products").doc(id).set(products[idx], { merge: true });
       const name = data.name || products[idx].name;
       await FB.addActivity({ action: 'edit_product', details: `Updated product: ${name}`, productId: id });
     }
