@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Admin | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #12100c;
+            color: #fdf8f0;
+            min-height: 100vh;
+            display: flex
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #1a1610;
+            border-right: 1px solid rgba(212, 160, 23, 0.12);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex-shrink: 0
+        }
+
+        .sidebar-brand {
+            padding: 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .sidebar-brand .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #d4a017
+        }
+
+        .sidebar-brand .sub {
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.5
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            opacity: 0.7;
+            transition: all 0.2s;
+            text-decoration: none;
+            border-left: 3px solid transparent
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+            border-left-color: #d4a017;
+            background: rgba(212, 160, 23, 0.08)
+        }
+
+        .nav-item.active {
+            color: #d4a017
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #12100c
+        }
+
+        .main-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1610;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .main-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: #d4a017
+        }
+
+        .content-area {
+            padding: 2rem
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4a017, #9a6f08);
+            color: #12100c;
+            border: none;
+            border-radius: 8px;
+            padding: 0.65rem 1.25rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s
+        }
+
+        .btn-gold:hover {
+            filter: brightness(1.1)
+        }
+
+        .btn-outline-sm {
+            background: transparent;
+            color: #d4a017;
+            border: 1px solid rgba(212, 160, 23, 0.4);
+            border-radius: 6px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s
+        }
+
+        .btn-outline-sm:hover {
+            background: #d4a017;
+            color: #12100c
+        }
+
+        .btn-danger-sm {
+            background: rgba(155, 35, 53, 0.15);
+            color: #e74c3a;
+            border: 1px solid rgba(155, 35, 53, 0.3);
+            border-radius: 6px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.78rem;
+            cursor: pointer
+        }
+
+        .btn-danger-sm:hover {
+            background: #9b2335;
+            color: #fff
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th {
+            padding: 0.85rem 1rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.6;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .table-card {
+            background: #1a1610;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            overflow: hidden
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .product-thumb {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0b0908
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase
+        }
+
+        .badge-in {
+            background: rgba(26, 92, 56, 0.2);
+            color: #4fc47c
+        }
+
+        .badge-out {
+            background: rgba(155, 35, 53, 0.2);
+            color: #e74c3a
+        }
+
+        .badge-feat {
+            background: rgba(212, 160, 23, 0.15);
+            color: #d4a017
+        }
+
+        /* Modal */
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem
+        }
+
+        .modal-bg.open {
+            display: flex
+        }
+
+        .modal-box {
+            background: #1a1610;
+            border: 1px solid rgba(212, 160, 23, 0.2);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem
+        }
+
+        .modal-box::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .modal-box::-webkit-scrollbar-thumb {
+            background: rgba(212, 160, 23, 0.3);
+            border-radius: 2px
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem
+        }
+
+        .modal-header h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: #d4a017
+        }
+
+        .modal-close {
+            background: none;
+            color: #e8d9c4;
+            font-size: 1.5rem;
+            cursor: pointer
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.65
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fdf8f0;
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: #d4a017
+        }
+
+        .form-select option {
+            background: #1a1610
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 90px
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem
+        }
+
+        .checkbox-row input {
+            accent-color: #d4a017;
+            width: 16px;
+            height: 16px
+        }
+
+        /* Image preview */
+        .img-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0b0908;
+            border: 1px solid rgba(212, 160, 23, 0.2);
+            flex-shrink: 0
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fdf8f0;
+            padding: 0.6rem 1rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            width: 260px
+        }
+
+        .search-box:focus {
+            border-color: #d4a017
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">Kandyan Gem & Jewellers</div>
+            <div class="sub">Admin Panel</div>
+        </div>
+        <nav style="padding:1rem 0;flex:1">
+            <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="products.html" class="nav-item active"><i class="fas fa-gem"></i>Products</a>
+            <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i>Settings</a>
+            <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
+                    class="fas fa-external-link-alt"></i>View Site</a>
+        </nav>
+        <div class="sidebar-footer"><a href="#" onclick="KGJ.adminLogout();window.location='index.html'"
+                style="opacity:0.5;font-size:0.75rem;display:flex;gap:0.5rem;align-items:center"><i
+                    class="fas fa-sign-out-alt"></i>Logout</a></div>
+    </aside>
+
+    <div class="main-content">
+        <div class="main-header">
+            <div>
+                <h2>Products</h2>
+                <div style="font-size:0.75rem;opacity:0.6;margin-top:0.2rem">Manage your jewellery catalogue</div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:center">
+                <input type="text" class="search-box" id="search-input" placeholder="🔍 Search products…"
+                    oninput="filterTable()">
+                <button class="btn-gold" onclick="openModal()"><i class="fas fa-plus"></i>Add New Product</button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="table-card">
+                <div class="table-header">
+                    <h3 id="product-count">Loading…</h3>
+                    <div style="display:flex;gap:0.5rem">
+                        <button class="btn-outline-sm" onclick="exportProducts()"><i class="fas fa-download"></i>
+                            Export</button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Discount Price</th>
+                                <th>Offer</th>
+                                <th>Stock</th>
+                                <th>Featured</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-bg" id="product-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Product</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="product-form" onsubmit="saveProduct(event)">
+                <input type="hidden" id="edit-id">
+
+                <div class="form-grid" style="margin-bottom:1.25rem">
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Product Name
+                            *</label><input type="text" class="form-input" id="f-name"
+                            placeholder="e.g. Royal Sapphire Ring" required></div>
+                    <div class="form-group"><label class="form-label">Category *</label>
+                        <select class="form-select" id="f-cat">
+                            <option>Rings</option>
+                            <option>Necklaces</option>
+                            <option>Earrings</option>
+                            <option>Bracelets</option>
+                            <option>Bridal</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label class="form-label">Metal Type</label><input type="text"
+                            class="form-input" id="f-metal" placeholder="e.g. 22K Gold, 18K Rose Gold"></div>
+                    <div class="form-group"><label class="form-label">Gemstone</label><input type="text"
+                            class="form-input" id="f-gem" placeholder="e.g. Ceylon Blue Sapphire"></div>
+                    <div class="form-group"><label class="form-label">Weight (g)</label><input type="text"
+                            class="form-input" id="f-weight" placeholder="e.g. 8.5g"></div>
+                    <div class="form-group"><label class="form-label">Regular Price (Rs.) *</label><input type="number"
+                            class="form-input" id="f-price" placeholder="150000" required min="0"></div>
+                    <div class="form-group"><label class="form-label">Discounted Price (Rs.)</label><input type="number"
+                            class="form-input" id="f-disc" placeholder="Leave same if no discount" min="0"></div>
+                    <div class="form-group"><label class="form-label">Special Offer Label</label><input type="text"
+                            class="form-input" id="f-offer" placeholder="e.g. Valentine Special, 15% Off"></div>
+                    <div class="form-group"><label class="form-label">Offer Expiry Date</label><input type="date"
+                            class="form-input" id="f-expiry"></div>
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Product Image URL
+                            *</label>
+                        <div style="display:flex;gap:1rem;align-items:center">
+                            <input type="url" class="form-input" id="f-image" placeholder="https://… or images/hero.jpg"
+                                oninput="updatePreview()">
+                            <img id="img-preview" class="img-preview" src="../images/hero.jpg" alt="Preview">
+                        </div>
+                        <p style="font-size:0.72rem;opacity:0.5;margin-top:0.35rem">Paste any image URL, or use local
+                            paths like <code>images/your-image.jpg</code></p>
+                    </div>
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Description
+                            *</label><textarea class="form-textarea" id="f-desc"
+                            placeholder="Describe the product in detail…" required></textarea></div>
+                    <div class="form-group" style="grid-column:1/-1;display:flex;gap:2rem">
+                        <label class="checkbox-row"><input type="checkbox" id="f-stock" checked><span>In
+                                Stock</span></label>
+                        <label class="checkbox-row"><input type="checkbox" id="f-featured"><span>Featured on Home
+                                Page</span></label>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:0.75rem">
+                    <button type="button" class="btn-outline-sm" style="padding:0.7rem 1.5rem"
+                        onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-gold" style="flex:1;justify-content:center"><i
+                            class="fas fa-save"></i> Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/store.js"></script>
+    <script>
+        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
+
+        let allProducts = [];
+        let editingId = null;
+
+        function loadProducts() {
+            allProducts = KGJ.getProducts();
+            renderTable(allProducts);
+            document.getElementById('product-count').textContent = `${allProducts.length} Products`;
+        }
+
+        function renderTable(products) {
+            const tbody = document.getElementById('products-tbody');
+            tbody.innerHTML = products.map(p => {
+                const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
+                const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
+                return `<tr>
+        <td><img src="../${p.images[0]}" class="product-thumb" onerror="this.src='../images/hero.jpg'"></td>
+        <td><strong>${p.name}</strong></td>
+        <td>${p.category}</td>
+        <td>${KGJ.fmt(p.price)}</td>
+        <td style="color:${disc > 0 ? '#d4a017' : '#e8d9c4'}">${disc > 0 ? KGJ.fmt(p.discountedPrice) + ` <span style="font-size:0.72rem;opacity:0.7">(-${disc}%)</span>` : '—'}</td>
+        <td>${p.specialOffer ? `<span style="color:#d4a017">${p.specialOffer}</span>` : '<span style="opacity:0.4">—</span>'}</td>
+        <td><span class="badge ${p.inStock ? 'badge-in' : 'badge-out'}">${p.inStock ? 'In Stock' : 'Out of Stock'}</span></td>
+        <td>${p.featured ? '<span class="badge badge-feat">Featured</span>' : '<span style="opacity:0.4">No</span>'}</td>
+        <td>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn-outline-sm" onclick="openModal('${p.id}')"><i class="fas fa-edit"></i></button>
+            <button class="btn-danger-sm" onclick="deleteProduct('${p.id}','${p.name}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+            }).join('') || '<tr><td colspan="9" style="text-align:center;padding:2rem;opacity:0.5">No products. Add your first product!</td></tr>';
+        }
+
+        function filterTable() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            renderTable(allProducts.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || (p.gemstone || '').toLowerCase().includes(q)));
+        }
+
+        function openModal(id = null) {
+            editingId = id;
+            document.getElementById('modal-title').textContent = id ? 'Edit Product' : 'Add New Product';
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-id').value = '';
+            document.getElementById('img-preview').src = '../images/hero.jpg';
+
+            if (id) {
+                const p = KGJ.getProduct(id);
+                if (!p) return;
+                document.getElementById('edit-id').value = p.id;
+                document.getElementById('f-name').value = p.name;
+                document.getElementById('f-cat').value = p.category;
+                document.getElementById('f-metal').value = p.metal || '';
+                document.getElementById('f-gem').value = p.gemstone || '';
+                document.getElementById('f-weight').value = p.weight || '';
+                document.getElementById('f-price').value = p.price;
+                document.getElementById('f-disc').value = p.discountedPrice || '';
+                document.getElementById('f-offer').value = p.specialOffer || '';
+                document.getElementById('f-expiry').value = p.offerExpiry || '';
+                document.getElementById('f-image').value = p.images[0] || '';
+                document.getElementById('f-desc').value = p.description;
+                document.getElementById('f-stock').checked = p.inStock;
+                document.getElementById('f-featured').checked = p.featured;
+                updatePreview();
+            }
+            document.getElementById('product-modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('product-modal').classList.remove('open');
+            editingId = null;
+        }
+
+        function updatePreview() {
+            const url = document.getElementById('f-image').value;
+            if (url) {
+                const src = url.startsWith('http') ? url : `../${url}`;
+                document.getElementById('img-preview').src = src;
+            }
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const price = +document.getElementById('f-price').value;
+            const discVal = document.getElementById('f-disc').value;
+            const discountedPrice = discVal ? +discVal : price;
+            const imageUrl = document.getElementById('f-image').value;
+
+            const data = {
+                name: document.getElementById('f-name').value,
+                category: document.getElementById('f-cat').value,
+                metal: document.getElementById('f-metal').value,
+                gemstone: document.getElementById('f-gem').value,
+                weight: document.getElementById('f-weight').value,
+                price,
+                discountedPrice,
+                specialOffer: document.getElementById('f-offer').value,
+                offerExpiry: document.getElementById('f-expiry').value,
+                images: [imageUrl || 'images/hero.jpg'],
+                description: document.getElementById('f-desc').value,
+                inStock: document.getElementById('f-stock').checked,
+                featured: document.getElementById('f-featured').checked,
+                rating: 4.8, reviews: 0,
+            };
+
+            const id = document.getElementById('edit-id').value;
+            if (id) KGJ.updateProduct(id, data);
+            else KGJ.addProduct(data);
+
+            closeModal();
+            loadProducts();
+            alert(id ? '✅ Product updated!' : '✅ Product added!');
+        }
+
+        function deleteProduct(id, name) {
+            if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+            KGJ.deleteProduct(id);
+            loadProducts();
+        }
+
+        function exportProducts() {
+            const data = JSON.stringify(KGJ.getProducts(), null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'products.json'; a.click();
+        }
+
+        document.getElementById('product-modal').addEventListener('click', e => {
+            if (e.target === document.getElementById('product-modal')) closeModal();
+        });
+
+        loadProducts();
+    </script>
+</body>
+
+</html>

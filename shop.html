@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Shop Kandyan Gem & Jewellers — Browse rings, necklaces, earrings, bracelets and bridal sets with certified gems.">
+    <title>Shop | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .shop-page-hero {
+            height: 300px;
+            min-height: 300px;
+            background-image: url('images/collection-banner.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding-top: var(--nav-height);
+        }
+
+        .shop-page-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(12, 9, 7, 0.92));
+        }
+
+        .shop-page-hero .content {
+            position: relative;
+            z-index: 1;
+            padding: 2.5rem 0;
+        }
+
+        .active-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(212, 160, 23, 0.15);
+            border: 1px solid rgba(212, 160, 23, 0.3);
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 0.78rem;
+            color: var(--gold-400);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+
+        .filter-chip:hover {
+            background: rgba(212, 160, 23, 0.25);
+        }
+
+        .sort-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .sort-bar .result-count {
+            font-size: 0.85rem;
+            color: var(--cream-300);
+            opacity: 0.7;
+        }
+
+        .sort-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            color: var(--cream-100);
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="nav-placeholder"></div>
+    <div id="cart-placeholder"></div>
+
+    <!-- Page Hero -->
+    <div class="shop-page-hero">
+        <div class="container content">
+            <span class="subtitle">Browse Our Collection</span>
+            <h1 class="display-md">The Gem & Jewellery Shop</h1>
+        </div>
+    </div>
+
+    <!-- Ticker -->
+    <div class="ticker-wrapper">
+        <div class="ticker-track"></div>
+    </div>
+
+    <!-- Shop Layout -->
+    <section style="padding:3rem 0 6rem;background:var(--dark-200)">
+        <div class="container">
+            <div class="shop-layout">
+
+                <!-- Filters Sidebar -->
+                <aside class="filter-sidebar">
+                    <div class="filter-panel">
+                        <h3
+                            style="font-family:var(--font-serif);font-size:1.2rem;color:var(--gold-400);margin-bottom:1.5rem">
+                            <i class="fas fa-sliders-h" style="margin-right:0.5rem"></i>Filter By
+                        </h3>
+
+                        <!-- Category -->
+                        <div class="filter-group">
+                            <h4>Category</h4>
+                            <div id="cat-filters"></div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="filter-group">
+                            <h4>Price Range</h4>
+                            <div class="price-range-labels">
+                                <span id="price-min-lbl">Rs. 0</span>
+                                <span id="price-max-lbl">Rs. 900,000</span>
+                            </div>
+                            <input type="range" id="price-max-slider" min="0" max="900000" value="900000" step="5000">
+                            <div class="price-range-labels" style="margin-top:0.5rem">
+                                <span style="opacity:0.5">Min: Rs. 0</span>
+                                <span>Max: <span id="price-range-val">900,000</span></span>
+                            </div>
+                        </div>
+
+                        <!-- Metal -->
+                        <div class="filter-group">
+                            <h4>Metal Type</h4>
+                            <div id="metal-filters"></div>
+                        </div>
+
+                        <!-- Gemstone -->
+                        <div class="filter-group">
+                            <h4>Gemstone</h4>
+                            <div id="gem-filters"></div>
+                        </div>
+
+                        <button class="btn btn-ghost w-full btn-sm" onclick="clearFilters()">
+                            <i class="fas fa-times"></i> Clear All Filters
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Product Grid -->
+                <div>
+                    <div class="active-filters" id="active-filters"></div>
+                    <div class="sort-bar">
+                        <span class="result-count" id="result-count">Loading…</span>
+                        <select class="sort-select" id="sort-select" onchange="applyFilters()">
+                            <option value="featured">Featured First</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="newest">Newest First</option>
+                            <option value="rating">Top Rated</option>
+                        </select>
+                    </div>
+                    <div class="product-grid" id="product-grid"></div>
+                    <div class="load-more-trigger" id="load-more-trigger">
+                        <div class="spinner"></div>
+                    </div>
+                    <div id="no-products"
+                        style="display:none;text-align:center;padding:4rem 0;color:var(--cream-300);opacity:0.6">
+                        <i class="fas fa-gem" style="font-size:3rem;margin-bottom:1rem;display:block"></i>
+                        <p>No products match your filters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+    <script src="js/store.js"></script>
+    <script src="js/scroll.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+        Components.init('shop');
+
+        let allProducts = [];
+        let displayedCount = 0;
+        const PAGE_SIZE = 9;
+        let activeFilters = { category: [], metal: [], gem: [], maxPrice: 900000 };
+
+        function getFilteredSorted() {
+            let list = allProducts.filter(p => p.inStock);
+            if (activeFilters.category.length) list = list.filter(p => activeFilters.category.includes(p.category));
+            if (activeFilters.metal.length) list = list.filter(p => activeFilters.metal.some(m => p.metal && p.metal.includes(m)));
+            if (activeFilters.gem.length) list = list.filter(p => activeFilters.gem.some(g => p.gemstone && p.gemstone.includes(g)));
+            list = list.filter(p => (p.discountedPrice < p.price ? p.discountedPrice : p.price) <= activeFilters.maxPrice);
+
+            const sort = document.getElementById('sort-select')?.value;
+            if (sort === 'price-asc') list.sort((a, b) => (a.discountedPrice || a.price) - (b.discountedPrice || b.price));
+            else if (sort === 'price-desc') list.sort((a, b) => (b.discountedPrice || b.price) - (a.discountedPrice || a.price));
+            else if (sort === 'newest') list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            else if (sort === 'rating') list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            else list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+            return list;
+        }
+
+        function renderProductCard(p) {
+            const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
+            const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
+            const wished = KGJ.isWishlisted(p.id);
+            return `
+      <div class="product-card" onclick="window.location='product.html?id=${p.id}'">
+        <div class="img-wrap">
+          <img src="${p.images[0]}" alt="${p.name}" loading="lazy">
+          <div class="badges">
+            ${disc > 0 ? `<span class="badge-discount">-${disc}%</span>` : ''}
+            ${p.specialOffer ? `<span class="badge-offer">${p.specialOffer}</span>` : ''}
+          </div>
+          <button class="wish-btn ${wished ? 'active' : ''}" id="wish-${p.id}" onclick="toggleWish(event,'${p.id}')">
+            <i class="fas fa-heart"></i>
+          </button>
+          <div class="quick-actions" onclick="event.stopPropagation()">
+            <button class="btn btn-primary btn-sm" style="flex:1" onclick="Cart.addItem('${p.id}')">
+              <i class="fas fa-shopping-bag"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-cat">${p.category}</div>
+          <div class="card-name">${p.name}</div>
+          <div class="price-row">
+            <span class="price-current">${KGJ.fmt(price)}</span>
+            ${disc > 0 ? `<span class="price-original">${KGJ.fmt(p.price)}</span>` : ''}
+          </div>
+          ${p.specialOffer ? `<div class="offer-tag"><i class="fas fa-tag"></i> ${p.specialOffer}</div>` : ''}
+          <div class="stars" style="margin-top:0.5rem;font-size:0.75rem">
+            ${'★'.repeat(Math.round(p.rating || 5))}${'☆'.repeat(5 - Math.round(p.rating || 5))}
+            <span style="color:var(--cream-300);opacity:0.6;margin-left:4px">(${p.reviews || 0})</span>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        function applyFilters() {
+            displayedCount = 0;
+            document.getElementById('product-grid').innerHTML = '';
+            loadMore();
+            renderActiveFilters();
+        }
+
+        function loadMore() {
+            const list = getFilteredSorted();
+            const trigger = document.getElementById('load-more-trigger');
+            const noProducts = document.getElementById('no-products');
+            const grid = document.getElementById('product-grid');
+            const count = document.getElementById('result-count');
+
+            if (list.length === 0) {
+                noProducts.style.display = 'block';
+                trigger.style.display = 'none';
+                if (count) count.textContent = '0 products found';
+                return;
+            }
+            noProducts.style.display = 'none';
+            if (count) count.textContent = `${list.length} product${list.length !== 1 ? 's' : ''} found`;
+
+            const slice = list.slice(displayedCount, displayedCount + PAGE_SIZE);
+            slice.forEach(p => {
+                grid.insertAdjacentHTML('beforeend', renderProductCard(p));
+            });
+            displayedCount += slice.length;
+
+            if (displayedCount >= list.length) {
+                trigger.className = 'load-more-trigger all-loaded';
+                trigger.innerHTML = '<span><i class="fas fa-check"></i> All products loaded</span>';
+            } else {
+                trigger.className = 'load-more-trigger';
+                trigger.innerHTML = '<div class="spinner"></div>';
+            }
+        }
+
+        // Infinite scroll observer
+        const observer = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting) loadMore();
+        }, { rootMargin: '200px' });
+        observer.observe(document.getElementById('load-more-trigger'));
+
+        function toggleWish(e, id) {
+            e.stopPropagation();
+            const added = KGJ.toggleWishlist(id);
+            const btn = document.getElementById(`wish-${id}`);
+            if (btn) btn.classList.toggle('active', added);
+            Cart.showToast(added ? 'Added to wishlist!' : 'Removed from wishlist');
+        }
+
+        function buildFilters() {
+            const products = KGJ.getProducts();
+            const cats = [...new Set(products.map(p => p.category))];
+            const metals = [...new Set(products.map(p => p.metal).filter(Boolean))];
+            const gems = [...new Set(products.map(p => p.gemstone).filter(Boolean))];
+
+            const urlCat = new URLSearchParams(window.location.search).get('cat');
+
+            document.getElementById('cat-filters').innerHTML = cats.map(c => `
+      <div class="filter-item">
+        <input type="checkbox" id="cat-${c}" value="${c}" onchange="updateFilters()" ${urlCat === c ? 'checked' : ''}>
+        <label for="cat-${c}">${c}</label>
+      </div>`).join('');
+
+            document.getElementById('metal-filters').innerHTML = metals.map(m => `
+      <div class="filter-item">
+        <input type="checkbox" id="metal-${m.replace(/\s/g, '')}" value="${m}" onchange="updateFilters()">
+        <label for="metal-${m.replace(/\s/g, '')}">${m}</label>
+      </div>`).join('');
+
+            document.getElementById('gem-filters').innerHTML = gems.slice(0, 8).map(g => `
+      <div class="filter-item">
+        <input type="checkbox" id="gem-${g.replace(/\s/g, '')}" value="${g}" onchange="updateFilters()">
+        <label for="gem-${g.replace(/\s/g, '')}">${g}</label>
+      </div>`).join('');
+
+            if (urlCat) { activeFilters.category = [urlCat]; }
+        }
+
+        function updateFilters() {
+            activeFilters.category = [...document.querySelectorAll('#cat-filters input:checked')].map(el => el.value);
+            activeFilters.metal = [...document.querySelectorAll('#metal-filters input:checked')].map(el => el.value);
+            activeFilters.gem = [...document.querySelectorAll('#gem-filters input:checked')].map(el => el.value);
+            applyFilters();
+        }
+
+        function renderActiveFilters() {
+            const chips = [
+                ...activeFilters.category.map(c => `<span class="filter-chip" onclick="removeFilter('cat','${c}')">${c} <i class="fas fa-times"></i></span>`),
+                ...activeFilters.metal.map(m => `<span class="filter-chip" onclick="removeFilter('metal','${m}')">${m} <i class="fas fa-times"></i></span>`),
+                ...activeFilters.gem.map(g => `<span class="filter-chip" onclick="removeFilter('gem','${g}')">${g} <i class="fas fa-times"></i></span>`),
+            ];
+            document.getElementById('active-filters').innerHTML = chips.join('');
+        }
+
+        function removeFilter(type, val) {
+            if (type === 'cat') {
+                activeFilters.category = activeFilters.category.filter(v => v !== val);
+                document.querySelectorAll('#cat-filters input').forEach(el => { if (el.value === val) el.checked = false; });
+            } else if (type === 'metal') {
+                activeFilters.metal = activeFilters.metal.filter(v => v !== val);
+                document.querySelectorAll('#metal-filters input').forEach(el => { if (el.value === val) el.checked = false; });
+            } else if (type === 'gem') {
+                activeFilters.gem = activeFilters.gem.filter(v => v !== val);
+                document.querySelectorAll('#gem-filters input').forEach(el => { if (el.value === val) el.checked = false; });
+            }
+            applyFilters();
+        }
+
+        function clearFilters() {
+            activeFilters = { category: [], metal: [], gem: [], maxPrice: 900000 };
+            document.querySelectorAll('.filter-sidebar input[type="checkbox"]').forEach(el => el.checked = false);
+            document.getElementById('price-max-slider').value = 900000;
+            document.getElementById('price-range-val').textContent = '900,000';
+            applyFilters();
+        }
+
+        // Price slider
+        document.getElementById('price-max-slider').addEventListener('input', function () {
+            activeFilters.maxPrice = +this.value;
+            document.getElementById('price-range-val').textContent = Number(this.value).toLocaleString();
+            applyFilters();
+        });
+
+        allProducts = KGJ.getProducts();
+        buildFilters();
+        applyFilters();
+    </script>
+</body>
+
+</html>

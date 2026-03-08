@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Kandyan Gem & Jewellers — Exquisite handcrafted Kandyan jewellery and certified precious gemstones from Kandy, Sri Lanka.">
+  <title>Kandyan Gem & Jewellers | Timeless Kandyan Craftsmanship</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ── Hero ── */
+    .parallax-hero .layer-1 {
+      background-image: url('images/hero.jpg');
+    }
+
+    .parallax-hero .layer-2 {
+      background-image: url('images/gems-bg.jpg');
+    }
+
+    /* Default about-teaser bg (overridden by JS if saved setting exists) */
+    #about-bg {
+      background-image: url('images/gems-bg.jpg');
+    }
+
+    /* ── Featured Collections (Horizontal) ── */
+    .collections-section {
+      padding: 5rem 0;
+      background: var(--dark-300);
+    }
+
+    .gallery-section {
+      position: relative;
+    }
+
+    /* ── Fixed BG Teaser ── */
+    .about-teaser {
+      min-height: 80vh;
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6rem;
+      position: relative;
+    }
+
+    .about-teaser::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 1;
+    }
+
+    .about-teaser .glass-panel {
+      position: relative;
+      z-index: 2;
+      max-width: 560px;
+      padding: 3rem;
+    }
+
+    /* ── Special Offers ── */
+    .offers-section {
+      padding: 5rem 0;
+      background: var(--dark-200);
+    }
+
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .offer-card {
+      position: relative;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      min-height: 320px;
+      display: flex;
+      align-items: flex-end;
+      cursor: pointer;
+    }
+
+    .offer-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .offer-card:hover img {
+      transform: scale(1.06);
+    }
+
+    .offer-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.1) 60%);
+    }
+
+    .offer-card-body {
+      position: relative;
+      z-index: 2;
+      padding: 1.75rem;
+      width: 100%;
+    }
+
+    .offer-tag-pill {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+      color: var(--dark-200);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+
+    .countdown-timer {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .cd-box {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      min-width: 48px;
+    }
+
+    .cd-num {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      color: var(--gold-400);
+      line-height: 1;
+    }
+
+    .cd-label {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--cream-300);
+      opacity: 0.7;
+    }
+
+    /* ── Testimonials ── */
+    .testimonials-section {
+      padding: 6rem 0;
+      background: var(--dark-300);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    /* ── Stats ── */
+    .stats-section {
+      padding: 4rem 0;
+      background: var(--dark-200);
+    }
+
+    /* ── Why Us ── */
+    .why-section {
+      padding: 5rem 0;
+      background: var(--dark-300);
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .why-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border: 1px solid rgba(212, 160, 23, 0.1);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-med);
+    }
+
+    .why-card:hover {
+      border-color: rgba(212, 160, 23, 0.35);
+      background: rgba(212, 160, 23, 0.04);
+    }
+
+    .why-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(212, 160, 23, 0.1);
+      border: 1px solid rgba(212, 160, 23, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--gold-400);
+      margin: 0 auto 1.25rem;
+    }
+
+    @media(max-width:1024px) {
+
+      .offers-grid,
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .why-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:600px) {
+
+      .offers-grid,
+      .testimonials-grid,
+      .why-grid {
+        grid-template-columns: 1fr
+      }
+
+      .about-teaser {
+        padding: 2rem;
+        justify-content: center
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="nav-placeholder"></div>
+  <div id="cart-placeholder"></div>
+
+  <!-- ── TICKER ── -->
+  <div class="ticker-wrapper" style="margin-top:var(--nav-height)">
+    <div class="ticker-track" id="ticker-track">
+      <span class="ticker-item"><i class="fas fa-gem"></i>Free shipping on orders over Rs. 15,000</span>
+      <span class="ticker-item"><i class="fas fa-certificate"></i>Certified Authentic Gems</span>
+      <span class="ticker-item"><i class="fas fa-undo"></i>30-Day Hassle-Free Returns</span>
+      <span class="ticker-item"><i class="fas fa-gem"></i>Free shipping on orders over Rs. 15,000</span>
+      <span class="ticker-item"><i class="fas fa-certificate"></i>Certified Authentic Gems</span>
+      <span class="ticker-item"><i class="fas fa-undo"></i>30-Day Hassle-Free Returns</span>
+    </div>
+  </div>
+
+  <!-- ── HERO (PARALLAX MULTI-LAYERED) ── -->
+  <section class="parallax-hero" id="hero-section">
+    <div class="layer layer-1" id="hero-bg" data-speed="0.4"></div>
+    <div class="layer layer-2" data-speed="0.25"></div>
+    <div class="layer layer-3"></div>
+    <div class="hero-particles" id="hero-particles"></div>
+    <div class="hero-content">
+      <span class="subtitle">Est. 1985 &bull; Kandy, Sri Lanka</span>
+      <div class="gold-divider">
+        <div class="diamond"></div>
+      </div>
+      <h1 class="display-xl" id="hero-title">Where Every Gem <br><span class="shimmer-text">Tells a Story</span></h1>
+      <p class="body-lg" id="hero-subtitle" style="color:var(--cream-200);max-width:620px;margin:1.5rem auto">
+        Handcrafted Kandyan jewellery of unparalleled quality, using only certified precious gemstones.</p>
+      <div class="hero-cta flex justify-center gap-3" style="flex-wrap:wrap;margin-top:2.5rem">
+        <a href="shop.html" id="hero-cta" class="btn btn-primary btn-lg"><i class="fas fa-gem"></i> Explore
+          Collection</a>
+        <a href="about.html" class="btn btn-outline btn-lg">Our Story</a>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ── CATEGORIES QUICK-NAV ── -->
+  <section style="padding:3.5rem 0;background:var(--dark-200)">
+    <div class="container">
+      <div class="flex gap-3 justify-center" style="flex-wrap:wrap" id="cat-nav"></div>
+    </div>
+  </section>
+
+  <!-- ── FEATURED PRODUCTS (HORIZONTAL SCROLL GALLERY) ── -->
+  <section class="collections-section gallery-section">
+    <div class="container">
+      <div class="gallery-nav">
+        <div>
+          <span class="subtitle">Curated Selection</span>
+          <h2 class="display-md" style="margin-top:0.5rem">Featured Pieces</h2>
+        </div>
+        <div class="flex gap-2">
+          <button class="gallery-arrow gallery-arrow-prev" aria-label="Previous"><i
+              class="fas fa-chevron-left"></i></button>
+          <button class="gallery-arrow gallery-arrow-next" aria-label="Next"><i
+              class="fas fa-chevron-right"></i></button>
+          <a href="shop.html" class="btn btn-outline btn-sm" style="margin-left:0.5rem">View All</a>
+        </div>
+      </div>
+    </div>
+    <div class="horizontal-gallery" id="featured-gallery">
+      <div class="horizontal-gallery-track" id="featured-gallery-track"></div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT TEASER (FIXED BG SCROLLING) ── -->
+  <section class="about-teaser reveal" id="about-bg" data-bg="about">
+    <div class="glass-panel">
+      <span class="subtitle">Our Heritage</span>
+      <div class="gold-divider">
+        <div class="diamond"></div>
+      </div>
+      <h2 class="display-sm" style="margin-bottom:1.25rem">Four Decades of <br>Kandyan Excellence</h2>
+      <p class="body-md" style="color:var(--cream-300);margin-bottom:2rem">Since 1985, our master craftsmen have
+        preserved the ancient art of Kandyan jewellery-making, sourcing only the finest certified gemstones from Sri
+        Lanka's legendary mines.</p>
+      <a href="about.html" class="btn btn-primary">Discover Our Story <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </section>
+
+  <!-- ── SPECIAL OFFERS ── -->
+  <section class="offers-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="subtitle">Limited Time</span>
+        <div class="gold-divider">
+          <div class="diamond"></div>
+        </div>
+        <h2 class="display-md">Special Offers</h2>
+      </div>
+      <div class="offers-grid stagger" id="offers-grid"></div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" data-count="40" data-suffix="+">40+</div>
+          <div class="stat-label">Years of Excellence</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="5000" data-suffix="+">5,000+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="1200" data-suffix="+">1,200+</div>
+          <div class="stat-label">Unique Designs</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="100" data-suffix="%">100%</div>
+          <div class="stat-label">Certified Authentic</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHY US ── -->
+  <section class="why-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="subtitle">Why Choose Us</span>
+        <div class="gold-divider">
+          <div class="diamond"></div>
+        </div>
+        <h2 class="display-md">The Kandyan Promise</h2>
+      </div>
+      <div class="why-grid stagger">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-certificate"></i></div>
+          <h3 class="display-sm" style="font-size:1.1rem;margin-bottom:0.75rem">Certified Gems</h3>
+          <p class="body-sm" style="opacity:0.75">Every gemstone certified by the National Gem & Jewellery Authority of
+            Sri Lanka.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-hand-sparkles"></i></div>
+          <h3 class="display-sm" style="font-size:1.1rem;margin-bottom:0.75rem">Master Crafted</h3>
+          <p class="body-sm" style="opacity:0.75">Handmade by fifth-generation Kandyan master craftsmen using
+            traditional techniques.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3 class="display-sm" style="font-size:1.1rem;margin-bottom:0.75rem">Buy-Back Guarantee</h3>
+          <p class="body-sm" style="opacity:0.75">We stand behind every piece with a lifetime buy-back guarantee on all
+            gold items.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-shipping-fast"></i></div>
+          <h3 class="display-sm" style="font-size:1.1rem;margin-bottom:0.75rem">Island-wide Delivery</h3>
+          <p class="body-sm" style="opacity:0.75">Secure, insured delivery to your door anywhere in Sri Lanka within 3-5
+            days.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="subtitle">Customer Stories</span>
+        <div class="gold-divider">
+          <div class="diamond"></div>
+        </div>
+        <h2 class="display-md">What Our Customers Say</h2>
+      </div>
+      <div class="testimonials-grid stagger">
+        <div class="testimonial-card">
+          <p class="testimonial-text">The sapphire ring I purchased is absolutely breathtaking. The craftsmanship is
+            world-class, and the gem certificate gave me complete confidence.</p>
+          <div class="testimonial-author">
+            <div
+              style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--gold-400),var(--sapphire));display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:700;color:#fff">
+              N</div>
+            <div class="testimonial-author-info">
+              <div class="name">Nimalka Fernando</div>
+              <div class="title stars">★★★★★ &nbsp;Colombo</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-text">Bought a bridal set for my wedding. The entire Kandyan collection was magnificent.
+            Everyone at the ceremony asked where it was from!</p>
+          <div class="testimonial-author">
+            <div
+              style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--ruby),var(--gold-500));display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:700;color:#fff">
+              P</div>
+            <div class="testimonial-author-info">
+              <div class="name">Priyantha Perera</div>
+              <div class="title stars">★★★★★ &nbsp;Kandy</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p class="testimonial-text">Ordered online with cash on delivery. Delivery was fast and the packaging was so
+            luxurious. The ruby pendant exceeded all my expectations!</p>
+          <div class="testimonial-author">
+            <div
+              style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--emerald),var(--sapphire));display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:700;color:#fff">
+              S</div>
+            <div class="testimonial-author-info">
+              <div class="name">Sanduni Rathnayake</div>
+              <div class="title stars">★★★★★ &nbsp;Galle</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NEWSLETTER ── -->
+  <section style="padding:5rem 0;background:var(--dark-200)">
+    <div class="container">
+      <div class="glass-panel"
+        style="padding:3.5rem;text-align:center;max-width:700px;margin:0 auto;border-color:rgba(212,160,23,0.2)">
+        <span class="subtitle">Stay Connected</span>
+        <div class="gold-divider">
+          <div class="diamond"></div>
+        </div>
+        <h2 class="display-sm" style="margin-bottom:1rem">Get Exclusive Offers</h2>
+        <p class="body-md" style="color:var(--cream-300);margin-bottom:2rem">Subscribe for early access to new arrivals,
+          special promotions, and gemstone guides.</p>
+        <form id="newsletter-form" style="display:flex;gap:0.75rem;max-width:480px;margin:0 auto"
+          onsubmit="handleNewsletter(event)">
+          <input type="email" class="form-input" placeholder="Your email address" required style="flex:1">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="js/store.js"></script>
+  <script>
+    // ── Apply saved settings (backgrounds, hero text) immediately ──
+    (function applySettings() {
+      const s = KGJ.getSettings();
+      // Hero background
+      if (s.heroBg) {
+        const src = s.heroBg.startsWith('http') ? s.heroBg : s.heroBg;
+        document.querySelector('.parallax-hero .layer-1').style.backgroundImage = `url('${src}')`;
+      }
+      // Gems/parallax layer 2
+      if (s.gemsBg) {
+        const src = s.gemsBg.startsWith('http') ? s.gemsBg : s.gemsBg;
+        document.querySelector('.parallax-hero .layer-2').style.backgroundImage = `url('${src}')`;
+      }
+      // About teaser fixed-bg
+      if (s.aboutBg) {
+        const src = s.aboutBg.startsWith('http') ? s.aboutBg : s.aboutBg;
+        const el = document.getElementById('about-bg');
+        if (el) el.style.backgroundImage = `url('${src}')`;
+      }
+      // Hero text
+      if (s.heroTitle) {
+        const el = document.getElementById('hero-title');
+        if (el) el.innerHTML = s.heroTitle.replace(/\n/g, '<br>');
+      }
+      if (s.heroSubtitle) {
+        const el = document.getElementById('hero-subtitle');
+        if (el) el.textContent = s.heroSubtitle;
+      }
+      if (s.heroCtaText) {
+        const el = document.getElementById('hero-cta');
+        if (el) el.innerHTML = `<i class="fas fa-gem"></i> ${s.heroCtaText}`;
+      }
+    })();
+  </script>
+  <script src="js/scroll.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    Components.init('home');
+
+    /* ── Category Quick Nav ── */
+    function renderCatNav() {
+      const cats = ['All', ...KGJ.getCategories()];
+      document.getElementById('cat-nav').innerHTML = cats.map(c => `
+      <a href="shop.html${c === 'All' ? '' : '?cat=' + c}" 
+        class="btn btn-ghost btn-sm" style="border-color:rgba(212,160,23,0.2)">
+        ${c}
+      </a>`).join('');
+    }
+
+    /* ── Featured Gallery ── */
+    function renderFeatured() {
+      const items = KGJ.getFeatured().slice(0, 8);
+      const track = document.getElementById('featured-gallery-track');
+      if (!track) return;
+      track.innerHTML = items.map(p => {
+        const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
+        const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
+        return `
+        <div class="h-gallery-item" onclick="window.location='product.html?id=${p.id}'">
+          <img src="${p.images[0]}" alt="${p.name}">
+          <div class="caption">
+            ${disc > 0 ? `<span class="badge-discount" style="display:inline-block;margin-bottom:0.5rem">-${disc}%</span>` : ''}
+            <h3>${p.name}</h3>
+            <p>${KGJ.fmt(price)}${disc > 0 ? ` <span style="text-decoration:line-through;opacity:0.5">${KGJ.fmt(p.price)}</span>` : ''}</p>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    /* ── Special Offers ── */
+    function renderOffers() {
+      const offers = KGJ.getProducts().filter(p => p.specialOffer && p.inStock).slice(0, 3);
+      const grid = document.getElementById('offers-grid');
+      if (!grid || !offers.length) return;
+
+      grid.innerHTML = offers.map(p => {
+        const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
+        const expiry = p.offerExpiry ? new Date(p.offerExpiry) : null;
+        return `
+        <div class="offer-card" onclick="window.location='product.html?id=${p.id}'">
+          <img src="${p.images[0]}" alt="${p.name}">
+          <div class="offer-card-overlay"></div>
+          <div class="offer-card-body">
+            <div class="offer-tag-pill">${p.specialOffer}</div>
+            <h3 style="font-family:var(--font-serif);font-size:1.3rem;margin-bottom:0.35rem">${p.name}</h3>
+            <div class="flex gap-2 items-center" style="flex-wrap:wrap">
+              <span style="color:var(--gold-400);font-family:var(--font-serif);font-size:1.1rem">${KGJ.fmt(p.discountedPrice < p.price ? p.discountedPrice : p.price)}</span>
+              ${disc > 0 ? `<span style="text-decoration:line-through;opacity:0.5;font-size:0.85rem">${KGJ.fmt(p.price)}</span>` : ''}
+            </div>
+            ${expiry ? `<div class="countdown-timer" id="cd-${p.id}"></div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+
+      // Start countdowns
+      offers.forEach(p => {
+        if (!p.offerExpiry) return;
+        const expiry = new Date(p.offerExpiry);
+        const timerEl = document.getElementById(`cd-${p.id}`);
+        if (!timerEl) return;
+        const update = () => {
+          const diff = expiry - Date.now();
+          if (diff <= 0) { timerEl.innerHTML = '<span style="color:var(--ruby);font-size:0.8rem">Offer Expired</span>'; return; }
+          const d = Math.floor(diff / 86400000);
+          const h = Math.floor((diff % 86400000) / 3600000);
+          const m = Math.floor((diff % 3600000) / 60000);
+          const s = Math.floor((diff % 60000) / 1000);
+          timerEl.innerHTML = [['Days', d], ['Hrs', h], ['Min', m], ['Sec', s]].map(([l, v]) =>
+            `<div class="cd-box"><div class="cd-num">${String(v).padStart(2, '0')}</div><div class="cd-label">${l}</div></div>`).join('');
+        };
+        update(); setInterval(update, 1000);
+      });
+    }
+
+    /* ── Stats Counter ── */
+    function initCounters() {
+      const obs = new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        document.querySelectorAll('.stat-number[data-count]').forEach(el => {
+          const target = +el.dataset.count, suffix = el.dataset.suffix || '';
+          let cur = 0;
+          const step = target / 80;
+          const timer = setInterval(() => {
+            cur = Math.min(cur + step, target);
+            el.textContent = Math.floor(cur).toLocaleString() + suffix;
+            if (cur >= target) clearInterval(timer);
+          }, 20);
+        });
+      }, { threshold: 0.5 });
+      const section = document.getElementById('stats-grid');
+      if (section) obs.observe(section);
+    }
+
+    function handleNewsletter(e) {
+      e.preventDefault();
+      Cart.showToast('Thank you for subscribing! 💎', 'success');
+      e.target.reset();
+    }
+
+    renderCatNav();
+    renderFeatured();
+    renderOffers();
+    initCounters();
+  </script>
+</body>
+
+</html>

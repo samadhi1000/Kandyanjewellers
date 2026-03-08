@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Admin | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #12100c;
+            color: #fdf8f0;
+            min-height: 100vh;
+            display: flex
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #1a1610;
+            border-right: 1px solid rgba(212, 160, 23, 0.12);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex-shrink: 0
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            opacity: 0.7;
+            transition: all 0.2s;
+            text-decoration: none;
+            border-left: 3px solid transparent
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+            border-left-color: #d4a017;
+            background: rgba(212, 160, 23, 0.08)
+        }
+
+        .nav-item.active {
+            color: #d4a017
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center
+        }
+
+        .sidebar-brand {
+            padding: 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .sidebar-brand .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #d4a017
+        }
+
+        .sidebar-brand .sub {
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.5
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #12100c
+        }
+
+        .main-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1610;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .main-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: #d4a017
+        }
+
+        .content-area {
+            padding: 2rem;
+            max-width: 900px
+        }
+
+        .settings-card {
+            background: #1a1610;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.75rem
+        }
+
+        .settings-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: #d4a017;
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem
+        }
+
+        .settings-card .desc {
+            font-size: 0.78rem;
+            color: #e8d9c4;
+            opacity: 0.55;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem
+        }
+
+        .form-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.65
+        }
+
+        .form-input,
+        .form-textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fdf8f0;
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: #d4a017
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3)
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4a017, #9a6f08);
+            color: #12100c;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem
+        }
+
+        .btn-gold:hover {
+            filter: brightness(1.1)
+        }
+
+        .success-msg {
+            display: none;
+            background: rgba(26, 92, 56, 0.15);
+            border: 1px solid rgba(26, 92, 56, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            color: #4fc47c;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            align-items: center;
+            gap: 0.5rem
+        }
+
+        .success-msg.show {
+            display: flex
+        }
+
+        /* Image Manager */
+        .bg-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem
+        }
+
+        .bg-item {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s
+        }
+
+        .bg-item:hover {
+            border-color: rgba(212, 160, 23, 0.3)
+        }
+
+        .bg-preview {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+            background: #0b0908
+        }
+
+        .bg-item-body {
+            padding: 1rem
+        }
+
+        .bg-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.65;
+            margin-bottom: 0.45rem
+        }
+
+        .bg-input-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center
+        }
+
+        .bg-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #fdf8f0;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            transition: border-color 0.2s
+        }
+
+        .bg-input:focus {
+            border-color: #d4a017
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, #d4a017, #9a6f08);
+            color: #12100c;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap
+        }
+
+        .btn-apply:hover {
+            filter: brightness(1.1)
+        }
+
+        .bg-hint {
+            font-size: 0.7rem;
+            opacity: 0.45;
+            margin-top: 0.4rem
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">Kandyan Gem & Jewellers</div>
+            <div class="sub">Admin Panel</div>
+        </div>
+        <nav style="padding:1rem 0;flex:1">
+            <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="products.html" class="nav-item"><i class="fas fa-gem"></i>Products</a>
+            <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="settings.html" class="nav-item active"><i class="fas fa-cog"></i>Settings</a>
+            <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
+                    class="fas fa-external-link-alt"></i>View Site</a>
+        </nav>
+        <div class="sidebar-footer"><a href="#" onclick="KGJ.adminLogout();window.location='index.html'"
+                style="opacity:0.5;font-size:0.75rem;display:flex;gap:0.5rem;align-items:center"><i
+                    class="fas fa-sign-out-alt"></i>Logout</a></div>
+    </aside>
+
+    <div class="main-content">
+        <div class="main-header">
+            <div>
+                <h2>Settings</h2>
+                <div style="font-size:0.75rem;opacity:0.6;margin-top:0.2rem">Manage site-wide settings</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+
+            <!-- ── 1. BACKGROUND IMAGES (most important per user request!) ── -->
+            <div class="settings-card">
+                <h3><i class="fas fa-image"></i>Background Images Manager</h3>
+                <div class="desc">Change the background images of your website sections. Paste a URL from the internet
+                    or use a local image path (e.g. <code style="color:#d4a017">images/my-photo.jpg</code>). Changes
+                    take effect immediately on the live site.</div>
+                <div class="bg-grid" id="bg-grid">
+                    <!-- Dynamically rendered -->
+                </div>
+            </div>
+
+            <!-- ── 2. SITE IDENTITY ── -->
+            <div class="settings-card">
+                <h3><i class="fas fa-store"></i>Site Identity</h3>
+                <div class="desc">Basic site name, tagline, and hero section text.</div>
+                <div class="form-grid" style="margin-bottom:1.25rem">
+                    <div class="form-group"><label class="form-label">Site Name</label><input type="text"
+                            class="form-input" id="s-name"></div>
+                    <div class="form-group"><label class="form-label">Tagline</label><input type="text"
+                            class="form-input" id="s-tagline"></div>
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Hero Title</label><input
+                            type="text" class="form-input" id="s-hero-title"></div>
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Hero
+                            Subtitle</label><input type="text" class="form-input" id="s-hero-sub"></div>
+                    <div class="form-group"><label class="form-label">Hero Button Text</label><input type="text"
+                            class="form-input" id="s-hero-cta"></div>
+                </div>
+                <button class="btn-gold" onclick="saveSiteIdentity()"><i class="fas fa-save"></i>Save</button>
+                <div class="success-msg" id="msg-identity"><i class="fas fa-check-circle"></i> Saved successfully!</div>
+            </div>
+
+            <!-- ── 3. CONTACT INFO ── -->
+            <div class="settings-card">
+                <h3><i class="fas fa-phone"></i>Contact Information</h3>
+                <div class="desc">This information appears in the footer, contact page, and WhatsApp links across the
+                    site.</div>
+                <div class="form-grid" style="margin-bottom:1.25rem">
+                    <div class="form-group"><label class="form-label">Phone Number</label><input type="text"
+                            class="form-input" id="s-phone"></div>
+                    <div class="form-group"><label class="form-label">WhatsApp Number</label><input type="text"
+                            class="form-input" id="s-whatsapp"></div>
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Email
+                            Address</label><input type="text" class="form-input" id="s-email"></div>
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Physical
+                            Address</label><textarea class="form-textarea" id="s-address"
+                            style="min-height:60px"></textarea></div>
+                </div>
+                <button class="btn-gold" onclick="saveContact()"><i class="fas fa-save"></i>Save</button>
+                <div class="success-msg" id="msg-contact"><i class="fas fa-check-circle"></i> Saved successfully!</div>
+            </div>
+
+            <!-- ── 4. SOCIAL MEDIA ── -->
+            <div class="settings-card">
+                <h3><i class="fab fa-instagram"></i>Social Media Links</h3>
+                <div class="desc">Full URLs to your social media pages.</div>
+                <div class="form-grid" style="margin-bottom:1.25rem">
+                    <div class="form-group"><label class="form-label"><i class="fab fa-facebook"
+                                style="color:#4267B2"></i> Facebook URL</label><input type="url" class="form-input"
+                            id="s-fb"></div>
+                    <div class="form-group"><label class="form-label"><i class="fab fa-instagram"
+                                style="color:#E1306C"></i> Instagram URL</label><input type="url" class="form-input"
+                            id="s-ig"></div>
+                </div>
+                <button class="btn-gold" onclick="saveSocial()"><i class="fas fa-save"></i>Save</button>
+                <div class="success-msg" id="msg-social"><i class="fas fa-check-circle"></i> Saved successfully!</div>
+            </div>
+
+            <!-- ── 5. OFFERS TICKER ── -->
+            <div class="settings-card">
+                <h3><i class="fas fa-bullhorn"></i>Offer Ticker Banner</h3>
+                <div class="desc">The scrolling banner text at the top of the site. Separate messages with a pipe
+                    character <code style="color:#d4a017">|</code>.</div>
+                <div class="form-group" style="margin-bottom:1.25rem">
+                    <label class="form-label">Ticker Messages</label>
+                    <textarea class="form-textarea" id="s-ticker" style="min-height:70px"
+                        placeholder="Free shipping on orders over Rs. 15,000 | Certified Authentic Gems | 30-Day Returns"></textarea>
+                </div>
+                <button class="btn-gold" onclick="saveTicker()"><i class="fas fa-save"></i>Save</button>
+                <div class="success-msg" id="msg-ticker"><i class="fas fa-check-circle"></i> Saved successfully!</div>
+            </div>
+
+            <!-- ── 6. DELIVERY SETTINGS ── -->
+            <div class="settings-card">
+                <h3><i class="fas fa-truck"></i>Delivery Settings</h3>
+                <div class="desc">Delivery charge shown in cart and checkout.</div>
+                <div class="form-grid" style="margin-bottom:1.25rem">
+                    <div class="form-group"><label class="form-label">Delivery Charge (Rs.)</label><input type="number"
+                            class="form-input" id="s-delivery" min="0" placeholder="350"></div>
+                    <div class="form-group"><label class="form-label">Free Shipping Threshold (Rs.)</label><input
+                            type="number" class="form-input" value="15000" disabled
+                            style="opacity:0.5;cursor:not-allowed" title="Fixed at Rs. 15,000"></div>
+                </div>
+                <button class="btn-gold" onclick="saveDelivery()"><i class="fas fa-save"></i>Save</button>
+                <div class="success-msg" id="msg-delivery"><i class="fas fa-check-circle"></i> Saved successfully!</div>
+            </div>
+
+            <!-- ── 7. ADMIN CREDENTIALS ── -->
+            <div class="settings-card">
+                <h3><i class="fas fa-lock"></i>Change Admin Password</h3>
+                <div class="desc">Update your admin login credentials.</div>
+                <div class="form-grid" style="margin-bottom:1.25rem">
+                    <div class="form-group"><label class="form-label">New Username</label><input type="text"
+                            class="form-input" id="s-admin-user"></div>
+                    <div class="form-group"><label class="form-label">New Password</label><input type="password"
+                            class="form-input" id="s-admin-pass" placeholder="Min 6 characters"></div>
+                </div>
+                <button class="btn-gold" onclick="saveCreds()"><i class="fas fa-key"></i>Update Credentials</button>
+                <div class="success-msg" id="msg-creds"><i class="fas fa-check-circle"></i> Credentials updated! Please
+                    log in again.</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="../js/store.js"></script>
+    <script>
+        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
+
+        // ── Background Image Manager ──
+        const bgSections = [
+            { key: 'heroBg', label: 'Hero Background (Home Page)', hint: 'Main hero section on homepage' },
+            { key: 'gemsBg', label: 'Gems Background', hint: 'About page fixed-bg & fixed sections' },
+            { key: 'aboutBg', label: 'Artisan / Workshop Background', hint: 'About page second fixed-bg section' },
+            { key: 'collectionBg', label: 'Collection Banner', hint: 'Shop page hero & offer cards background' },
+        ];
+
+        function renderBgGrid() {
+            const s = KGJ.getSettings();
+            document.getElementById('bg-grid').innerHTML = bgSections.map(section => {
+                const val = s[section.key] || '';
+                const previewSrc = val.startsWith('http') ? val : `../${val}`;
+                return `
+        <div class="bg-item">
+          <img class="bg-preview" id="prev-${section.key}" src="${previewSrc}" onerror="this.src='../images/hero.jpg'" alt="${section.label}">
+          <div class="bg-item-body">
+            <div class="bg-label">${section.label}</div>
+            <div class="bg-input-row">
+              <input type="text" class="bg-input" id="bg-${section.key}" value="${val}" 
+                placeholder="Paste URL or path…" 
+                oninput="previewBg('${section.key}', this.value)" 
+                onkeydown="if(event.key==='Enter'){applyBg('${section.key}');event.target.blur()}">
+              <button class="btn-apply" onclick="applyBg('${section.key}')"><i class="fas fa-check"></i> Apply</button>
+            </div>
+            <div class="bg-hint">${section.hint} — Press Apply or Enter to save</div>
+          </div>
+        </div>`;
+            }).join('');
+        }
+
+        function previewBg(key, val) {
+            const img = document.getElementById(`prev-${key}`);
+            if (!img) return;
+            const src = val.startsWith('http') ? val : `../${val}`;
+            img.src = src;
+        }
+
+        function applyBg(key) {
+            const val = document.getElementById(`bg-${key}`).value.trim();
+            const settings = KGJ.getSettings();
+            settings[key] = val;
+            KGJ.saveSettings(settings);
+            previewBg(key, val);
+            showMsg('bg-saved');
+            if (!document.getElementById('msg-bg-saved')) {
+                const msg = document.createElement('div');
+                msg.id = 'msg-bg-saved';
+                msg.className = 'success-msg show';
+                msg.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;background:rgba(26,92,56,0.9);border:1px solid rgba(26,92,56,0.5)';
+                msg.innerHTML = '<i class="fas fa-check-circle"></i> Background image updated! Refresh the site to see changes.';
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 3500);
+            }
+        }
+
+        // ── Load all settings into form fields ──
+        function loadSettings() {
+            const s = KGJ.getSettings();
+            document.getElementById('s-name').value = s.siteName || '';
+            document.getElementById('s-tagline').value = s.tagline || '';
+            document.getElementById('s-hero-title').value = s.heroTitle || '';
+            document.getElementById('s-hero-sub').value = s.heroSubtitle || '';
+            document.getElementById('s-hero-cta').value = s.heroCtaText || '';
+            document.getElementById('s-phone').value = s.phone || '';
+            document.getElementById('s-whatsapp').value = s.whatsapp || '';
+            document.getElementById('s-email').value = s.email || '';
+            document.getElementById('s-address').value = s.address || '';
+            document.getElementById('s-fb').value = s.facebook || '';
+            document.getElementById('s-ig').value = s.instagram || '';
+            document.getElementById('s-ticker').value = s.offerBanner || '';
+            document.getElementById('s-delivery').value = s.deliveryCharge || 350;
+            const creds = KGJ.getAdminCreds();
+            document.getElementById('s-admin-user').value = creds.username || 'admin';
+        }
+
+        function showMsg(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+
+        function patchAndSave(patch) {
+            const s = KGJ.getSettings();
+            KGJ.saveSettings({ ...s, ...patch });
+        }
+
+        function saveSiteIdentity() {
+            patchAndSave({
+                siteName: document.getElementById('s-name').value,
+                tagline: document.getElementById('s-tagline').value,
+                heroTitle: document.getElementById('s-hero-title').value,
+                heroSubtitle: document.getElementById('s-hero-sub').value,
+                heroCtaText: document.getElementById('s-hero-cta').value,
+            });
+            showMsg('msg-identity');
+        }
+
+        function saveContact() {
+            patchAndSave({
+                phone: document.getElementById('s-phone').value,
+                whatsapp: document.getElementById('s-whatsapp').value,
+                email: document.getElementById('s-email').value,
+                address: document.getElementById('s-address').value,
+            });
+            showMsg('msg-contact');
+        }
+
+        function saveSocial() {
+            patchAndSave({
+                facebook: document.getElementById('s-fb').value,
+                instagram: document.getElementById('s-ig').value,
+            });
+            showMsg('msg-social');
+        }
+
+        function saveTicker() {
+            patchAndSave({ offerBanner: document.getElementById('s-ticker').value });
+            showMsg('msg-ticker');
+        }
+
+        function saveDelivery() {
+            patchAndSave({ deliveryCharge: +document.getElementById('s-delivery').value });
+            showMsg('msg-delivery');
+        }
+
+        function saveCreds() {
+            const user = document.getElementById('s-admin-user').value;
+            const pass = document.getElementById('s-admin-pass').value;
+            if (!user || !pass) { alert('Please enter both username and password.'); return; }
+            if (pass.length < 6) { alert('Password must be at least 6 characters.'); return; }
+            localStorage.setItem('kgj_admin', JSON.stringify({ username: user, password: pass }));
+            KGJ.adminLogout();
+            showMsg('msg-creds');
+            setTimeout(() => window.location.href = 'index.html', 2500);
+        }
+
+        renderBgGrid();
+        loadSettings();
+    </script>
+</body>
+
+</html>

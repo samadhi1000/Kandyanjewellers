@@ -1,0 +1,666 @@
+/* ================================================
+   KANDYAN GEM & JEWELLERS — Scroll & Animation FX
+   ================================================ */
+
+/* ── 1. PARALLAX MULTI-LAYERED HERO ── */
+.parallax-hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-hero .layer {
+    position: absolute;
+    inset: -20%;
+    /* Extra space for parallax travel */
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    transition: transform 0.05s linear;
+}
+
+.parallax-hero .layer-1 {
+    z-index: 1;
+    transform: scale(1.2);
+}
+
+.parallax-hero .layer-2 {
+    z-index: 2;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.25;
+    mix-blend-mode: screen;
+}
+
+.parallax-hero .layer-3 {
+    z-index: 3;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.55) 70%, rgba(12, 9, 7, 0.95) 100%);
+}
+
+.parallax-hero .hero-content {
+    position: relative;
+    z-index: 4;
+    text-align: center;
+    max-width: 900px;
+    padding: 0 2rem;
+}
+
+.hero-content .subtitle {
+    opacity: 0;
+    animation: fadeSlideUp 0.9s 0.3s ease forwards;
+}
+
+.hero-content h1 {
+    opacity: 0;
+    animation: fadeSlideUp 1s 0.55s ease forwards;
+}
+
+.hero-content p {
+    opacity: 0;
+    animation: fadeSlideUp 0.9s 0.8s ease forwards;
+}
+
+.hero-content .hero-cta {
+    opacity: 0;
+    animation: fadeSlideUp 0.9s 1.05s ease forwards;
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Floating gem particles */
+.hero-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.hero-particles .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--gold-400);
+    border-radius: 50%;
+    animation: particleFloat linear infinite;
+    opacity: 0;
+    box-shadow: 0 0 8px var(--gold-400);
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-20vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--cream-300);
+    opacity: 0.6;
+    animation: fadeIn 1s 1.5s ease forwards;
+    opacity: 0;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 0.6;
+    }
+}
+
+.scroll-indicator .mouse {
+    width: 24px;
+    height: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+}
+
+.scroll-indicator .wheel {
+    width: 3px;
+    height: 7px;
+    background: var(--gold-400);
+    border-radius: 2px;
+    animation: scrollDown 2s infinite ease;
+}
+
+@keyframes scrollDown {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    80% {
+        transform: translateY(14px);
+        opacity: 0;
+    }
+}
+
+/* ── 2. SNAP SCROLLING SECTIONS ── */
+.snap-container {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+}
+
+.snap-container::-webkit-scrollbar {
+    display: none;
+}
+
+.snap-section {
+    height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* ── 3. FIXED BACKGROUND SCROLLING (About page) ── */
+.fixed-bg-section {
+    position: relative;
+    min-height: 100vh;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+}
+
+.fixed-bg-content-panel {
+    position: relative;
+    z-index: 2;
+    background: rgba(12, 9, 7, 0.88);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 160, 23, 0.2);
+    border-radius: var(--radius-xl);
+    padding: 3.5rem;
+    width: 100%;
+    max-width: 680px;
+}
+
+.fixed-bg-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* Alternating layout */
+.fixed-bg-section.left {
+    justify-content: flex-start;
+    padding-left: 6rem;
+}
+
+.fixed-bg-section.right {
+    justify-content: flex-end;
+    padding-right: 6rem;
+}
+
+/* ── 4. HORIZONTAL SCROLLING GALLERY ── */
+.horizontal-gallery {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+    scrollbar-width: none;
+    padding: 1rem 0;
+}
+
+.horizontal-gallery::-webkit-scrollbar {
+    display: none;
+}
+
+.horizontal-gallery:active {
+    cursor: grabbing;
+}
+
+.horizontal-gallery-track {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0 2rem;
+    width: max-content;
+}
+
+.h-gallery-item {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 320px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    background: var(--dark-300);
+}
+
+.h-gallery-item img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.h-gallery-item:hover img {
+    transform: scale(1.06);
+}
+
+.h-gallery-item .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2.5rem 1.5rem 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+}
+
+.h-gallery-item .caption h3 {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--cream-100);
+}
+
+.h-gallery-item .caption p {
+    font-size: 0.8rem;
+    color: var(--gold-400);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+/* Gallery Navigation Arrows */
+.gallery-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.gallery-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--cream-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.gallery-arrow:hover {
+    background: var(--gold-400);
+    color: var(--dark-200);
+    border-color: var(--gold-400);
+}
+
+/* ── 5. INFINITE SCROLL PRODUCT GRID ── */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+}
+
+.load-more-trigger {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.load-more-trigger .spinner {
+    display: none;
+}
+
+.load-more-trigger.loading .spinner {
+    display: block;
+}
+
+.load-more-trigger.all-loaded {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cream-300);
+    opacity: 0.5;
+}
+
+/* ── 6. REVEAL ON SCROLL ANIMATIONS ── */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Stagger children */
+.stagger>* {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.stagger>*:nth-child(1) {
+    transition-delay: 0s;
+}
+
+.stagger>*:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+.stagger>*:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+.stagger>*:nth-child(4) {
+    transition-delay: 0.3s;
+}
+
+.stagger>*:nth-child(5) {
+    transition-delay: 0.4s;
+}
+
+.stagger>*:nth-child(6) {
+    transition-delay: 0.5s;
+}
+
+.stagger>*:nth-child(7) {
+    transition-delay: 0.6s;
+}
+
+.stagger>*:nth-child(8) {
+    transition-delay: 0.7s;
+}
+
+.stagger.visible>* {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ── 7. MOBILE SNAPPING ── */
+@media (max-width: 768px) {
+    .fixed-bg-section {
+        background-attachment: scroll;
+    }
+
+    /* iOS fix */
+    .fixed-bg-section.left,
+    .fixed-bg-section.right {
+        padding: 4rem 1.25rem;
+        justify-content: center;
+    }
+
+    .fixed-bg-content-panel {
+        padding: 2rem;
+    }
+
+    .h-gallery-item {
+        width: 260px;
+    }
+
+    .h-gallery-item img {
+        height: 320px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── 8. SPECIAL VISUAL EFFECTS ── */
+/* Gold shimmer text */
+.shimmer-text {
+    background: linear-gradient(90deg, var(--gold-500) 0%, var(--gold-200) 40%, var(--gold-500) 60%, var(--gold-300) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% center;
+    }
+}
+
+/* Gold underline decoration */
+.gold-underline {
+    position: relative;
+    display: inline-block;
+}
+
+.gold-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+}
+
+/* Glassmorphism panel */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+}
+
+/* Gradient border card */
+.gradient-border {
+    position: relative;
+    border-radius: var(--radius-lg);
+}
+
+.gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--gold-400), transparent, var(--gold-500));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-med);
+}
+
+.gradient-border:hover::before {
+    opacity: 1;
+}
+
+/* Stats counter section */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.stat-item {
+    background: var(--dark-200);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    transition: background var(--transition-fast);
+}
+
+.stat-item:hover {
+    background: rgba(212, 160, 23, 0.06);
+}
+
+.stat-number {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--gold-400);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cream-300);
+    opacity: 0.7;
+}
+
+/* Testimonial card */
+.testimonial-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    position: relative;
+}
+
+.testimonial-card::before {
+    content: '\201C';
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    font-family: var(--font-serif);
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--gold-400);
+    opacity: 0.2;
+}
+
+.testimonial-text {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--cream-200);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.testimonial-author img {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(212, 160, 23, 0.3);
+    background: var(--dark-300);
+}
+
+.testimonial-author-info .name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--cream-100);
+}
+
+.testimonial-author-info .title {
+    font-size: 0.78rem;
+    color: var(--cream-300);
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

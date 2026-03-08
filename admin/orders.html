@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders | Admin | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #12100c;
+            color: #fdf8f0;
+            min-height: 100vh;
+            display: flex
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #1a1610;
+            border-right: 1px solid rgba(212, 160, 23, 0.12);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex-shrink: 0
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            opacity: 0.7;
+            transition: all 0.2s;
+            text-decoration: none;
+            border-left: 3px solid transparent
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+            border-left-color: #d4a017;
+            background: rgba(212, 160, 23, 0.08)
+        }
+
+        .nav-item.active {
+            color: #d4a017
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center
+        }
+
+        .sidebar-brand {
+            padding: 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .sidebar-brand .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #d4a017
+        }
+
+        .sidebar-brand .sub {
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.5
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #12100c
+        }
+
+        .main-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1610;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .main-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: #d4a017
+        }
+
+        .content-area {
+            padding: 2rem
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th {
+            padding: 0.85rem 1rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.6;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: top
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .table-card {
+            background: #1a1610;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            overflow: hidden
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em
+        }
+
+        .badge-pending {
+            background: rgba(212, 160, 23, 0.15);
+            color: #d4a017
+        }
+
+        .badge-processing {
+            background: rgba(15, 52, 96, 0.3);
+            color: #4d9ef5
+        }
+
+        .badge-shipped {
+            background: rgba(26, 92, 56, 0.15);
+            color: #4fc47c
+        }
+
+        .badge-delivered {
+            background: rgba(26, 92, 56, 0.3);
+            color: #2ecc71
+        }
+
+        .badge-cancelled {
+            background: rgba(155, 35, 53, 0.2);
+            color: #e74c3a
+        }
+
+        .status-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #fdf8f0;
+            padding: 0.4rem 0.7rem;
+            font-size: 0.78rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            cursor: pointer
+        }
+
+        .status-select:focus {
+            border-color: #d4a017
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            color: #e8d9c4;
+            padding: 0.4rem 1rem;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: rgba(212, 160, 23, 0.12);
+            border-color: rgba(212, 160, 23, 0.35);
+            color: #d4a017
+        }
+
+        .order-items {
+            font-size: 0.78rem;
+            opacity: 0.65;
+            margin-top: 0.35rem
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fdf8f0;
+            padding: 0.55rem 1rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            width: 240px
+        }
+
+        .search-box:focus {
+            border-color: #d4a017
+        }
+
+        .btn-outline-sm {
+            background: transparent;
+            color: #d4a017;
+            border: 1px solid rgba(212, 160, 23, 0.4);
+            border-radius: 6px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.78rem;
+            cursor: pointer
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">Kandyan Gem & Jewellers</div>
+            <div class="sub">Admin Panel</div>
+        </div>
+        <nav style="padding:1rem 0;flex:1">
+            <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="products.html" class="nav-item"><i class="fas fa-gem"></i>Products</a>
+            <a href="orders.html" class="nav-item active"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i>Settings</a>
+            <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
+                    class="fas fa-external-link-alt"></i>View Site</a>
+        </nav>
+        <div class="sidebar-footer"><a href="#" onclick="KGJ.adminLogout();window.location='index.html'"
+                style="opacity:0.5;font-size:0.75rem;display:flex;gap:0.5rem;align-items:center"><i
+                    class="fas fa-sign-out-alt"></i>Logout</a></div>
+    </aside>
+
+    <div class="main-content">
+        <div class="main-header">
+            <div>
+                <h2>Orders</h2>
+                <div style="font-size:0.75rem;opacity:0.6;margin-top:0.2rem">Manage customer orders</div>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:center">
+                <input type="text" class="search-box" id="search-input" placeholder="🔍 Search orders…"
+                    oninput="renderOrders()">
+                <button class="btn-outline-sm" onclick="exportOrders()"><i class="fas fa-download"></i> Export</button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Filter bar -->
+            <div class="filter-row" id="filter-row">
+                <button class="filter-btn active" onclick="setFilter('all',this)">All Orders</button>
+                <button class="filter-btn" onclick="setFilter('pending',this)"><i class="fas fa-clock"></i>
+                    Pending</button>
+                <button class="filter-btn" onclick="setFilter('processing',this)"><i class="fas fa-cog"></i>
+                    Processing</button>
+                <button class="filter-btn" onclick="setFilter('shipped',this)"><i class="fas fa-shipping-fast"></i>
+                    Shipped</button>
+                <button class="filter-btn" onclick="setFilter('delivered',this)"><i class="fas fa-check"></i>
+                    Delivered</button>
+                <button class="filter-btn" onclick="setFilter('cancelled',this)"><i class="fas fa-times"></i>
+                    Cancelled</button>
+            </div>
+
+            <div class="table-card">
+                <div class="table-header">
+                    <h3 id="orders-count">All Orders</h3>
+                </div>
+                <div style="overflow-x:auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/store.js"></script>
+    <script>
+        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
+
+        let currentFilter = 'all';
+
+        function setFilter(f, btn) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderOrders();
+        }
+
+        function renderOrders() {
+            let orders = KGJ.getOrders();
+            const q = document.getElementById('search-input').value.toLowerCase();
+            if (currentFilter !== 'all') orders = orders.filter(o => o.status === currentFilter);
+            if (q) orders = orders.filter(o =>
+                o.id.toLowerCase().includes(q) ||
+                (o.customer?.name || '').toLowerCase().includes(q) ||
+                (o.customer?.phone || '').toLowerCase().includes(q)
+            );
+
+            document.getElementById('orders-count').textContent = `${orders.length} Order${orders.length !== 1 ? 's' : ''}`;
+            const tbody = document.getElementById('orders-tbody');
+            tbody.innerHTML = orders.length ? orders.map(o => {
+                const items = (o.items || []).map(i => `${i.name} ×${i.qty}`).join(', ');
+                return `<tr>
+        <td style="color:#d4a017;font-size:0.8rem;font-family:monospace">${o.id}</td>
+        <td>
+          <strong>${o.customer?.name || '—'}</strong>
+          <div style="font-size:0.78rem;opacity:0.6;margin-top:0.2rem">${o.customer?.phone || ''}</div>
+          <div style="font-size:0.78rem;opacity:0.5;margin-top:0.1rem">${o.customer?.address || ''}</div>
+        </td>
+        <td><div style="max-width:220px;font-size:0.8rem;opacity:0.75;line-height:1.6">${items}</div></td>
+        <td style="font-family:'Cormorant Garamond',serif;font-size:1rem;color:#d4a017">${KGJ.fmt(o.total)}</td>
+        <td>${o.paymentMethod === 'cod' ? '🚚 COD' : '💳 Card'}</td>
+        <td style="opacity:0.6;font-size:0.78rem">${new Date(o.createdAt).toLocaleDateString('en-LK', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+        <td>
+          <select class="status-select" onchange="updateStatus('${o.id}',this.value)">
+            ${['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(s =>
+                    `<option value="${s}" ${o.status === s ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`
+                ).join('')}
+          </select>
+          <div style="margin-top:0.4rem"><span class="badge badge-${o.status}">${o.status}</span></div>
+        </td>
+      </tr>`;
+            }).join('') : '<tr><td colspan="7" style="text-align:center;padding:2.5rem;opacity:0.5">No orders found.</td></tr>';
+        }
+
+        function updateStatus(id, status) {
+            KGJ.updateOrderStatus(id, status);
+            renderOrders();
+        }
+
+        function exportOrders() {
+            const data = JSON.stringify(KGJ.getOrders(), null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'orders.json'; a.click();
+        }
+
+        renderOrders();
+    </script>
+</body>
+
+</html>
