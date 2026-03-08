@@ -197,7 +197,14 @@
         let activeFilters = { category: [], metal: [], gem: [], maxPrice: 900000 };
 
         async function initPage() {
-            await KGJ.init();
+            await KGJ.init((type) => {
+                if (type === 'settings') Components.init('shop');
+                if (type === 'products') {
+                    allProducts = KGJ.getProducts();
+                    buildFilters();
+                    applyFilters();
+                }
+            });
             Components.init('shop');
 
             allProducts = KGJ.getProducts();

@@ -291,7 +291,16 @@
             let qty = 1;
 
             async function initPage() {
-                await KGJ.init();
+                await KGJ.init((type) => {
+                    if (type === 'settings') Components.init('shop');
+                    if (type === 'products') {
+                        const id = new URLSearchParams(window.location.search).get('id');
+                        if (id) {
+                            const p = KGJ.getProduct(id);
+                            if (p) { renderProduct(p); renderRelated(p); }
+                        }
+                    }
+                });
                 Components.init('shop');
 
                 const urlParams = new URLSearchParams(window.location.search);
@@ -461,14 +470,6 @@
                 if (related.length === 0) document.querySelector('.related-section').style.display = 'none';
             }
 
-            // Load product
-            if (productId) {
-                const p = KGJ.getProduct(productId);
-                if (p) { renderProduct(p); renderRelated(p); }
-                else document.getElementById('product-layout').innerHTML = '<div style="text-align:center;padding:4rem;grid-column:1/-1;color:var(--cream-300)"><i class="fas fa-gem" style="font-size:3rem;display:block;margin-bottom:1rem"></i>Product not found. <a href="shop.html" style="color:var(--gold-400)">Browse our shop →</a></div>';
-            } else {
-                window.location.href = 'shop.html';
-            }
         </script>
 </body>
 

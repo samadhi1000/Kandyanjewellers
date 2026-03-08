@@ -494,24 +494,17 @@
   <script src="js/store.js"></script>
   <script>
     // ── Apply saved settings (backgrounds, hero text) immediately ──
-    async function applyInitialSettings() {
-      await KGJ.init();
+    function applySettingsToDOM() {
       const s = KGJ.getSettings();
+      if (!s) return;
       // Hero background
-      if (s.heroBg) {
-        const src = s.heroBg.startsWith('http') ? s.heroBg : s.heroBg;
-        document.querySelector('.parallax-hero .layer-1').style.backgroundImage = `url('${src}')`;
-      }
+      if (s.heroBg) document.querySelector('.parallax-hero .layer-1').style.backgroundImage = `url('${s.heroBg}')`;
       // Gems/parallax layer 2
-      if (s.gemsBg) {
-        const src = s.gemsBg.startsWith('http') ? s.gemsBg : s.gemsBg;
-        document.querySelector('.parallax-hero .layer-2').style.backgroundImage = `url('${src}')`;
-      }
+      if (s.gemsBg) document.querySelector('.parallax-hero .layer-2').style.backgroundImage = `url('${s.gemsBg}')`;
       // About teaser fixed-bg
       if (s.aboutBg) {
-        const src = s.aboutBg.startsWith('http') ? s.aboutBg : s.aboutBg;
         const el = document.getElementById('about-bg');
-        if (el) el.style.backgroundImage = `url('${src}')`;
+        if (el) el.style.backgroundImage = `url('${s.aboutBg}')`;
       }
       // Hero text
       if (s.heroTitle) {
@@ -526,15 +519,28 @@
         const el = document.getElementById('hero-cta');
         if (el) el.innerHTML = `<i class="fas fa-gem"></i> ${s.heroCtaText}`;
       }
+    }
 
-      // After settings are applied, init components and render context
+    async function initPage() {
+      await KGJ.init((type) => {
+        if (type === 'settings') {
+          applySettingsToDOM();
+          Components.init('home');
+        }
+        if (type === 'products') {
+          renderCatNav();
+          renderFeatured();
+          renderOffers();
+        }
+      });
+      applySettingsToDOM();
       Components.init('home');
       renderCatNav();
       renderFeatured();
       renderOffers();
       initCounters();
     }
-    applyInitialSettings();
+    initPage();
   </script>
   <script src="js/scroll.js"></script>
   <script src="js/cart.js"></script>

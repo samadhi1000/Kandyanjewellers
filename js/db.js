@@ -47,6 +47,20 @@ const FB = {
         await this.db.collection("settings").doc("global").set(settings);
     },
 
+    // Real-time synchronization
+    listenProducts(callback) {
+        return this.db.collection("products").orderBy("name").onSnapshot(snapshot => {
+            const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            callback(products);
+        }, error => console.error("Error listening to products:", error));
+    },
+
+    listenSettings(callback) {
+        return this.db.collection("settings").doc("global").onSnapshot(doc => {
+            if (doc.exists) callback(doc.data());
+        }, error => console.error("Error listening to settings:", error));
+    },
+
     async addOrder(order) {
         order.createdAt = firebase.firestore.FieldValue.serverTimestamp();
         const docRef = await this.db.collection("orders").add(order);

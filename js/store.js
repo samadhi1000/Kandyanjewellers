@@ -28,19 +28,43 @@ const KGJ = {
   },
 
   /* ── INIT ── */
-  async init() {
+  async init(onUpdate = null) {
     if (this._cache.initialized) return;
 
     if (window.FB) {
       try {
         FB.init();
-        const [products, settings] = await Promise.all([
-          FB.getProducts(),
-          FB.getSettings()
+
+        let initialProductsResolve, initialSettingsResolve;
+        const initialProductsPromise = new Promise(r => initialProductsResolve = r);
+        const initialSettingsPromise = new Promise(r => initialSettingsResolve = r);
+
+        // Listen for products
+        FB.listenProducts(products => {
+          this._cache.products = products || [];
+          localStorage.setItem(this.KEYS.products, JSON.stringify(products));
+          if (this._cache.initialized && onUpdate) onUpdate('products');
+          initialProductsResolve();
+        });
+
+        // Listen for settings
+        FB.listenSettings(settings => {
+          if (settings) {
+            this._cache.settings = settings;
+            localStorage.setItem(this.KEYS.settings, JSON.stringify(settings));
+            if (this._cache.initialized && onUpdate) onUpdate('settings');
+          }
+          initialSettingsResolve();
+        });
+
+        // Wait up to 3 seconds for initial fetch (in case offline)
+        const timeout = new Promise(r => setTimeout(r, 3000));
+        await Promise.race([
+          Promise.all([initialProductsPromise, initialSettingsPromise]),
+          timeout
         ]);
-        this._cache.products = products || [];
-        this._cache.settings = settings;
-        console.log("💎 KGJ Data Loaded from Firebase");
+
+        console.log("💎 KGJ Data Loaded from Firebase (Real-time sync active)");
       } catch (e) {
         console.error("❌ Firebase Load Failed, falling back to LocalStorage:", e);
       }
