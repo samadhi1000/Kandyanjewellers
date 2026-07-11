@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Library | Admin | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #12100c;
+            color: #fdf8f0;
+            min-height: 100vh;
+            display: flex
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #1a1610;
+            border-right: 1px solid rgba(212, 160, 23, 0.12);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex-shrink: 0
+        }
+
+        .sidebar-brand {
+            padding: 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .sidebar-brand .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #d4a017
+        }
+
+        .sidebar-brand .sub {
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.5
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            opacity: 0.7;
+            transition: all 0.2s;
+            text-decoration: none;
+            border-left: 3px solid transparent
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+            border-left-color: #d4a017;
+            background: rgba(212, 160, 23, 0.08)
+        }
+
+        .nav-item.active {
+            color: #d4a017
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #12100c
+        }
+
+        .main-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1610;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .main-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: #d4a017
+        }
+
+        .content-area {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ── Media Grid ── */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .media-item {
+            background: #1a1610;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .media-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 160, 23, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .media-preview {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            background: #0b0908;
+            cursor: pointer;
+        }
+
+        .media-info {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .media-name {
+            font-size: 0.75rem;
+            color: #e8d9c4;
+            opacity: 0.8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .media-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e8d9c4;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: rgba(212, 160, 23, 0.12);
+            border-color: #d4a017;
+            color: #d4a017;
+        }
+
+        /* ── Info Box ── */
+        .info-box {
+            background: rgba(212, 160, 23, 0.05);
+            border: 1px solid rgba(212, 160, 23, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.2rem;
+            align-items: flex-start;
+        }
+
+        .info-box i {
+            font-size: 1.5rem;
+            color: #d4a017;
+        }
+
+        .info-box h3 {
+            font-family: 'Cormorant Garamond', serif;
+            color: #d4a017;
+            margin-bottom: 0.4rem;
+        }
+
+        .info-box p {
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .info-box code {
+            background: rgba(0,0,0,0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #ecc94b;
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 0;
+            opacity: 0.5;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #toast-global {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            background: rgba(26, 92, 56, .92);
+            border: 1px solid rgba(79, 196, 124, .4);
+            border-radius: 8px;
+            padding: .85rem 1.4rem;
+            color: #4fc47c;
+            font-size: .85rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all .3s
+        }
+
+        #toast-global.show {
+            opacity: 1;
+            transform: translateY(0)
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">Kandyan Gem & Jewellers</div>
+            <div class="sub">Admin Panel</div>
+        </div>
+        <nav style="padding:1rem 0;flex:1">
+            <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="products.html" class="nav-item"><i class="fas fa-gem"></i>Products</a>
+            <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="settings.html" class="nav-item"><i class="fas fa-paint-brush"></i>Visual Editor</a>
+            <a href="media.html" class="nav-item active"><i class="fas fa-images"></i>Media Library</a>
+            <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
+                    class="fas fa-external-link-alt"></i>View Site</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" onclick="KGJ.adminLogout();window.location='index.html'"
+                style="opacity:.5;font-size:.75rem;display:flex;gap:.5rem;align-items:center">
+                <i class="fas fa-sign-out-alt"></i>Logout
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <div class="main-header">
+            <div>
+                <h2><i class="fas fa-images" style="font-size:1rem;margin-right:.5rem"></i>Media Library (Free)</h2>
+                <div style="font-size:.75rem;opacity:.6;margin-top:.2rem">Manage website images for free</div>
+            </div>
+            <div style="font-size: 0.7rem; text-align: right; opacity: 0.5">
+                Local-first approach
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h3>How to add images?</h3>
+                    <p>
+                        1. Copy your images to the <code>images/uploads/</code> folder on your computer.<br>
+                        2. Tell me <strong>"Sync images"</strong>.<br>
+                        3. I will update this library and deploy the site for you!
+                    </p>
+                </div>
+            </div>
+
+            <div id="media-grid" class="media-grid">
+                <!-- Media items will be rendered here -->
+            </div>
+
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <i class="fas fa-image"></i>
+                <h3>Library is being initialized</h3>
+                <p>Add images to the uploads folder and sync to see them here.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-global"></div>
+
+    <script src="../js/store.js"></script>
+    <script>
+        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
+
+        const grid = document.getElementById('media-grid');
+        const emptyState = document.getElementById('empty-state');
+
+        async function loadMedia() {
+            try {
+                // Fetch the static JSON index
+                const response = await fetch('../images/media.json?t=' + Date.now());
+                if (!response.ok) throw new Error("Index not found");
+                
+                const data = await response.json();
+                
+                grid.innerHTML = '';
+                
+                if (!data || data.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                emptyState.style.display = 'none';
+                
+                data.forEach((item) => {
+                    renderMediaItem(item);
+                });
+            } catch (error) {
+                console.error("Error loading media:", error);
+                emptyState.style.display = 'block';
+                showToast("Initialize the library by adding images first", true);
+            }
+        }
+
+        function renderMediaItem(item) {
+            const div = document.createElement('div');
+            div.className = 'media-item';
+            div.innerHTML = `
+                <img src="${item.url}" class="media-preview" alt="${item.name}" onclick="copyUrl('${item.url}')">
+                <div class="media-info">
+                    <div class="media-name">${item.name}</div>
+                    <div class="media-actions">
+                        <button class="btn-icon" onclick="copyUrl('${item.url}')" title="Copy URL">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(div);
+        }
+
+        window.copyUrl = function(url) {
+            // Resolve relative path for clipboard if needed, but keeping original for now
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("URL copied to clipboard!");
+            });
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast-global');
+            toast.style.background = isError ? 'rgba(155, 35, 53, 0.92)' : 'rgba(26, 92, 56, 0.92)';
+            toast.style.borderColor = isError ? 'rgba(231, 76, 58, 0.4)' : 'rgba(79, 196, 124, 0.4)';
+            toast.style.color = isError ? '#e74c3a' : '#4fc47c';
+            toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>${msg}`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        loadMedia();
+    </script>
+</body>
+
+</html>

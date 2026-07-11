@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Editor | Admin | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #12100c;
+            color: #fdf8f0;
+            min-height: 100vh;
+            display: flex
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 260px;
+            background: #1a1610;
+            border-right: 1px solid rgba(212, 160, 23, .12);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex-shrink: 0
+        }
+
+        .sidebar-brand {
+            padding: 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .06)
+        }
+
+        .sidebar-brand .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #d4a017
+        }
+
+        .sidebar-brand .sub {
+            font-size: .68rem;
+            letter-spacing: .15em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: .5
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            padding: .8rem 1.5rem;
+            font-size: .875rem;
+            color: #e8d9c4;
+            opacity: .7;
+            transition: all .2s;
+            text-decoration: none;
+            border-left: 3px solid transparent
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+            border-left-color: #d4a017;
+            background: rgba(212, 160, 23, .08)
+        }
+
+        .nav-item.active {
+            color: #d4a017
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, .06);
+            margin-top: auto
+        }
+
+        /* ── Main Area ── */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #12100c
+        }
+
+        .main-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1610;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .main-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: #d4a017
+        }
+
+        .content-area {
+            padding: 2rem;
+            max-width: 960px
+        }
+
+        /* ── Tab System ── */
+        .tab-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: .65rem 1.25rem;
+            font-size: .78rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: .55;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all .2s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .tab-btn:hover {
+            opacity: .85
+        }
+
+        .tab-btn.active {
+            opacity: 1;
+            color: #d4a017;
+            border-bottom-color: #d4a017
+        }
+
+        .tab-panel {
+            display: none
+        }
+
+        .tab-panel.active {
+            display: block
+        }
+
+        /* ── Settings Card ── */
+        .settings-card {
+            background: #1a1610;
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.75rem
+        }
+
+        .settings-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: #d4a017;
+            margin-bottom: .35rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem
+        }
+
+        .settings-card .desc {
+            font-size: .78rem;
+            color: #e8d9c4;
+            opacity: .55;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .06)
+        }
+
+        /* ── Form Elements ── */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: .45rem
+        }
+
+        .form-label {
+            font-size: .72rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: .65
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 8px;
+            color: #fdf8f0;
+            padding: .8rem 1rem;
+            font-size: .9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color .2s;
+            width: 100%
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            border-color: #d4a017
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(255, 255, 255, .3)
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px
+        }
+
+        .form-select option {
+            background: #1a1610
+        }
+
+        .char-count {
+            font-size: .68rem;
+            opacity: .45;
+            text-align: right;
+            margin-top: .25rem
+        }
+
+        /* ── Buttons ── */
+        .btn-gold {
+            background: linear-gradient(135deg, #d4a017, #9a6f08);
+            color: #12100c;
+            border: none;
+            border-radius: 8px;
+            padding: .7rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: .8rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem
+        }
+
+        .btn-gold:hover {
+            filter: brightness(1.12);
+            transform: translateY(-1px)
+        }
+
+        .btn-outline-sm {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, .15);
+            color: #e8d9c4;
+            border-radius: 6px;
+            padding: .5rem 1rem;
+            font-size: .75rem;
+            cursor: pointer;
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .btn-outline-sm:hover {
+            border-color: #d4a017;
+            color: #d4a017
+        }
+
+        /* ── Success message ── */
+        .success-msg {
+            display: none;
+            background: rgba(26, 92, 56, .15);
+            border: 1px solid rgba(26, 92, 56, .3);
+            border-radius: 8px;
+            padding: .75rem 1.25rem;
+            color: #4fc47c;
+            font-size: .85rem;
+            margin-top: 1rem;
+            align-items: center;
+            gap: .5rem
+        }
+
+        .success-msg.show {
+            display: flex
+        }
+
+        /* ── Color Picker Section ── */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 1.5rem
+        }
+
+        .color-item {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem
+        }
+
+        .color-preview-row {
+            display: flex;
+            align-items: center;
+            gap: .75rem
+        }
+
+        .color-swatch {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, .15);
+            cursor: pointer;
+            transition: transform .15s;
+            flex-shrink: 0
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.08)
+        }
+
+        input[type="color"] {
+            opacity: 0;
+            position: absolute;
+            width: 0;
+            height: 0
+        }
+
+        .color-hex {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 6px;
+            color: #fdf8f0;
+            padding: .45rem .75rem;
+            font-size: .8rem;
+            font-family: monospace;
+            width: 100%;
+            outline: none;
+            transition: border-color .2s
+        }
+
+        .color-hex:focus {
+            border-color: #d4a017
+        }
+
+        /* ── Font Selector ── */
+        .font-preview {
+            margin-top: 1rem;
+            padding: 1rem 1.25rem;
+            background: rgba(0, 0, 0, .3);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, .07)
+        }
+
+        .font-preview .heading-sample {
+            font-size: 1.6rem;
+            color: #d4a017;
+            margin-bottom: .25rem
+        }
+
+        .font-preview .body-sample {
+            font-size: .9rem;
+            color: #e8d9c4;
+            opacity: .7
+        }
+
+        /* ── Image Manager ── */
+        .bg-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem
+        }
+
+        .bg-item {
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color .2s
+        }
+
+        .bg-item:hover {
+            border-color: rgba(212, 160, 23, .3)
+        }
+
+        .bg-preview {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+            display: block;
+            background: #0b0908
+        }
+
+        .bg-item-body {
+            padding: 1rem
+        }
+
+        .bg-label {
+            font-size: .72rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: .65;
+            margin-bottom: .45rem
+        }
+
+        .bg-input-row {
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+            margin-bottom: .5rem
+        }
+
+        .bg-input {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 6px;
+            color: #fdf8f0;
+            padding: .55rem .75rem;
+            font-size: .8rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            flex: 1;
+            min-width: 0;
+            transition: border-color .2s
+        }
+
+        .bg-input:focus {
+            border-color: #d4a017
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, #d4a017, #9a6f08);
+            color: #12100c;
+            border: none;
+            border-radius: 6px;
+            padding: .55rem .9rem;
+            font-size: .75rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: filter .2s
+        }
+
+        .btn-apply:hover {
+            filter: brightness(1.12)
+        }
+
+        .upload-row {
+            display: flex;
+            gap: .5rem;
+            align-items: center
+        }
+
+        .upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .5rem .85rem;
+            background: rgba(255, 255, 255, .07);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 6px;
+            font-size: .75rem;
+            color: #e8d9c4;
+            cursor: pointer;
+            transition: all .2s;
+            white-space: nowrap
+        }
+
+        .upload-label:hover {
+            background: rgba(212, 160, 23, .12);
+            border-color: rgba(212, 160, 23, .35);
+            color: #d4a017
+        }
+
+        input[type="file"] {
+            display: none
+        }
+
+        /* ── Range Slider ── */
+        .range-wrap {
+            display: flex;
+            align-items: center;
+            gap: 1rem
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: #d4a017;
+            cursor: pointer
+        }
+
+        .range-val {
+            font-size: .85rem;
+            color: #d4a017;
+            font-weight: 600;
+            min-width: 32px;
+            text-align: right
+        }
+
+        /* ── Toggle Switch ── */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .05)
+        }
+
+        .toggle-row:last-child {
+            border-bottom: none
+        }
+
+        .toggle-info {
+            flex: 1
+        }
+
+        .toggle-info .toggle-label {
+            font-size: .85rem;
+            font-weight: 500;
+            color: #fdf8f0
+        }
+
+        .toggle-info .toggle-desc {
+            font-size: .75rem;
+            color: #e8d9c4;
+            opacity: .55;
+            margin-top: .15rem
+        }
+
+        .toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            flex-shrink: 0
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0
+        }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, .15);
+            border-radius: 99px;
+            cursor: pointer;
+            transition: .2s
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            left: 3px;
+            top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: .2s
+        }
+
+        .toggle input:checked+.toggle-slider {
+            background: #d4a017
+        }
+
+        .toggle input:checked+.toggle-slider::before {
+            transform: translateX(20px)
+        }
+
+        /* ── Toast ── */
+        #toast-global {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            background: rgba(26, 92, 56, .92);
+            border: 1px solid rgba(79, 196, 124, .4);
+            border-radius: 8px;
+            padding: .85rem 1.4rem;
+            color: #4fc47c;
+            font-size: .85rem;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all .3s
+        }
+
+        #toast-global.show {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .color-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .bg-grid {
+                grid-template-columns: 1fr
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">Kandyan Gem & Jewellers</div>
+            <div class="sub">Admin Panel</div>
+        </div>
+        <nav style="padding:1rem 0;flex:1">
+            <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="products.html" class="nav-item"><i class="fas fa-gem"></i>Products</a>
+            <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="settings.html" class="nav-item active"><i class="fas fa-paint-brush"></i>Visual Editor</a>
+            <a href="media.html" class="nav-item"><i class="fas fa-images"></i>Media Library</a>
+            <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
+                    class="fas fa-external-link-alt"></i>View Site</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" onclick="KGJ.adminLogout();window.location='index.html'"
+                style="opacity:.5;font-size:.75rem;display:flex;gap:.5rem;align-items:center">
+                <i class="fas fa-sign-out-alt"></i>Logout
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <div class="main-header">
+            <div>
+                <h2><i class="fas fa-paint-brush" style="font-size:1rem;margin-right:.5rem"></i>Visual Editor</h2>
+                <div style="font-size:.75rem;opacity:.6;margin-top:.2rem">Customize every part of your website</div>
+            </div>
+            <button class="btn-gold" onclick="saveAllAndReload()"><i class="fas fa-save"></i>Save All</button>
+        </div>
+
+        <div class="content-area">
+
+            <!-- Tab Bar -->
+            <div class="tab-bar">
+                <button class="tab-btn active" onclick="switchTab('text')" id="tab-text">
+                    <i class="fas fa-text-height"></i>Text & Content
+                </button>
+                <button class="tab-btn" onclick="switchTab('colors')" id="tab-colors">
+                    <i class="fas fa-palette"></i>Colors
+                </button>
+                <button class="tab-btn" onclick="switchTab('fonts')" id="tab-fonts">
+                    <i class="fas fa-font"></i>Fonts
+                </button>
+                <button class="tab-btn" onclick="switchTab('images')" id="tab-images">
+                    <i class="fas fa-images"></i>Images
+                </button>
+                <button class="tab-btn" onclick="switchTab('animations')" id="tab-animations">
+                    <i class="fas fa-magic"></i>Animations
+                </button>
+                <button class="tab-btn" onclick="switchTab('contact')" id="tab-contact">
+                    <i class="fas fa-phone"></i>Contact & Social
+                </button>
+                <button class="tab-btn" onclick="switchTab('management')" id="tab-management">
+                    <i class="fas fa-users"></i>Management Team
+                </button>
+                <button class="tab-btn" onclick="switchTab('aboutpage')" id="tab-aboutpage">
+                    <i class="fas fa-book-open"></i>About Page
+                </button>
+
+                <button class="tab-btn" onclick="switchTab('advanced')" id="tab-advanced">
+                    <i class="fas fa-cog"></i>Advanced
+                </button>
+            </div>
+
+            <!-- ═══════════════════════════════════════
+                 TAB 1: TEXT & CONTENT
+            ════════════════════════════════════════ -->
+            <div class="tab-panel active" id="panel-text">
+
+                <!-- Hero Section -->
+                <div class="settings-card">
+                    <h3><i class="fas fa-home"></i>Hero Section</h3>
+                    <div class="desc">Main banner text and call-to-action on the homepage.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Hero Title (use | for line break)</label>
+                            <input type="text" class="form-input" id="s-hero-title"
+                                oninput="updateChar(this,'cc-hero-title',80)"
+                                placeholder="Where Every Gem | Tells a Story">
+                            <div class="char-count" id="cc-hero-title"></div>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Hero Subtitle</label>
+                            <textarea class="form-textarea" id="s-hero-sub" style="min-height:60px"
+                                oninput="updateChar(this,'cc-hero-sub',160)"
+                                placeholder="Handcrafted Kandyan jewellery of unparalleled quality..."></textarea>
+                            <div class="char-count" id="cc-hero-sub"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Hero Button Text</label>
+                            <input type="text" class="form-input" id="s-hero-cta" placeholder="Explore Collection">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Hero Tagline (Est. line)</label>
+                            <input type="text" class="form-input" id="s-hero-tagline"
+                                placeholder="Est. 1995 • Kandy, Sri Lanka">
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="saveSiteIdentity()"><i class="fas fa-save"></i>Save Text</button>
+                    <div class="success-msg" id="msg-identity"><i class="fas fa-check-circle"></i>Saved!</div>
+                </div>
+
+                <!-- Ticker Banner -->
+                <div class="settings-card">
+                    <h3><i class="fas fa-bullhorn"></i>Ticker Banner</h3>
+                    <div class="desc">The scrolling text strip at the top. Separate messages with <code
+                            style="color:#d4a017">|</code></div>
+                    <div class="form-group" style="margin-bottom:1.25rem">
+                        <label class="form-label">Ticker Messages</label>
+                        <textarea class="form-textarea" id="s-ticker" style="min-height:65px"
+                            placeholder="Free shipping on orders over Rs. 15,000 | Certified Authentic Gems | 30-Day Returns"></textarea>
+                    </div>
+                    <button class="btn-gold" onclick="saveTicker()"><i class="fas fa-save"></i>Save</button>
+                    <div class="success-msg" id="msg-ticker"><i class="fas fa-check-circle"></i>Saved!</div>
+                </div>
+
+                <!-- About + Footer Text -->
+                <div class="settings-card">
+                    <h3><i class="fas fa-file-alt"></i>Page Content</h3>
+                    <div class="desc">Text that appears in the About teaser section and the footer.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">Site Name</label>
+                            <input type="text" class="form-input" id="s-name" placeholder="Kandyan Gem & Jewellers">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Site Tagline</label>
+                            <input type="text" class="form-input" id="s-tagline"
+                                placeholder="Timeless Kandyan Craftsmanship">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">About Teaser Heading</label>
+                            <input type="text" class="form-input" id="s-about-heading"
+                                placeholder="Four Decades of Kandyan Excellence">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">About Teaser Body Text</label>
+                            <textarea class="form-textarea" id="s-about-body" style="min-height:70px"
+                                placeholder="Since 1995, our master craftsmen have preserved..."></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Footer Copyright Text</label>
+                            <input type="text" class="form-input" id="s-footer-copy"
+                                placeholder="© 2025 Kandyan Gem & Jewellers. All rights reserved.">
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="savePageContent()"><i class="fas fa-save"></i>Save</button>
+                    <div class="success-msg" id="msg-pagecontent"><i class="fas fa-check-circle"></i>Saved!</div>
+                </div>
+
+            </div><!-- /panel-text -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB: ABOUT PAGE
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-aboutpage">
+                <div class="settings-card">
+                    <h3><i class="fas fa-history"></i>Section 1: Our Story</h3>
+                    <div class="desc">The first 'Founded in 1995' section on the left.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" class="form-input" id="s-aboutS1Sub">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Heading</label>
+                            <input type="text" class="form-input" id="s-aboutS1Head">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Paragraph 1</label>
+                            <textarea class="form-textarea" id="s-aboutS1P1" style="min-height:70px"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Paragraph 2</label>
+                            <textarea class="form-textarea" id="s-aboutS1P2" style="min-height:70px"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stat 1 Value</label>
+                            <input type="text" class="form-input" id="s-aboutStat1Val">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stat 1 Label</label>
+                            <input type="text" class="form-input" id="s-aboutStat1Lbl">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stat 2 Value</label>
+                            <input type="text" class="form-input" id="s-aboutStat2Val">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stat 2 Label</label>
+                            <input type="text" class="form-input" id="s-aboutStat2Lbl">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-hammer"></i>Section 2: The Art</h3>
+                    <div class="desc">The 'Master Craftsmen' section on the right.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" class="form-input" id="s-aboutS2Sub">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Heading</label>
+                            <input type="text" class="form-input" id="s-aboutS2Head">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Paragraph 1</label>
+                            <textarea class="form-textarea" id="s-aboutS2P1" style="min-height:70px"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Paragraph 2</label>
+                            <textarea class="form-textarea" id="s-aboutS2P2" style="min-height:70px"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Bullet Point 1</label>
+                            <input type="text" class="form-input" id="s-aboutBullet1">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Bullet Point 2</label>
+                            <input type="text" class="form-input" id="s-aboutBullet2">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Bullet Point 3</label>
+                            <input type="text" class="form-input" id="s-aboutBullet3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-certificate"></i>Section 3: Trust & Authenticity</h3>
+                    <div class="desc">The 'Certified. Authentic.' section on the left.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" class="form-input" id="s-aboutS3Sub">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Heading</label>
+                            <input type="text" class="form-input" id="s-aboutS3Head">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Paragraph 1</label>
+                            <textarea class="form-textarea" id="s-aboutS3P1" style="min-height:70px"></textarea>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Certification 1</label>
+                            <input type="text" class="form-input" id="s-aboutCert1">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Certification 2</label>
+                            <input type="text" class="form-input" id="s-aboutCert2">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Certification 3</label>
+                            <input type="text" class="form-input" id="s-aboutCert3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-arrow-right"></i>Call to Action</h3>
+                    <div class="desc">The bottom CTA section on the About page.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">Subtitle</label>
+                            <input type="text" class="form-input" id="s-aboutCtaSub">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Heading</label>
+                            <input type="text" class="form-input" id="s-aboutCtaHead">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Description Text</label>
+                            <input type="text" class="form-input" id="s-aboutCtaP1">
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="saveAboutPage()"><i class="fas fa-save"></i>Save About Page</button>
+                    <div class="success-msg" id="msg-aboutpage"><i class="fas fa-check-circle"></i>Saved!</div>
+                </div>
+            </div><!-- /panel-aboutpage -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB 2: COLORS
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-colors">
+                <div class="settings-card">
+                    <h3><i class="fas fa-palette"></i>Theme Colors</h3>
+                    <div class="desc">Change the main colors of the website. Changes apply site-wide after saving.</div>
+                    <div class="color-grid" id="color-grid">
+                        <!-- Rendered by JS -->
+                    </div>
+                    <button class="btn-gold" onclick="saveColors()"><i class="fas fa-save"></i>Save Colors</button>
+                    <div class="success-msg" id="msg-colors"><i class="fas fa-check-circle"></i>Colors saved! Reload the
+                        site to see changes.</div>
+                </div>
+
+                <!-- Live Preview -->
+                <div class="settings-card">
+                    <h3><i class="fas fa-eye"></i>Live Color Preview</h3>
+                    <div class="desc">See how your color choices look before saving.</div>
+                    <div id="color-preview-box"
+                        style="padding:1.5rem;border-radius:10px;background:#12100c;border:1px solid rgba(255,255,255,.08)">
+                        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem" id="cprev-heading">Kandyan
+                            Gem & Jewellers</div>
+                        <div style="font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;margin:.5rem 0 1rem"
+                            id="cprev-subtitle">Est. 1995 • Kandy</div>
+                        <button id="cprev-btn"
+                            style="border:none;border-radius:6px;padding:.65rem 1.5rem;font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:default">Explore
+                            Collection</button>
+                    </div>
+                </div>
+            </div><!-- /panel-colors -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB 3: FONTS
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-fonts">
+                <div class="settings-card">
+                    <h3><i class="fas fa-font"></i>Typography</h3>
+                    <div class="desc">Choose heading and body fonts. Google Fonts are loaded automatically.</div>
+                    <div class="form-grid" style="margin-bottom:1.5rem">
+                        <div class="form-group">
+                            <label class="form-label">Heading / Display Font</label>
+                            <select class="form-select" id="s-font-serif" onchange="updateFontPreview()">
+                                <option value="Cormorant Garamond">Cormorant Garamond (Default)</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Cinzel">Cinzel</option>
+                                <option value="EB Garamond">EB Garamond</option>
+                                <option value="Libre Baskerville">Libre Baskerville</option>
+                                <option value="Merriweather">Merriweather</option>
+                                <option value="Lora">Lora</option>
+                                <option value="Crimson Text">Crimson Text</option>
+                                <option value="Spectral">Spectral</option>
+                                <option value="Gilda Display">Gilda Display</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Body / UI Font</label>
+                            <select class="form-select" id="s-font-sans" onchange="updateFontPreview()">
+                                <option value="Inter">Inter (Default)</option>
+                                <option value="DM Sans">DM Sans</option>
+                                <option value="Outfit">Outfit</option>
+                                <option value="Nunito">Nunito</option>
+                                <option value="Raleway">Raleway</option>
+                                <option value="Poppins">Poppins</option>
+                                <option value="Jost">Jost</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Open Sans">Open Sans</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Font Preview -->
+                    <div class="font-preview" id="font-preview-box">
+                        <div class="heading-sample" id="fp-heading">Where Every Gem Tells a Story</div>
+                        <div class="body-sample" id="fp-body">Handcrafted Kandyan jewellery of unparalleled quality,
+                            using only certified precious gemstones from Sri Lanka.</div>
+                    </div>
+
+                    <div style="margin-top:1.25rem">
+                        <button class="btn-gold" onclick="saveFonts()"><i class="fas fa-save"></i>Save Fonts</button>
+                    </div>
+                    <div class="success-msg" id="msg-fonts"><i class="fas fa-check-circle"></i>Fonts saved! Reload the
+                        site to apply.</div>
+                </div>
+            </div><!-- /panel-fonts -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB 4: IMAGES
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-images">
+                <div class="settings-card">
+                    <h3><i class="fas fa-images"></i>Background Images</h3>
+                    <div class="desc">Upload images directly from your computer OR paste a URL. Images are saved and
+                        applied to the live site.</div>
+                    <div class="bg-grid" id="bg-grid"></div>
+                </div>
+            </div><!-- /panel-images -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB 5: ANIMATIONS
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-animations">
+                <div class="settings-card">
+                    <h3><i class="fas fa-magic"></i>Animation Controls</h3>
+                    <div class="desc">Fine-tune all animations on the site. Changes take effect on the next page load.
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Hero Parallax Effect</div>
+                            <div class="toggle-desc">Layers shift as you scroll through the hero section</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="anim-parallax" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Floating Particles</div>
+                            <div class="toggle-desc">Gold particles floating in the hero background</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="anim-particles" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Scroll Reveal Animations</div>
+                            <div class="toggle-desc">Elements fade in as you scroll down every page</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="anim-reveal" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="toggle-label">Shimmer Text Effect</div>
+                            <div class="toggle-desc">The gold shimmer animation on the hero headline</div>
+                        </div>
+                        <label class="toggle"><input type="checkbox" id="anim-shimmer" checked><span
+                                class="toggle-slider"></span></label>
+                    </div>
+
+                    <!-- Particle Count -->
+                    <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,.07)">
+                        <div class="form-label" style="margin-bottom:.75rem">Particle Count <span
+                                style="color:#d4a017;font-size:.85rem" id="particle-count-label">40</span></div>
+                        <div class="range-wrap">
+                            <input type="range" id="anim-particle-count" min="5" max="100" value="40"
+                                oninput="document.getElementById('particle-count-label').textContent=this.value">
+                            <span class="range-val" id="pc-val"></span>
+                        </div>
+                        <div style="font-size:.72rem;opacity:.45;margin-top:.4rem">Higher = more particles but slightly
+                            heavier on low-end devices</div>
+                    </div>
+
+                    <!-- Particle Speed -->
+                    <div style="margin-top:1.25rem">
+                        <div class="form-label" style="margin-bottom:.75rem">Particle Speed <span
+                                style="color:#d4a017;font-size:.85rem" id="particle-speed-label">5</span></div>
+                        <div class="range-wrap">
+                            <input type="range" id="anim-particle-speed" min="1" max="10" value="5"
+                                oninput="document.getElementById('particle-speed-label').textContent=this.value">
+                        </div>
+                        <div style="font-size:.72rem;opacity:.45;margin-top:.4rem">1 = very slow dreamy float · 10 =
+                            fast energetic</div>
+                    </div>
+
+                    <div style="margin-top:1.5rem">
+                        <button class="btn-gold" onclick="saveAnimations()"><i class="fas fa-save"></i>Save
+                            Animations</button>
+                        <div class="success-msg" id="msg-anim"><i class="fas fa-check-circle"></i>Animation settings
+                            saved!</div>
+                    </div>
+                </div>
+            </div><!-- /panel-animations -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB 6: CONTACT & SOCIAL
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-contact">
+                <div class="settings-card">
+                    <h3><i class="fas fa-phone"></i>Contact Information</h3>
+                    <div class="desc">Appears in the footer, contact page, and WhatsApp links.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-input" id="s-phone" placeholder="+94 81 234 5678">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">WhatsApp Number</label>
+                            <input type="text" class="form-input" id="s-whatsapp" placeholder="94812345678">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Email Address</label>
+                            <input type="text" class="form-input" id="s-email" placeholder="info@kandyangem.lk">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Physical Address</label>
+                            <textarea class="form-textarea" id="s-address" style="min-height:60px"
+                                placeholder="123 Kandy Road, Kandy 20000, Sri Lanka"></textarea>
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="saveContact()"><i class="fas fa-save"></i>Save</button>
+                    <div class="success-msg" id="msg-contact"><i class="fas fa-check-circle"></i>Saved!</div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fab fa-instagram"></i>Social Media</h3>
+                    <div class="desc">Full URLs to your social media pages.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fab fa-facebook" style="color:#4267B2"></i> Facebook
+                                URL</label>
+                            <input type="url" class="form-input" id="s-fb" placeholder="https://facebook.com/yourpage">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fab fa-instagram" style="color:#E1306C"></i> Instagram
+                                URL</label>
+                            <input type="url" class="form-input" id="s-ig" placeholder="https://instagram.com/yourpage">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fab fa-youtube" style="color:#FF0000"></i> YouTube
+                                URL</label>
+                            <input type="url" class="form-input" id="s-yt"
+                                placeholder="https://youtube.com/@yourchannel">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="fab fa-tiktok" style="color:#69C9D0"></i> TikTok
+                                URL</label>
+                            <input type="url" class="form-input" id="s-tiktok"
+                                placeholder="https://tiktok.com/@yourpage">
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="saveSocial()"><i class="fas fa-save"></i>Save</button>
+                    <div class="success-msg" id="msg-social"><i class="fas fa-check-circle"></i>Saved!</div>
+                </div>
+            </div><!-- /panel-contact -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB 7: ADVANCED
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-advanced">
+                <div class="settings-card">
+                    <h3><i class="fas fa-truck"></i>Delivery Settings</h3>
+                    <div class="desc">Delivery charge shown in cart and checkout.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">Delivery Charge (Rs.)</label>
+                            <input type="number" class="form-input" id="s-delivery" min="0" placeholder="350">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Free Shipping Threshold (Rs.)</label>
+                            <input type="number" class="form-input" value="15000" disabled
+                                style="opacity:.4;cursor:not-allowed" title="Fixed at Rs. 15,000">
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="saveDelivery()"><i class="fas fa-save"></i>Save</button>
+                    <div class="success-msg" id="msg-delivery"><i class="fas fa-check-circle"></i>Saved!</div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-lock"></i>Change Admin Password</h3>
+                    <div class="desc">Update your admin login credentials.</div>
+                    <div class="form-grid" style="margin-bottom:1.25rem">
+                        <div class="form-group">
+                            <label class="form-label">New Username</label>
+                            <input type="text" class="form-input" id="s-admin-user">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-input" id="s-admin-pass" placeholder="Min 6 characters">
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="saveCreds()"><i class="fas fa-key"></i>Update Credentials</button>
+                    <div class="success-msg" id="msg-creds"><i class="fas fa-check-circle"></i>Updated! Logging out...
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3><i class="fas fa-database"></i>Data Management</h3>
+                    <div class="desc">Export or reset your website settings and data.</div>
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+                        <button class="btn-outline-sm" onclick="exportSettings()"><i class="fas fa-download"></i>Export
+                            Settings</button>
+                        <button class="btn-outline-sm" onclick="importSettings()"><i class="fas fa-upload"></i>Import
+                            Settings</button>
+                        <button class="btn-outline-sm" onclick="resetSettings()"
+                            style="border-color:rgba(155,35,53,.4);color:#d47070"><i class="fas fa-undo"></i>Reset to
+                            Defaults</button>
+                    </div>
+                    <input type="file" id="import-file" accept=".json" onchange="doImport(event)">
+                </div>
+            </div><!-- /panel-advanced -->
+
+            <!-- ═══════════════════════════════════════
+                 TAB 7: MANAGEMENT TEAM
+            ════════════════════════════════════════ -->
+            <div class="tab-panel" id="panel-management">
+                <div class="settings-card">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+                        <h3><i class="fas fa-users"></i>Manage Management Team</h3>
+                        <button class="btn-gold btn-sm" onclick="addManagement()"><i class="fas fa-plus"></i>Add
+                            Member</button>
+                    </div>
+                    <div class="desc">Edit the details of the company leadership shown on the About page. Add a headshot image or a simple icon.</div>
+
+                    <div id="management-manager-list"
+                        style="display:flex;flex-direction:column;gap:1.5rem;margin-top:1.5rem">
+                        <!-- Rendered by JS -->
+                    </div>
+
+                    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.1)">
+                        <button class="btn-gold" onclick="saveManagement()"><i class="fas fa-save"></i>Save
+                            Management</button>
+                        <div class="success-msg" id="msg-management" style="opacity:0; transition: opacity 0.3s"><i
+                                class="fas fa-check-circle"></i>Management team saved!</div>
+                    </div>
+                </div>
+            </div><!-- /panel-artisans -->
+
+
+        </div><!-- /content-area -->
+    </div><!-- /main-content -->
+
+    <!-- Global Toast -->
+    <div id="toast-global"><i class="fas fa-check-circle"></i><span id="toast-text">Saved!</span></div>
+
+    <script src="../js/store.js?v=1.2"></script>
+    <script type="module" src="../js/firestore-settings.js?v=1.2"></script>
+    <script>
+        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
+
+        /* ══════════════════════════════════════
+           TAB SYSTEM
+        ══════════════════════════════════════ */
+        function switchTab(name) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('panel-' + name).classList.add('active');
+            document.getElementById('tab-' + name).classList.add('active');
+        }
+
+        /* ══════════════════════════════════════
+           TOAST
+        ══════════════════════════════════════ */
+        let toastTimer;
+        function showToast(msg = 'Saved successfully!') {
+            const t = document.getElementById('toast-global');
+            document.getElementById('toast-text').textContent = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+        }
+        function showMsg(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
+        async function patchAndSave(patch) {
+            const s = KGJ.getSettings();
+            const newSettings = { ...s, ...patch };
+            
+            // Show saving state
+            showToast('Saving to cloud...');
+            
+            try {
+                if (KGJ.saveSettingsAsync) {
+                    await KGJ.saveSettingsAsync(newSettings);
+                    showToast('✅ Saved to cloud!');
+                } else {
+                    KGJ.saveSettings(newSettings);
+                    showToast('Saved locally (Firestore logic loading)');
+                }
+            } catch (err) {
+                console.error("Save error:", err);
+                showToast('❌ Error saving to cloud');
+            }
+        }
+
+        /* ══════════════════════════════════════
+           CHAR COUNTER
+        ══════════════════════════════════════ */
+        function updateChar(el, counterId, max) {
+            const el2 = document.getElementById(counterId);
+            if (!el2) return;
+            const len = el.value.length;
+            el2.textContent = `${len}/${max}`;
+            el2.style.color = len > max ? '#d47070' : '';
+        }
+
+        /* ══════════════════════════════════════
+           LOAD ALL SETTINGS
+        ══════════════════════════════════════ */
+        async function loadSettings() {
+            // Show loading overlay if needed
+            document.body.insertAdjacentHTML('afterbegin', `<div id="sync-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;color:white;font-family:serif;flex-direction:column;gap:1rem">
+                <div class="spinner"></div>
+                <div>Syncing with Firestore...</div>
+            </div>`);
+
+            // 1. Wait for Firestore module
+            for (let i = 0; i < 20; i++) {
+                if (KGJ.fsLoadSettings) break;
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            // 2. Fetch latest settings
+            let s;
+            try {
+                s = await KGJ.getSettingsAsync();
+            } catch (e) {
+                s = KGJ.getSettings();
+            }
+
+            // Remove overlay
+            const overlay = document.getElementById('sync-overlay');
+            if (overlay) overlay.remove();
+
+            // Populate fields
+            // Text
+            set('s-name', s.siteName);
+            set('s-tagline', s.tagline);
+            set('s-hero-title', s.heroTitle);
+            set('s-hero-sub', s.heroSubtitle);
+            set('s-hero-cta', s.heroCtaText);
+            set('s-hero-tagline', s.heroTagline);
+            set('s-about-heading', s.aboutHeading);
+            set('s-about-body', s.aboutBody);
+            set('s-footer-copy', s.footerCopy);
+            set('s-ticker', s.offerBanner);
+            // Contact
+            set('s-phone', s.phone);
+            set('s-whatsapp', s.whatsapp);
+            set('s-email', s.email);
+            set('s-address', s.address);
+            set('s-fb', s.facebook);
+            set('s-ig', s.instagram);
+            set('s-yt', s.youtube);
+            set('s-tiktok', s.tiktok);
+            // About Page logic
+            set('s-aboutS1Sub', s.aboutS1Sub); set('s-aboutS1Head', s.aboutS1Head);
+            set('s-aboutS1P1', s.aboutS1P1); set('s-aboutS1P2', s.aboutS1P2);
+            set('s-aboutStat1Val', s.aboutStat1Val); set('s-aboutStat1Lbl', s.aboutStat1Lbl);
+            set('s-aboutStat2Val', s.aboutStat2Val); set('s-aboutStat2Lbl', s.aboutStat2Lbl);
+            
+            set('s-aboutS2Sub', s.aboutS2Sub); set('s-aboutS2Head', s.aboutS2Head);
+            set('s-aboutS2P1', s.aboutS2P1); set('s-aboutS2P2', s.aboutS2P2);
+            set('s-aboutBullet1', s.aboutBullet1); set('s-aboutBullet2', s.aboutBullet2); set('s-aboutBullet3', s.aboutBullet3);
+
+            set('s-aboutS3Sub', s.aboutS3Sub); set('s-aboutS3Head', s.aboutS3Head); set('s-aboutS3P1', s.aboutS3P1);
+            if (s.aboutCerts) {
+                set('s-aboutCert1', s.aboutCerts[0]); set('s-aboutCert2', s.aboutCerts[1]); set('s-aboutCert3', s.aboutCerts[2]);
+            }
+            
+            set('s-aboutCtaSub', s.aboutCtaSub); set('s-aboutCtaHead', s.aboutCtaHead); set('s-aboutCtaP1', s.aboutCtaP1);
+
+            // Delivery
+            set('s-delivery', s.deliveryCharge || 350);
+            // Admin
+            const creds = KGJ.getAdminCreds();
+            set('s-admin-user', creds.username || 'admin');
+            // Fonts
+            setSelect('s-font-serif', s.fontSerif || 'Cormorant Garamond');
+            setSelect('s-font-sans', s.fontSans || 'Inter');
+            updateFontPreview();
+            // Animations
+            setCheck('anim-parallax', s.animParallax !== false);
+            setCheck('anim-particles', s.animParticles !== false);
+            setCheck('anim-reveal', s.animReveal !== false);
+            setCheck('anim-shimmer', s.animShimmer !== false);
+            const pc = s.particleCount || 40;
+            document.getElementById('anim-particle-count').value = pc;
+            document.getElementById('particle-count-label').textContent = pc;
+            document.getElementById('anim-particle-speed').value = s.particleSpeed || 5;
+            document.getElementById('particle-speed-label').textContent = s.particleSpeed || 5;
+
+            // Render sub-sections
+            renderManagementManager();
+            renderColors();
+            renderBgGrid();
+        }
+        function set(id, val) { const el = document.getElementById(id); if (el && val != null) el.value = val; }
+        function setSelect(id, val) { const el = document.getElementById(id); if (el) el.value = val; }
+        function setCheck(id, val) { const el = document.getElementById(id); if (el) el.checked = val; }
+
+        /* ══════════════════════════════════════
+           SAVE FUNCTIONS
+        ══════════════════════════════════════ */
+        function saveSiteIdentity() {
+            patchAndSave({
+                siteName: val('s-name'), tagline: val('s-tagline'),
+                heroTitle: val('s-hero-title'), heroSubtitle: val('s-hero-sub'),
+                heroCtaText: val('s-hero-cta'), heroTagline: val('s-hero-tagline'),
+            });
+            showMsg('msg-identity'); showToast('Hero text saved!');
+        }
+        function saveTicker() {
+            patchAndSave({ offerBanner: val('s-ticker') });
+            showMsg('msg-ticker'); showToast('Ticker saved!');
+        }
+        function savePageContent() {
+            patchAndSave({
+                siteName: val('s-name'), tagline: val('s-tagline'),
+                aboutHeading: val('s-about-heading'), aboutBody: val('s-about-body'),
+                footerCopy: val('s-footer-copy'),
+            });
+            showMsg('msg-pagecontent'); showToast('Page content saved!');
+        }
+        function saveAboutPage() {
+            patchAndSave({
+                aboutS1Sub: val('s-aboutS1Sub'), aboutS1Head: val('s-aboutS1Head'),
+                aboutS1P1: val('s-aboutS1P1'), aboutS1P2: val('s-aboutS1P2'),
+                aboutStat1Val: val('s-aboutStat1Val'), aboutStat1Lbl: val('s-aboutStat1Lbl'),
+                aboutStat2Val: val('s-aboutStat2Val'), aboutStat2Lbl: val('s-aboutStat2Lbl'),
+
+                aboutS2Sub: val('s-aboutS2Sub'), aboutS2Head: val('s-aboutS2Head'),
+                aboutS2P1: val('s-aboutS2P1'), aboutS2P2: val('s-aboutS2P2'),
+                aboutBullet1: val('s-aboutBullet1'), aboutBullet2: val('s-aboutBullet2'), aboutBullet3: val('s-aboutBullet3'),
+
+                aboutS3Sub: val('s-aboutS3Sub'), aboutS3Head: val('s-aboutS3Head'), aboutS3P1: val('s-aboutS3P1'),
+                aboutCerts: [val('s-aboutCert1'), val('s-aboutCert2'), val('s-aboutCert3')],
+
+                aboutCtaSub: val('s-aboutCtaSub'), aboutCtaHead: val('s-aboutCtaHead'), aboutCtaP1: val('s-aboutCtaP1')
+            });
+            showMsg('msg-aboutpage'); showToast('About page saved!');
+        }
+        function saveContact() {
+            patchAndSave({ phone: val('s-phone'), whatsapp: val('s-whatsapp'), email: val('s-email'), address: val('s-address') });
+            showMsg('msg-contact'); showToast('Contact info saved!');
+        }
+        function saveSocial() {
+            patchAndSave({ facebook: val('s-fb'), instagram: val('s-ig'), youtube: val('s-yt'), tiktok: val('s-tiktok') });
+            showMsg('msg-social'); showToast('Social links saved!');
+        }
+        function saveDelivery() {
+            patchAndSave({ deliveryCharge: +val('s-delivery') });
+            showMsg('msg-delivery'); showToast('Delivery settings saved!');
+        }
+        function saveAnimations() {
+            patchAndSave({
+                animParallax: document.getElementById('anim-parallax').checked,
+                animParticles: document.getElementById('anim-particles').checked,
+                animReveal: document.getElementById('anim-reveal').checked,
+                animShimmer: document.getElementById('anim-shimmer').checked,
+                particleCount: +document.getElementById('anim-particle-count').value,
+                particleSpeed: +document.getElementById('anim-particle-speed').value,
+            });
+            showMsg('msg-anim'); showToast('Animation settings saved!');
+        }
+        function saveFonts() {
+            const serif = val('s-font-serif');
+            const sans = val('s-font-sans');
+            patchAndSave({ fontSerif: serif, fontSans: sans });
+            showMsg('msg-fonts'); showToast('Fonts saved!');
+        }
+        function saveColors() {
+            const patch = {};
+            colorDefs.forEach(c => { patch[c.key] = document.getElementById('ch-' + c.key).value; });
+            patchAndSave(patch);
+            showMsg('msg-colors'); showToast('Colors saved!');
+        }
+        function saveCreds() {
+            const user = val('s-admin-user'), pass = val('s-admin-pass');
+            if (!user || !pass) { alert('Please enter both username and password.'); return; }
+            if (pass.length < 6) { alert('Password must be at least 6 characters.'); return; }
+            localStorage.setItem('kgj_admin', JSON.stringify({ username: user, password: pass }));
+            KGJ.adminLogout();
+            showMsg('msg-creds');
+            setTimeout(() => window.location.href = 'index.html', 2500);
+        }
+        function saveAllAndReload() {
+            saveSiteIdentity(); saveTicker(); savePageContent();
+            saveContact(); saveSocial(); saveDelivery();
+            saveAnimations(); saveFonts(); saveColors();
+            showToast('✅ All settings saved!');
+        }
+        function val(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+        /* ══════════════════════════════════════
+           COLORS
+        ══════════════════════════════════════ */
+        const colorDefs = [
+            { key: 'colorGold', label: 'Primary Gold', defaultVal: '#d4a017', desc: 'Buttons, accents, gold text' },
+            { key: 'colorGoldLight', label: 'Gold Highlight', defaultVal: '#f5c842', desc: 'Shimmer & hover highlights' },
+            { key: 'colorBgDark', label: 'Background Dark', defaultVal: '#12100c', desc: 'Main page background' },
+            { key: 'colorBgCard', label: 'Card Background', defaultVal: '#1a1610', desc: 'Cards, nav, sidebars' },
+            { key: 'colorText', label: 'Text Light', defaultVal: '#fdf8f0', desc: 'Main body text color' },
+            { key: 'colorRuby', label: 'Accent Red', defaultVal: '#9b2335', desc: 'Discount badges, alerts' },
+        ];
+
+        function renderColors() {
+            const s = KGJ.getSettings();
+            document.getElementById('color-grid').innerHTML = colorDefs.map(c => {
+                const saved = s[c.key] || c.defaultVal;
+                return `
+                <div class="color-item">
+                    <div class="form-label">${c.label}</div>
+                    <div class="color-preview-row">
+                        <div class="color-swatch" id="sw-${c.key}" style="background:${saved}"
+                             onclick="document.getElementById('cp-${c.key}').click()"></div>
+                        <input type="color" id="cp-${c.key}" value="${saved}"
+                               oninput="syncColor('${c.key}',this.value)">
+                        <input type="text" class="color-hex" id="ch-${c.key}" value="${saved}" maxlength="7"
+                               oninput="syncColorHex('${c.key}',this.value)">
+                    </div>
+                    <div style="font-size:.68rem;opacity:.45;margin-top:.25rem">${c.desc}</div>
+                </div>`;
+            }).join('');
+            updateColorPreview();
+        }
+        function syncColor(key, val) {
+            document.getElementById('sw-' + key).style.background = val;
+            document.getElementById('ch-' + key).value = val;
+            updateColorPreview();
+        }
+        function syncColorHex(key, val) {
+            if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+                document.getElementById('sw-' + key).style.background = val;
+                document.getElementById('cp-' + key).value = val;
+                updateColorPreview();
+            }
+        }
+        function updateColorPreview() {
+            const gold = (document.getElementById('ch-colorGold') || {}).value || '#d4a017';
+            const bg = (document.getElementById('ch-colorBgDark') || {}).value || '#12100c';
+            const text = (document.getElementById('ch-colorText') || {}).value || '#fdf8f0';
+            const box = document.getElementById('color-preview-box');
+            if (box) { box.style.background = bg; }
+            const h = document.getElementById('cprev-heading');
+            if (h) { h.style.color = gold; h.style.color = gold; }
+            const sub = document.getElementById('cprev-subtitle');
+            if (sub) { sub.style.color = gold; sub.style.opacity = '.7'; }
+            const btn = document.getElementById('cprev-btn');
+            if (btn) { btn.style.background = gold; btn.style.color = bg; }
+            const texts = document.querySelectorAll('#color-preview-box');
+            texts.forEach(el => el.style.color = text);
+        }
+
+        /* ══════════════════════════════════════
+           FONTS
+        ══════════════════════════════════════ */
+        let fontLinkEl = null;
+        function updateFontPreview() {
+            const serif = val('s-font-serif') || 'Cormorant Garamond';
+            const sans = val('s-font-sans') || 'Inter';
+            // Inject Google Fonts link
+            const families = encodeURIComponent(`${serif}:wght@400;600&family=${sans}:wght@400;500`);
+            const href = `https://fonts.googleapis.com/css2?family=${families}&display=swap`;
+            if (!fontLinkEl) { fontLinkEl = document.createElement('link'); fontLinkEl.rel = 'stylesheet'; document.head.appendChild(fontLinkEl); }
+            fontLinkEl.href = href;
+            document.getElementById('fp-heading').style.fontFamily = `'${serif}', serif`;
+            document.getElementById('fp-body').style.fontFamily = `'${sans}', sans-serif`;
+        }
+
+        /* ══════════════════════════════════════
+           IMAGES MANAGER
+        ══════════════════════════════════════ */
+        const bgSections = [
+            { key: 'heroBg', label: 'Main Hero Background', hint: 'The big image on the homepage hero section.', hasPos: true },
+            { key: 'gemsBg', label: 'Parallax Gems Layer', hint: 'The floating overlay image on the hero (Transparent PNG recommended).' },
+            { key: 'shopHeroBg', label: 'Shop Page Hero', hint: 'The background for the shop page header.', hasPos: true },
+            { key: 'aboutHeroBg', label: 'About Page Hero', hint: 'The background for the about page header.', hasPos: true },
+            { key: 'aboutBg', label: 'Story Section BG', hint: 'Used for the fixed "Founder Story" background on the about page.' },
+            { key: 'collectionBg', label: 'Product Collection BG', hint: 'Background used for general section banners.' },
+        ];
+
+
+        function renderBgGrid() {
+            const s = KGJ.getSettings();
+            document.getElementById('bg-grid').innerHTML = bgSections.map(section => {
+                const saved = s[section.key] || '';
+                const previewSrc = saved.startsWith('http') || saved.startsWith('data:') ? saved : (saved ? `../${saved}` : '../images/hero.jpg');
+                return `
+                <div class="bg-item">
+                    <img class="bg-preview" id="prev-${section.key}" src="${previewSrc}"
+                         style="background-position: ${s[section.key + 'Pos'] || 'center'}"
+                         onerror="this.src='../images/hero.jpg'" alt="${section.label}">
+                    <div class="bg-item-body">
+                        <div class="bg-label">${section.label}</div>
+                        <div class="bg-input-row">
+                            <input type="text" class="bg-input" id="bg-${section.key}" value="${saved}"
+                                   placeholder="Paste URL or local path…"
+                                   oninput="previewBg('${section.key}',this.value)"
+                                   onkeydown="if(event.key==='Enter'){applyBg('${section.key}')}">
+                            <button class="btn-apply" onclick="applyBg('${section.key}')"><i class="fas fa-check"></i></button>
+                        </div>
+                        
+                        ${section.hasPos ? `
+                        <div style="margin-bottom: 0.75rem">
+                            <div class="bg-label" style="font-size: 0.65rem; margin-bottom: 0.25rem">Vertical Alignment</div>
+                            <select class="bg-input" onchange="applyBgPos('${section.key}', this.value)" style="width: 100%; height: 34px; padding: 0 0.5rem">
+                                <option value="top" ${s[section.key + 'Pos'] === 'top' ? 'selected' : ''}>Top</option>
+                                <option value="center" ${(!s[section.key + 'Pos'] || s[section.key + 'Pos'] === 'center') ? 'selected' : ''}>Center</option>
+                                <option value="bottom" ${s[section.key + 'Pos'] === 'bottom' ? 'selected' : ''}>Bottom</option>
+                            </select>
+                        </div>
+                        ` : ''}
+
+                        <div class="upload-row">
+                            <label class="upload-label" for="file-${section.key}">
+                                <i class="fas fa-upload"></i>Upload Image
+                            </label>
+                            <input type="file" id="file-${section.key}" accept="image/*"
+                                   onchange="handleUpload('${section.key}', event)">
+                            <button class="upload-label" onclick="openMediaPicker('${section.key}')">
+                                <i class="fas fa-photo-video"></i> Library
+                            </button>
+                            <span style="font-size:.68rem;opacity:.4">JPG, PNG, WebP</span>
+                        </div>
+                        <div style="font-size:.68rem;opacity:.4;margin-top:.4rem">${section.hint}</div>
+                    </div>
+                </div>`;
+
+            }).join('');
+        }
+
+        function previewBg(key, val) {
+            const img = document.getElementById('prev-' + key);
+            if (!img) return;
+            img.src = (val.startsWith('http') || val.startsWith('data:')) ? val : `../${val}`;
+        }
+
+        function applyBg(key) {
+            const val = document.getElementById('bg-' + key).value.trim();
+            patchAndSave({ [key]: val });
+            previewBg(key, val);
+            showToast(`${key === 'heroBg' ? 'Hero' : 'Background'} image saved!`);
+        }
+
+        function applyBgPos(key, pos) {
+            patchAndSave({ [key + 'Pos']: pos });
+            const img = document.getElementById('prev-' + key);
+            if (img) img.style.backgroundPosition = pos;
+            showToast('Alignment saved!');
+        }
+
+
+        function handleUpload(key, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                // Save base64 to settings
+                patchAndSave({ [key]: dataUrl });
+                document.getElementById('bg-' + key).value = '(Uploaded Image)';
+                document.getElementById('prev-' + key).src = dataUrl;
+                showToast('Image uploaded & saved! ✅');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /* ══════════════════════════════════════
+           DATA MANAGEMENT
+        ══════════════════════════════════════ */
+        function exportSettings() {
+            const s = KGJ.getSettings();
+            const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'kgj-settings-export.json';
+            a.click();
+            showToast('Settings exported!');
+        }
+        function importSettings() { document.getElementById('import-file').click(); }
+        function doImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    KGJ.saveSettings(data);
+                    showToast('Settings imported! Reloading…');
+                    setTimeout(() => location.reload(), 1500);
+                } catch { alert('Invalid settings file.'); }
+            };
+            reader.readAsText(file);
+        }
+        function resetSettings() {
+            if (!confirm('This will reset ALL website settings to defaults. Continue?')) return;
+            localStorage.removeItem('kgj_settings');
+            showToast('Settings reset. Reloading…');
+            setTimeout(() => location.reload(), 1200);
+        }
+
+        /* ══════════════════════════════════════
+           INIT
+        ══════════════════════════════════════ */
+        /* ══════════════════════════════════════
+           MANAGEMENT TEAM MANAGEMENT
+        ══════════════════════════════════════ */
+        function renderManagementManager() {
+            const s = KGJ.getSettings();
+            const list = s.artisans || [];
+            const container = document.getElementById('management-manager-list');
+            if(!container) return;
+
+            container.innerHTML = list.map((a, index) => `
+                <div class="settings-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);margin:0">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem">
+                        <span style="font-weight:600;color:var(--gold-400)">Team Member #${index + 1}</span>
+                        <button class="btn-apply" style="background:#ff4444;border-color:#ff4444" onclick="deleteManagement(${index})"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="form-grid">
+                        <div style="display:flex;gap:1.5rem;grid-column:1/-1">
+                            <div style="flex:0 0 80px">
+                                <img src="${a.image || '../images/hero.jpg'}" id="man-prev-${index}" 
+                                     style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid rgba(212,160,23,0.3);box-shadow:0 4px 12px rgba(0,0,0,0.2)">
+                                <label class="upload-label" for="man-file-${index}" style="margin-top:0.5rem;font-size:0.65rem;padding:6px;width:100%;justify-content:center">
+                                    <i class="fas fa-upload"></i> Change
+                                </label>
+                                <input type="file" id="man-file-${index}" accept="image/*" style="display:none" onchange="handleManagementUpload(${index}, event)">
+                            </div>
+                            <div style="flex:1;display:flex;flex-direction:column;gap:1rem">
+                                <div class="form-group" style="margin:0">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-input man-name" value="${a.name}" placeholder="Enter full name">
+                                </div>
+                                <div class="form-group" style="margin:0">
+                                    <label class="form-label">Role / Title</label>
+                                    <input type="text" class="form-input man-role" value="${a.role}" placeholder="e.g. Managing Director">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Profile Image URL</label>
+                            <input type="text" class="form-input man-image" value="${a.image}" 
+                                   placeholder="Paste image URL here"
+                                   oninput="document.getElementById('man-prev-${index}').src = this.value || '../images/hero.jpg'">
+                            <div style="font-size:0.65rem;opacity:0.5;margin-top:0.25rem">You can paste a direct image link or use the upload button above.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Icon (Emoji)</label>
+                            <input type="text" class="form-input man-icon" value="${a.icon}" placeholder="👑, 💎, ✨">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label class="form-label">Description / Bio</label>
+                            <textarea class="form-textarea man-desc" style="min-height:80px" placeholder="Write a brief bio...">${a.desc}</textarea>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addManagement() {
+            const s = KGJ.getSettings();
+            s.artisans = s.artisans || [];
+            s.artisans.push({ name: '', role: '', icon: '✨', desc: '', image: '' });
+            KGJ.saveSettings(s);
+            renderManagementManager();
+        }
+
+        function deleteManagement(index) {
+            if (!confirm('Are you sure you want to remove this member?')) return;
+            const s = KGJ.getSettings();
+            s.artisans.splice(index, 1);
+            KGJ.saveSettings(s);
+            renderManagementManager();
+        }
+
+        function handleManagementUpload(index, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const dataUrl = e.target.result;
+                document.getElementById('man-prev-' + index).src = dataUrl;
+                document.querySelectorAll('.man-image')[index].value = dataUrl;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveManagement() {
+            const names = document.querySelectorAll('.man-name');
+            const roles = document.querySelectorAll('.man-role');
+            const icons = document.querySelectorAll('.man-icon');
+            const descs = document.querySelectorAll('.man-desc');
+            const images = document.querySelectorAll('.man-image');
+
+            const artisans = [];
+            names.forEach((n, i) => {
+                artisans.push({
+                    name: n.value.trim(),
+                    role: roles[i].value.trim(),
+                    icon: icons[i].value.trim(),
+                    desc: descs[i].value.trim(),
+                    image: images[i].value
+                });
+            });
+
+            const s = KGJ.getSettings();
+            if (artisans.length === 0 && s.artisans && s.artisans.length > 0) {
+                if (!confirm('You are about to save an EMPTY Management Team. This will hide the team from the About page. Continue?')) return;
+            }
+
+            patchAndSave({ artisans });
+            document.getElementById('msg-management').style.opacity = 1;
+            setTimeout(() => document.getElementById('msg-management').style.opacity = 0, 3000);
+        }
+
+        /* ══════════════════════════════════════
+           MEDIA PICKER MODAL
+        ══════════════════════════════════════ */
+        let activePickerKey = null;
+
+        function openMediaPicker(key) {
+            activePickerKey = key;
+            const modal = document.getElementById('media-picker-modal');
+            modal.style.display = 'flex';
+            loadPickerMedia();
+        }
+
+        function closeMediaPicker() {
+            document.getElementById('media-picker-modal').style.display = 'none';
+        }
+
+        async function loadPickerMedia() {
+            const container = document.getElementById('picker-grid');
+            container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;opacity:0.5">Loading library...</div>';
+            
+            try {
+                const response = await fetch('../images/media.json?t=' + Date.now());
+                if (!response.ok) throw new Error("Index not found");
+                const data = await response.json();
+                
+                container.innerHTML = '';
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;opacity:0.5">Library is empty. Add images to images/uploads/ and ask me to sync.</div>';
+                    return;
+                }
+                
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-item';
+                    div.style.cursor = 'pointer';
+                    div.innerHTML = `
+                        <img src="${item.url}" style="width:100%;aspect-ratio:1;object-fit:cover;display:block">
+                        <div style="padding:0.5rem;font-size:0.7rem;text-align:center;background:#000;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.name}</div>
+                    `;
+                    div.onclick = () => selectFromPicker(item.url);
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Picker load error:", error);
+                container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#ff4444">Error loading library. Make sure to sync first.</div>';
+            }
+        }
+
+        function selectFromPicker(url) {
+            if (activePickerKey) {
+                patchAndSave({ [activePickerKey]: url });
+                document.getElementById('bg-' + activePickerKey).value = url;
+                document.getElementById('prev-' + activePickerKey).src = url;
+                showToast('Image selected from library!');
+            }
+            closeMediaPicker();
+        }
+
+        // Add modal HTML to body
+        document.body.insertAdjacentHTML('beforeend', `
+            <div id="media-picker-modal" class="modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:2rem">
+                <div class="modal-box" style="background:#1a1610;border:1px solid #d4a017;border-radius:12px;width:100%;max-width:800px;max-height:85vh;overflow-y:auto;padding:2rem">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                        <h3 style="font-family:'Cormorant Garamond',serif;color:#d4a017;font-size:1.5rem">Select from Library</h3>
+                        <button onclick="closeMediaPicker()" style="background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer">&times;</button>
+                    </div>
+                    <div id="picker-grid" class="bg-grid" style="grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:1rem">
+                    </div>
+                    <div style="margin-top:2rem;text-align:right">
+                        <a href="media.html" class="btn-outline-sm"><i class="fas fa-cloud-upload-alt"></i> Go to Media Library to Upload</a>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        renderBgGrid();
+        renderColors();
+        loadSettings().then(() => {
+            renderManagementManager();
+        });
+
+    </script>
+</body>
+
+</html>

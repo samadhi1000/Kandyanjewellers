@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Admin | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #12100c;
+            color: #fdf8f0;
+            min-height: 100vh;
+            display: flex
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #1a1610;
+            border-right: 1px solid rgba(212, 160, 23, 0.12);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex-shrink: 0
+        }
+
+        .sidebar-brand {
+            padding: 1.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        .sidebar-brand .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: #d4a017
+        }
+
+        .sidebar-brand .sub {
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.5
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            opacity: 0.7;
+            transition: all 0.2s;
+            text-decoration: none;
+            border-left: 3px solid transparent
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+            border-left-color: #d4a017;
+            background: rgba(212, 160, 23, 0.08)
+        }
+
+        .nav-item.active {
+            color: #d4a017
+        }
+
+        .nav-item i {
+            width: 18px;
+            text-align: center
+        }
+
+        .sidebar-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #12100c
+        }
+
+        .main-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1610;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .main-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: #d4a017
+        }
+
+        .content-area {
+            padding: 2rem
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #d4a017, #9a6f08);
+            color: #12100c;
+            border: none;
+            border-radius: 8px;
+            padding: 0.65rem 1.25rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s
+        }
+
+        .btn-gold:hover {
+            filter: brightness(1.1)
+        }
+
+        .btn-outline-sm {
+            background: transparent;
+            color: #d4a017;
+            border: 1px solid rgba(212, 160, 23, 0.4);
+            border-radius: 6px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s
+        }
+
+        .btn-outline-sm:hover {
+            background: #d4a017;
+            color: #12100c
+        }
+
+        .btn-danger-sm {
+            background: rgba(155, 35, 53, 0.15);
+            color: #e74c3a;
+            border: 1px solid rgba(155, 35, 53, 0.3);
+            border-radius: 6px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.78rem;
+            cursor: pointer
+        }
+
+        .btn-danger-sm:hover {
+            background: #9b2335;
+            color: #fff
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th {
+            padding: 0.85rem 1rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.6;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+        }
+
+        td {
+            padding: 0.85rem 1rem;
+            font-size: 0.875rem;
+            color: #e8d9c4;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .table-card {
+            background: #1a1610;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            overflow: hidden
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .product-thumb {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0b0908
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase
+        }
+
+        .badge-in {
+            background: rgba(26, 92, 56, 0.2);
+            color: #4fc47c
+        }
+
+        .badge-out {
+            background: rgba(155, 35, 53, 0.2);
+            color: #e74c3a
+        }
+
+        .badge-feat {
+            background: rgba(212, 160, 23, 0.15);
+            color: #d4a017
+        }
+
+        /* Modal */
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem
+        }
+
+        .modal-bg.open {
+            display: flex
+        }
+
+        .modal-box {
+            background: #1a1610;
+            border: 1px solid rgba(212, 160, 23, 0.2);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem
+        }
+
+        .modal-box::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .modal-box::-webkit-scrollbar-thumb {
+            background: rgba(212, 160, 23, 0.3);
+            border-radius: 2px
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem
+        }
+
+        .modal-header h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: #d4a017
+        }
+
+        .modal-close {
+            background: none;
+            color: #e8d9c4;
+            font-size: 1.5rem;
+            cursor: pointer
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #e8d9c4;
+            opacity: 0.65
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fdf8f0;
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: #d4a017
+        }
+
+        .form-select option {
+            background: #1a1610
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 90px
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem
+        }
+
+        .checkbox-row input {
+            accent-color: #d4a017;
+            width: 16px;
+            height: 16px
+        }
+
+        /* Image preview */
+        .img-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0b0908;
+            border: 1px solid rgba(212, 160, 23, 0.2);
+            flex-shrink: 0
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fdf8f0;
+            padding: 0.6rem 1rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            width: 260px
+        }
+
+        .search-box:focus {
+            border-color: #d4a017
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">Kandyan Gem & Jewellers</div>
+            <div class="sub">Admin Panel</div>
+        </div>
+        <nav style="padding:1rem 0;flex:1">
+            <a href="index.html" class="nav-item"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            <a href="products.html" class="nav-item active"><i class="fas fa-gem"></i>Products</a>
+            <a href="orders.html" class="nav-item"><i class="fas fa-shopping-bag"></i>Orders</a>
+            <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i>Settings</a>
+            <a href="media.html" class="nav-item"><i class="fas fa-images"></i>Media Library</a>
+            <a href="../index.html" target="_blank" class="nav-item" style="margin-top:1rem"><i
+                    class="fas fa-external-link-alt"></i>View Site</a>
+        </nav>
+        <div class="sidebar-footer"><a href="#" onclick="KGJ.adminLogout();window.location='index.html'"
+                style="opacity:0.5;font-size:0.75rem;display:flex;gap:0.5rem;align-items:center"><i
+                    class="fas fa-sign-out-alt"></i>Logout</a></div>
+    </aside>
+
+    <div class="main-content">
+        <div class="main-header">
+            <div>
+                <h2>Products</h2>
+                <div style="font-size:0.75rem;opacity:0.6;margin-top:0.2rem">Manage your jewellery catalogue</div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:center">
+                <input type="text" class="search-box" id="search-input" placeholder="🔍 Search products…"
+                    oninput="filterTable()">
+                <button class="btn-gold" onclick="openModal()"><i class="fas fa-plus"></i>Add New Product</button>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="table-card">
+                <div class="table-header">
+                    <h3 id="product-count">Loading…</h3>
+                    <div style="display:flex;gap:0.5rem">
+                        <button class="btn-outline-sm" onclick="exportProducts()"><i class="fas fa-download"></i>
+                            Export</button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Discount Price</th>
+                                <th>Offer</th>
+                                <th>Stock</th>
+                                <th>Featured</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-bg" id="product-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Product</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="product-form" onsubmit="saveProduct(event)">
+                <input type="hidden" id="edit-id">
+
+                <div class="form-grid" style="margin-bottom:1.25rem">
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Product Name
+                            *</label><input type="text" class="form-input" id="f-name"
+                            placeholder="e.g. Royal Sapphire Ring" required></div>
+                    <div class="form-group"><label class="form-label">Category *</label>
+                        <select class="form-select" id="f-cat">
+                            <option>Rings</option>
+                            <option>Necklaces</option>
+                            <option>Earrings</option>
+                            <option>Bracelets</option>
+                            <option>Bridal</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label class="form-label">Metal Type</label><input type="text"
+                            class="form-input" id="f-metal" placeholder="e.g. 22K Gold, 18K Rose Gold"></div>
+                    <div class="form-group"><label class="form-label">Gemstone</label><input type="text"
+                            class="form-input" id="f-gem" placeholder="e.g. Ceylon Blue Sapphire"></div>
+                    <div class="form-group"><label class="form-label">Weight (g)</label><input type="text"
+                            class="form-input" id="f-weight" placeholder="e.g. 8.5g"></div>
+                    <div class="form-group"><label class="form-label">Regular Price (Rs.) *</label><input type="number"
+                            class="form-input" id="f-price" placeholder="150000" required min="0"></div>
+                    <div class="form-group"><label class="form-label">Discounted Price (Rs.)</label><input type="number"
+                            class="form-input" id="f-disc" placeholder="Leave same if no discount" min="0"></div>
+                    <div class="form-group"><label class="form-label">Special Offer Label</label><input type="text"
+                            class="form-input" id="f-offer" placeholder="e.g. Valentine Special, 15% Off"></div>
+                    <div class="form-group"><label class="form-label">Offer Expiry Date</label><input type="date"
+                            class="form-input" id="f-expiry"></div>
+                    <div class="form-group" style="grid-column:1/-1">
+                        <label class="form-label">Product Gallery (Main + 4 additional)</label>
+                        <div id="gallery-container"
+                            style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.75rem">
+                            <!-- JS will render 5 slots here -->
+                        </div>
+                        <div style="font-size:0.7rem;opacity:0.5;margin-top:0.5rem;color:var(--gold-400)">
+                            <i class="fas fa-info-circle"></i> Tip: Use the first slot for the primary main image.
+                            Others can be different angles or colors.
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="grid-column:1/-1"><label class="form-label">Description
+                            *</label><textarea class="form-textarea" id="f-desc"
+                            placeholder="Describe the product in detail…" required></textarea></div>
+                    <div class="form-group" style="grid-column:1/-1;display:flex;gap:2rem">
+                        <label class="checkbox-row"><input type="checkbox" id="f-stock" checked><span>In
+                                Stock</span></label>
+                        <label class="checkbox-row"><input type="checkbox" id="f-featured"><span>Featured on Home
+                                Page</span></label>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:0.75rem">
+                    <button type="button" class="btn-outline-sm" style="padding:0.7rem 1.5rem"
+                        onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-gold" style="flex:1;justify-content:center"><i
+                            class="fas fa-save"></i> Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/store.js?v=1.2"></script>
+    <script type="module" src="../js/firestore-products.js?v=1.2"></script>
+    <script>
+        if (!KGJ.isAdminLoggedIn()) window.location.href = 'index.html';
+
+        let allProducts = [];
+        let editingId = null;
+
+        async function loadProducts() {
+            if (window.KGJ && KGJ.fsLoadProducts) {
+                allProducts = await KGJ.fsLoadProducts();
+            } else {
+                allProducts = KGJ.getProducts();
+            }
+            renderTable(allProducts);
+            document.getElementById('product-count').textContent = `${allProducts.length} Products`;
+        }
+
+        // Initial load
+        window.addEventListener('load', () => setTimeout(loadProducts, 200));
+
+        // ── Smart image src resolver ──
+        const FALLBACK_IMG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100' height='100' fill='%231a1610'/><text x='50' y='55' font-family='sans-serif' font-size='24' text-anchor='middle' fill='%23d4a017'>💎</text></svg>";
+
+        function getImgSrc(raw) {
+            if (!raw) return FALLBACK_IMG;
+            // base64 or full URL — use directly
+            if (raw.startsWith('data:') || raw.startsWith('http') || raw.startsWith('//')) return raw;
+            // local path — prefix ../ for admin folder
+            return '../' + raw.replace(/^\.\.\//, '');
+        }
+
+        function renderTable(products) {
+            const tbody = document.getElementById('products-tbody');
+            tbody.innerHTML = products.map(p => {
+                const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
+                const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
+                return `<tr>
+        <td><img src="${getImgSrc(p.images[0])}" class="product-thumb" onerror="this.onerror=null; this.src='${FALLBACK_IMG}'"></td>
+        <td><strong>${p.name}</strong></td>
+        <td>${p.category}</td>
+        <td>${KGJ.fmt(p.price)}</td>
+        <td style="color:${disc > 0 ? '#d4a017' : '#e8d9c4'}">${disc > 0 ? KGJ.fmt(p.discountedPrice) + ` <span style="font-size:0.72rem;opacity:0.7">(-${disc}%)</span>` : '—'}</td>
+        <td>${p.specialOffer ? `<span style="color:#d4a017">${p.specialOffer}</span>` : '<span style="opacity:0.4">—</span>'}</td>
+        <td><span class="badge ${p.inStock ? 'badge-in' : 'badge-out'}">${p.inStock ? 'In Stock' : 'Out of Stock'}</span></td>
+        <td>${p.featured ? '<span class="badge badge-feat">Featured</span>' : '<span style="opacity:0.4">No</span>'}</td>
+        <td>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn-outline-sm" onclick="openModal('${p.id}')"><i class="fas fa-edit"></i></button>
+            <button class="btn-danger-sm" onclick="deleteProduct('${p.id}','${p.name}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </td>
+      </tr>`;
+            }).join('') || '<tr><td colspan="9" style="text-align:center;padding:2rem;opacity:0.5">No products. Add your first product!</td></tr>';
+        }
+
+        function filterTable() {
+            const q = document.getElementById('search-input').value.toLowerCase();
+            renderTable(allProducts.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || (p.gemstone || '').toLowerCase().includes(q)));
+        }
+
+        function openModal(id = null) {
+            editingId = id;
+            document.getElementById('modal-title').textContent = id ? 'Edit Product' : 'Add New Product';
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-id').value = '';
+            renderGallerySlots([]); // Reset gallery slots
+
+
+            if (id) {
+                const p = KGJ.getProduct(id);
+                if (!p) return;
+                document.getElementById('edit-id').value = p.id;
+                document.getElementById('f-name').value = p.name;
+                document.getElementById('f-cat').value = p.category;
+                document.getElementById('f-metal').value = p.metal || '';
+                document.getElementById('f-gem').value = p.gemstone || '';
+                document.getElementById('f-weight').value = p.weight || '';
+                document.getElementById('f-price').value = p.price;
+                document.getElementById('f-disc').value = p.discountedPrice || '';
+                document.getElementById('f-offer').value = p.specialOffer || '';
+                document.getElementById('f-expiry').value = p.offerExpiry || '';
+                renderGallerySlots(p.images || []);
+                document.getElementById('f-desc').value = p.description;
+
+                document.getElementById('f-stock').checked = p.inStock;
+                document.getElementById('f-featured').checked = p.featured;
+                updatePreview();
+            }
+            document.getElementById('product-modal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('product-modal').classList.remove('open');
+            editingId = null;
+        }
+
+        function renderGallerySlots(existingImages) {
+            const container = document.getElementById('gallery-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 5; i++) {
+                const img = existingImages[i] || '';
+                const slot = document.createElement('div');
+                slot.className = 'gallery-slot';
+                slot.style.cssText = 'display:flex;flex-direction:column;gap:0.4rem;background:rgba(255,255,255,0.03);padding:0.5rem;border-radius:8px;border:1px solid rgba(255,255,255,0.05)';
+                slot.innerHTML = `
+                    <div style="position:relative;aspect-ratio:1/1;background:#0b0908;border-radius:6px;overflow:hidden;border:1px solid rgba(212,160,23,0.2)">
+                        <img src="${getImgSrc(img)}" id="prev-${i}" style="width:100%;height:100%;object-fit:cover">
+                        <label for="file-${i}" style="position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;cursor:pointer" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                    </div>
+                    <input type="file" id="file-${i}" accept="image/*" style="display:none" onchange="handleGalleryUpload(event, ${i})">
+                    <div style="display:flex;gap:0.2rem">
+                        <input type="text" class="form-input" id="url-${i}" value="${img.startsWith('data:') ? '' : img}" placeholder="URL" oninput="updateGalleryPreview(${i})" style="font-size:0.65rem;padding:0.3rem 0.5rem;flex:1">
+                        <button type="button" class="btn-icon" onclick="openMediaPicker(${i})" style="width:24px;height:24px;font-size:0.65rem" title="Select from Library">
+                            <i class="fas fa-photo-video"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" id="data-${i}" value="${img.startsWith('data:') ? img : ''}">
+                `;
+                container.appendChild(slot);
+            }
+        }
+
+        function updateGalleryPreview(i) {
+            const b64 = document.getElementById(`data-${i}`).value;
+            const url = document.getElementById(`url-${i}`).value.trim();
+            const prev = document.getElementById(`prev-${i}`);
+            if (b64) prev.src = b64;
+            else if (url) prev.src = (url.startsWith('http') || url.startsWith('//')) ? url : `../${url}`;
+            else prev.src = FALLBACK_IMG;
+        }
+
+        function handleGalleryUpload(event, i) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById(`data-${i}`).value = e.target.result;
+                document.getElementById(`url-${i}`).value = '';
+                document.getElementById(`prev-${i}`).src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updatePreview() { /* Obsolete with gallery */ }
+        function handleProductUpload() { /* Obsolete with gallery */ }
+
+
+        async function saveProduct(e) {
+            e.preventDefault();
+            const price = +document.getElementById('f-price').value;
+            const discVal = document.getElementById('f-disc').value;
+            const discountedPrice = discVal ? +discVal : price;
+
+            // Collect all images from the 5 slots
+            const images = [];
+            for (let i = 0; i < 5; i++) {
+                const b64 = document.getElementById(`data-${i}`).value;
+                const url = document.getElementById(`url-${i}`).value.trim();
+                const final = b64 || url;
+                if (final) images.push(final);
+            }
+            if (images.length === 0) images.push('images/hero.jpg'); // Fallback
+
+
+            const data = {
+                name: document.getElementById('f-name').value,
+                category: document.getElementById('f-cat').value,
+                metal: document.getElementById('f-metal').value,
+                gemstone: document.getElementById('f-gem').value,
+                weight: document.getElementById('f-weight').value,
+                price,
+                discountedPrice,
+                specialOffer: document.getElementById('f-offer').value,
+                offerExpiry: document.getElementById('f-expiry').value,
+                images,
+                description: document.getElementById('f-desc').value,
+
+                inStock: document.getElementById('f-stock').checked,
+                featured: document.getElementById('f-featured').checked,
+                rating: 4.8, reviews: 0,
+            };
+
+            const id = document.getElementById('edit-id').value;
+            
+            showToast('⏳ Saving to Firestore...', 'info');
+            
+            try {
+                if (id) {
+                    if (KGJ.fsUpdateProduct) await KGJ.fsUpdateProduct(id, data);
+                    else KGJ.updateProduct(id, data);
+                } else {
+                    if (KGJ.fsAddProduct) await KGJ.fsAddProduct(data);
+                    else KGJ.addProduct(data);
+                }
+
+                closeModal();
+                await loadProducts();
+                showToast(id ? '✅ Product updated!' : '✅ Product added!');
+            } catch (err) {
+                console.error(err);
+                showToast('❌ Error saving product', 'error');
+            }
+        }
+
+        // Simple toast
+        function showToast(msg, type = 'success') {
+            let t = document.getElementById('prod-toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'prod-toast';
+                t.style.cssText = 'position:fixed;bottom:2rem;right:2rem;z-index:9999;background:rgba(26,92,56,.95);border:1px solid rgba(79,196,124,.4);border-radius:10px;padding:.9rem 1.5rem;color:#4fc47c;font-size:.875rem;display:flex;align-items:center;gap:.6rem;box-shadow:0 8px 32px rgba(0,0,0,.5);transition:all .3s;pointer-events:none';
+                document.body.appendChild(t);
+            }
+            
+            if (type === 'info') t.style.background = 'rgba(21, 62, 82, 0.95)';
+            else if (type === 'error') t.style.background = 'rgba(92, 26, 26, 0.95)';
+            else t.style.background = 'rgba(26, 92, 56, .95)';
+            
+            t.innerHTML = `<i class="fas fa-${type === 'info' ? 'info-circle' : (type === 'error' ? 'exclamation-circle' : 'check-circle')}"></i>${msg}`;
+            t.style.opacity = '1'; t.style.transform = 'translateY(0)';
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(8px)'; }, 2800);
+        }
+
+        async function deleteProduct(id, name) {
+            if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+            
+            showToast('⏳ Deleting...', 'info');
+            try {
+                if (KGJ.fsDeleteProduct) await KGJ.fsDeleteProduct(id);
+                else KGJ.deleteProduct(id);
+                
+                await loadProducts();
+                showToast('✅ Deleted!');
+            } catch (err) {
+                console.error(err);
+                showToast('❌ Error deleting product', 'error');
+            }
+        }
+
+        function exportProducts() {
+            const data = JSON.stringify(KGJ.getProducts(), null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'products.json'; a.click();
+        }
+
+        document.getElementById('product-modal').addEventListener('click', e => {
+            if (e.target === document.getElementById('product-modal')) closeModal();
+        });
+
+        /* ══════════════════════════════════════
+           MEDIA PICKER MODAL
+        ══════════════════════════════════════ */
+        let activePickerIndex = null;
+
+        window.openMediaPicker = function(index) {
+            activePickerIndex = index;
+            const modal = document.getElementById('media-picker-modal');
+            modal.style.display = 'flex';
+            loadPickerMedia();
+        }
+
+        window.closeMediaPicker = function() {
+            document.getElementById('media-picker-modal').style.display = 'none';
+        }
+
+        async function loadPickerMedia() {
+            const container = document.getElementById('picker-grid');
+            container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;opacity:0.5">Loading library...</div>';
+            
+            try {
+                const response = await fetch('../images/media.json?t=' + Date.now());
+                if (!response.ok) throw new Error("Index not found");
+                const data = await response.json();
+                
+                container.innerHTML = '';
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;opacity:0.5">Library is empty. Add images to images/uploads/ and ask me to sync.</div>';
+                    return;
+                }
+                
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-item';
+                    div.style.cssText = 'background:#0b0908;border:1px solid rgba(255,255,255,0.07);border-radius:8px;overflow:hidden;cursor:pointer';
+                    div.innerHTML = `
+                        <img src="${item.url}" style="width:100%;aspect-ratio:1;object-fit:cover;display:block">
+                        <div style="padding:0.4rem;font-size:0.6rem;text-align:center;background:#000;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.name}</div>
+                    `;
+                    div.onclick = () => selectFromPicker(item.url);
+                    container.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Picker load error:", error);
+                container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:#ff4444">Error loading library. Make sure to sync first.</div>';
+            }
+        }
+
+        function selectFromPicker(url) {
+            if (activePickerIndex !== null) {
+                document.getElementById(`url-${activePickerIndex}`).value = url;
+                document.getElementById(`data-${activePickerIndex}`).value = '';
+                document.getElementById(`prev-${activePickerIndex}`).src = url;
+                showToast('Image selected from library!');
+            }
+            closeMediaPicker();
+        }
+
+        // Add modal HTML to body
+        document.body.insertAdjacentHTML('beforeend', `
+            <div id="media-picker-modal" class="modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:2rem">
+                <div class="modal-box" style="background:#1a1610;border:1px solid #d4a017;border-radius:12px;width:100%;max-width:800px;max-height:85vh;overflow-y:auto;padding:2rem">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+                        <h3 style="font-family:'Cormorant Garamond',serif;color:#d4a017;font-size:1.5rem">Select from Library</h3>
+                        <button onclick="closeMediaPicker()" style="background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer">&times;</button>
+                    </div>
+                    <div id="picker-grid" class="bg-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));gap:1rem">
+                    </div>
+                    <div style="margin-top:2rem;text-align:right">
+                        <a href="media.html" class="btn-outline-sm"><i class="fas fa-cloud-upload-alt"></i> Go to Media Library to Upload</a>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        loadProducts();
+    </script>
+</body>
+
+</html>

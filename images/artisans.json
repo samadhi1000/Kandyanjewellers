@@ -1,0 +1,30 @@
+[
+  {
+    "name": "H.M. Rajapaksha",
+    "role": "Managing Director & Founder",
+    "icon": "👑",
+    "desc": "Fifth-generation jewel smith with over 50 years of experience in Kandyan jewellery traditions.",
+    "image": ""
+  },
+  {
+    "name": "Chamara Rajapaksha",
+    "role": "Chief Executive Officer",
+    "icon": "💎",
+    "desc": "Certified by GEMA, specialising in Sri Lankan sapphires, rubies, and cat's eye gems.",
+    "image": ""
+  },
+  {
+    "name": "Dilini Rajapaksha",
+    "role": "Director of Design",
+    "icon": "✨",
+    "desc": "Brings contemporary Kandyan design to life, blending tradition with modern elegance.",
+    "image": ""
+  },
+  {
+    "name": "R.M. Rajapaksha",
+    "role": "Director of Operations",
+    "icon": "⚙️",
+    "desc": "Ensuring the highest standards of quality and service across all our galleries.",
+    "image": ""
+  }
+]
