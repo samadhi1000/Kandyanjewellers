@@ -196,6 +196,7 @@ const KGJ = {
       heroBgPos: 'center',
       shopHeroBgPos: 'center',
       aboutHeroBgPos: 'center',
+      offerBanner: 'Free shipping on orders over Rs. 15,000 | Certified Authentic Gems | Lifetime Warranty on Gold-Plated Jewellery | Latest Designs',
 
       // About Page Content
       aboutS1Sub: 'Founded in 1995',

@@ -53,7 +53,13 @@ const Components = {
     const tickerTrack = document.querySelector('.ticker-track');
     if (tickerTrack && s.offerBanner) {
       const msgs = s.offerBanner.split('|').map(m => m.trim());
-      const items = msgs.map(m => `<span class="ticker-item"><i class="fas fa-gem"></i>${m}</span>`).join('');
+      const items = msgs.map(m => {
+        let icon = 'fa-gem';
+        if (m.toLowerCase().includes('shipping')) icon = 'fa-truck';
+        else if (m.toLowerCase().includes('certified') || m.toLowerCase().includes('authentic')) icon = 'fa-certificate';
+        else if (m.toLowerCase().includes('warranty')) icon = 'fa-shield-alt';
+        return `<span class="ticker-item"><i class="fas ${icon}"></i>${m}</span>`;
+      }).join('');
       tickerTrack.innerHTML = items + items; // duplicate for seamless loop
     }
 
