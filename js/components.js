@@ -210,7 +210,7 @@ const Components = {
           <!-- Bottom Credits Row -->
           <div style="display:flex; justify-content:space-between; align-items:center; width:100%; font-size:0.75rem; color:var(--cream-300); opacity:0.5; border-top:1px solid rgba(255,255,255,0.03); padding-top:1rem; flex-wrap:wrap; gap:0.75rem;">
             <span>&copy; ${new Date().getFullYear()} ${s.siteName}. All rights reserved.</span>
-            <span>Proudly designed with <i class="fas fa-heart" style="color:var(--ruby)"></i> in Kandy, Sri Lanka</span>
+            <span>Designed & Developed by <a href="https://www.stackunleash.com/" target="_blank" rel="noopener" style="color:var(--gold-400); text-decoration:none; transition: color var(--transition-fast);" onmouseover="this.style.color='#f5c842'" onmouseout="this.style.color='var(--gold-400)'">StackUnleash</a></span>
           </div>
         </div>
       </div>
