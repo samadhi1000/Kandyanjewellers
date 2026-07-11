@@ -26,119 +26,681 @@ const COL = 'products';
 /* ── Seed data (12 default products) ─────────────────── */
 const SEED = [
   {
-    id: 'p_seed_1', name: 'Royal Sapphire Ring', category: 'Rings',
-    description: 'A breathtaking 3ct Ceylon Blue Sapphire set in 22k gold with intricate Kandyan filigree work. Certified by the National Gem and Jewellery Authority of Sri Lanka.',
-    price: 185000, discountedPrice: 165000, specialOffer: 'Valentine Special',
-    offerExpiry: '2026-04-30',
-    images: ['https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80'],
-    metal: '22K Gold', gemstone: 'Ceylon Blue Sapphire', inStock: true, featured: true,
-    createdAt: '2026-01-01T00:00:00.000Z', weight: '8.5g', rating: 4.9, reviews: 47
+    "id": "p_seed_new_1",
+    "name": "Elegant Jewellery Set",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated elegant jewellery set with detailed design. Durable and perfect for any special occasion.",
+    "price": 4500,
+    "discountedPrice": 4500,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_jewellery_set_4500_1.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:00:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 10
   },
   {
-    id: 'p_seed_2', name: 'Ruby Pendant Necklace', category: 'Necklaces',
-    description: 'Stunning Burmese ruby pendant set in 18k rose gold with diamond halo. Comes with a 22-inch rose gold chain.',
-    price: 245000, discountedPrice: 245000, specialOffer: '',
-    offerExpiry: '',
-    images: ['https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=600&q=80'],
-    metal: '18K Rose Gold', gemstone: 'Burmese Ruby', inStock: true, featured: true,
-    createdAt: '2026-01-02T00:00:00.000Z', weight: '12g', rating: 4.8, reviews: 31
+    "id": "p_seed_new_2",
+    "name": "Classic Gold Chain",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated classic gold chain with detailed design. Durable and perfect for any special occasion.",
+    "price": 4500,
+    "discountedPrice": 4500,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_classic_gold_chain_4500_2.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:01:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 11
   },
   {
-    id: 'p_seed_3', name: 'Emerald Cascade Earrings', category: 'Earrings',
-    description: 'Exquisite drop earrings featuring Colombian emeralds in a traditional Kandyan gold setting with hand-engraved lotus motifs.',
-    price: 135000, discountedPrice: 118000, specialOffer: '12% Off',
-    offerExpiry: '2026-05-15',
-    images: ['https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80'],
-    metal: '21K Gold', gemstone: 'Colombian Emerald', inStock: true, featured: true,
-    createdAt: '2026-01-03T00:00:00.000Z', weight: '6.2g', rating: 4.7, reviews: 28
+    "id": "p_seed_new_3",
+    "name": "Delicate Gold Bracelet",
+    "category": "Bracelet",
+    "description": "Beautiful handcrafted 24k gold-plated delicate gold bracelet with detailed design. Durable and perfect for any special occasion.",
+    "price": 2850,
+    "discountedPrice": 2850,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_delicate_gold_bracelet_2850_3.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:02:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 12
   },
   {
-    id: 'p_seed_4', name: 'Kandyan Bridal Set', category: 'Bridal',
-    description: 'Complete Kandyan bridal jewellery set including necklace, earrings, bangles, and maang tikka in 22k gold with rubies and pearls.',
-    price: 850000, discountedPrice: 750000, specialOffer: 'Bridal Season Offer',
-    offerExpiry: '2026-06-30',
-    images: ['https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=600&q=80'],
-    metal: '22K Gold', gemstone: 'Ruby & Pearl', inStock: true, featured: true,
-    createdAt: '2026-01-04T00:00:00.000Z', weight: '85g', rating: 5.0, reviews: 15
+    "id": "p_seed_new_4",
+    "name": "Chain with Pendant",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated chain with pendant with detailed design. Durable and perfect for any special occasion.",
+    "price": 6000,
+    "discountedPrice": 6000,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_chain_with_pendant_6000_4.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:03:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 13
   },
   {
-    id: 'p_seed_5', name: 'Sapphire Tennis Bracelet', category: 'Bracelets',
-    description: 'Elegant tennis bracelet with alternating Ceylon sapphires and white diamonds set in 18k white gold.',
-    price: 195000, discountedPrice: 175000, specialOffer: '',
-    offerExpiry: '',
-    images: ['https://images.unsplash.com/photo-1575377222312-dd1a63a51638?w=600&q=80'],
-    metal: '18K White Gold', gemstone: 'Ceylon Sapphire & Diamond', inStock: true, featured: false,
-    createdAt: '2026-01-05T00:00:00.000Z', weight: '15g', rating: 4.6, reviews: 22
+    "id": "p_seed_new_5",
+    "name": "Adjustable Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated adjustable gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_adjustable_gold_ring_3500_5.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:04:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 14
   },
   {
-    id: 'p_seed_6', name: "Cat's Eye Gent Ring", category: 'Rings',
-    description: "Bold gentleman's ring featuring a prized Cat's Eye Chrysoberyl in a heavy 22k gold setting with traditional engravings.",
-    price: 125000, discountedPrice: 125000, specialOffer: '',
-    offerExpiry: '',
-    images: ['https://images.unsplash.com/photo-1609743522653-52354461eb27?w=600&q=80'],
-    metal: '22K Gold', gemstone: "Cat's Eye Chrysoberyl", inStock: true, featured: false,
-    createdAt: '2026-01-06T00:00:00.000Z', weight: '18g', rating: 4.5, reviews: 19
+    "id": "p_seed_new_6",
+    "name": "Classic Earring Studs",
+    "category": "Earrings",
+    "description": "Beautiful handcrafted 24k gold-plated classic earring studs with detailed design. Durable and perfect for any special occasion.",
+    "price": 2500,
+    "discountedPrice": 2500,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_classic_earring_studs_2500_6.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:05:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 15
   },
   {
-    id: 'p_seed_7', name: 'Pearl Drop Earrings', category: 'Earrings',
-    description: 'Classic South Sea pearl drop earrings with 22k gold hooks adorned with seed diamonds and fine filigree.',
-    price: 75000, discountedPrice: 65000, specialOffer: '13% Off',
-    offerExpiry: '2026-04-20',
-    images: ['https://images.unsplash.com/photo-1535556116002-6281ff3e9f36?w=600&q=80'],
-    metal: '22K Gold', gemstone: 'South Sea Pearl', inStock: true, featured: false,
-    createdAt: '2026-01-07T00:00:00.000Z', weight: '4.5g', rating: 4.7, reviews: 38
+    "id": "p_seed_new_7",
+    "name": "Elegant Gold Bracelet",
+    "category": "Bracelet",
+    "description": "Beautiful handcrafted 24k gold-plated elegant gold bracelet with detailed design. Durable and perfect for any special occasion.",
+    "price": 2850,
+    "discountedPrice": 2850,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_elegant_gold_bracelet_2850_7.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:06:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 16
   },
   {
-    id: 'p_seed_8', name: 'Blue Topaz Pendant', category: 'Necklaces',
-    description: 'Faceted Swiss Blue Topaz in a prong-set 18k gold pendant with a delicate box chain.',
-    price: 55000, discountedPrice: 48000, specialOffer: '',
-    offerExpiry: '',
-    images: ['https://images.unsplash.com/photo-1531995811006-35cb42e1a022?w=600&q=80'],
-    metal: '18K Gold', gemstone: 'Swiss Blue Topaz', inStock: true, featured: false,
-    createdAt: '2026-01-08T00:00:00.000Z', weight: '5g', rating: 4.4, reviews: 12
+    "id": "p_seed_new_8",
+    "name": "Beaded Gold Bracelet",
+    "category": "Bracelet",
+    "description": "Beautiful handcrafted 24k gold-plated beaded gold bracelet with detailed design. Durable and perfect for any special occasion.",
+    "price": 2850,
+    "discountedPrice": 2850,
+    "specialOffer": "Featured",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_beaded_gold_bracelet_2850_8.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": true,
+    "createdAt": "2026-07-11T12:07:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 17
   },
   {
-    id: 'p_seed_9', name: 'Amethyst Cluster Ring', category: 'Rings',
-    description: 'Stunning cluster ring with deep purple amethysts set in 18k white gold, an elegant everyday luxury.',
-    price: 68000, discountedPrice: 60000, specialOffer: 'New Arrival',
-    offerExpiry: '2026-05-01',
-    images: ['https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=600&q=80'],
-    metal: '18K White Gold', gemstone: 'Amethyst', inStock: true, featured: false,
-    createdAt: '2026-01-09T00:00:00.000Z', weight: '7g', rating: 4.5, reviews: 9
+    "id": "p_seed_new_9",
+    "name": "Floral Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated floral gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_floral_gold_ring_3500_9.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:08:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 18
   },
   {
-    id: 'p_seed_10', name: 'Diamond Solitaire Ring', category: 'Rings',
-    description: 'Timeless 1ct G-VS2 diamond solitaire ring in a 6-prong platinum setting. The perfect engagement ring.',
-    price: 450000, discountedPrice: 420000, specialOffer: '',
-    offerExpiry: '',
-    images: ['https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80'],
-    metal: 'Platinum', gemstone: 'Diamond', inStock: true, featured: true,
-    createdAt: '2026-01-10T00:00:00.000Z', weight: '5g', rating: 5.0, reviews: 67
+    "id": "p_seed_new_10",
+    "name": "Minimalist Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated minimalist gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_minimalist_gold_ring_3500_10.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:09:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 19
   },
   {
-    id: 'p_seed_11', name: 'Gold Bangle Set', category: 'Bracelets',
-    description: 'Set of 4 traditional Kandyan plain gold bangles with fine engraved Kandyan border pattern, sold as a set.',
-    price: 95000, discountedPrice: 88000, specialOffer: '',
-    offerExpiry: '',
-    images: ['https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80'],
-    metal: '22K Gold', gemstone: 'None', inStock: true, featured: false,
-    createdAt: '2026-01-11T00:00:00.000Z', weight: '35g', rating: 4.6, reviews: 41
+    "id": "p_seed_new_11",
+    "name": "Stackable Gold Rings",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated stackable gold rings with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_stackable_gold_rings_3500_11.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:10:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 20
   },
   {
-    id: 'p_seed_12', name: 'Moonstone Silver Pendant', category: 'Necklaces',
-    description: 'Mystical rainbow moonstone set in fine sterling silver with oxidised Kandyan lotus detailing.',
-    price: 18500, discountedPrice: 15000, specialOffer: '19% Off',
-    offerExpiry: '2026-04-15',
-    images: ['https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=600&q=80'],
-    metal: 'Sterling Silver', gemstone: 'Rainbow Moonstone', inStock: true, featured: false,
-    createdAt: '2026-01-12T00:00:00.000Z', weight: '3g', rating: 4.8, reviews: 55
+    "id": "p_seed_new_12",
+    "name": "Gold Hoop Earrings",
+    "category": "Earrings",
+    "description": "Beautiful handcrafted 24k gold-plated gold hoop earrings with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_gold_hoop_earrings_3500_12.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:11:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 21
   },
+  {
+    "id": "p_seed_new_13",
+    "name": "Elegant Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated elegant gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_elegant_gold_ring_3500_13.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:12:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 22
+  },
+  {
+    "id": "p_seed_new_14",
+    "name": "Delicate Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated delicate gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_delicate_gold_ring_3500_14.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:13:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 23
+  },
+  {
+    "id": "p_seed_new_15",
+    "name": "Luxury Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated luxury gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 3850,
+    "discountedPrice": 3850,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_luxury_gold_ring_3850_15.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:14:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 24
+  },
+  {
+    "id": "p_seed_new_16",
+    "name": "Gold Bangle",
+    "category": "Bangles",
+    "description": "Beautiful handcrafted 24k gold-plated gold bangle with detailed design. Durable and perfect for any special occasion.",
+    "price": 4500,
+    "discountedPrice": 4500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_gold_bangle_4500_16.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:15:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 25
+  },
+  {
+    "id": "p_seed_new_17",
+    "name": "Classic Gold Bangle",
+    "category": "Bangles",
+    "description": "Beautiful handcrafted 24k gold-plated classic gold bangle with detailed design. Durable and perfect for any special occasion.",
+    "price": 4500,
+    "discountedPrice": 4500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_classic_gold_bangle_4500_17.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:16:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 26
+  },
+  {
+    "id": "p_seed_new_18",
+    "name": "Intricate Gold Bangle",
+    "category": "Bangles",
+    "description": "Beautiful handcrafted 24k gold-plated intricate gold bangle with detailed design. Durable and perfect for any special occasion.",
+    "price": 4500,
+    "discountedPrice": 4500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_intricate_gold_bangle_4500_18.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:17:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 27
+  },
+  {
+    "id": "p_seed_new_19",
+    "name": "Artistic Gold Bracelet",
+    "category": "Bracelet",
+    "description": "Beautiful handcrafted 24k gold-plated artistic gold bracelet with detailed design. Durable and perfect for any special occasion.",
+    "price": 4500,
+    "discountedPrice": 4500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_artistic_gold_bracelet_4500_19.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:18:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 28
+  },
+  {
+    "id": "p_seed_new_20",
+    "name": "Premium Gold Bracelet",
+    "category": "Bracelet",
+    "description": "Beautiful handcrafted 24k gold-plated premium gold bracelet with detailed design. Durable and perfect for any special occasion.",
+    "price": 5000,
+    "discountedPrice": 5000,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_premium_gold_bracelet_5000_20.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:19:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 29
+  },
+  {
+    "id": "p_seed_new_21",
+    "name": "Exquisite Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated exquisite gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 6000,
+    "discountedPrice": 6000,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_exquisite_gold_ring_6000_21.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:20:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 30
+  },
+  {
+    "id": "p_seed_new_22",
+    "name": "Luxury Gold Necklace",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated luxury gold necklace with detailed design. Durable and perfect for any special occasion.",
+    "price": 6000,
+    "discountedPrice": 6000,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_luxury_gold_necklace_6000_22.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:21:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 31
+  },
+  {
+    "id": "p_seed_new_23",
+    "name": "Premium Gold Necklace",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated premium gold necklace with detailed design. Durable and perfect for any special occasion.",
+    "price": 6000,
+    "discountedPrice": 6000,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_premium_gold_necklace_6000_23.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:22:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 32
+  },
+  {
+    "id": "p_seed_new_24",
+    "name": "Exquisite Gold Necklace",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated exquisite gold necklace with detailed design. Durable and perfect for any special occasion.",
+    "price": 6500,
+    "discountedPrice": 6500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_exquisite_gold_necklace_6500_24.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:23:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 33
+  },
+  {
+    "id": "p_seed_new_25",
+    "name": "Artistic Gold Necklace",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated artistic gold necklace with detailed design. Durable and perfect for any special occasion.",
+    "price": 6500,
+    "discountedPrice": 6500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_artistic_gold_necklace_6500_25.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:24:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 34
+  },
+  {
+    "id": "p_seed_new_26",
+    "name": "Premium Gold Bangle",
+    "category": "Bangles",
+    "description": "Beautiful handcrafted 24k gold-plated premium gold bangle with detailed design. Durable and perfect for any special occasion.",
+    "price": 6500,
+    "discountedPrice": 6500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_premium_gold_bangle_6500_26.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:25:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 35
+  },
+  {
+    "id": "p_seed_new_27",
+    "name": "Exquisite Gold Bangle",
+    "category": "Bangles",
+    "description": "Beautiful handcrafted 24k gold-plated exquisite gold bangle with detailed design. Durable and perfect for any special occasion.",
+    "price": 6500,
+    "discountedPrice": 6500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_exquisite_gold_bangle_6500_27.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:26:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 36
+  },
+  {
+    "id": "p_seed_new_28",
+    "name": "Delicate Gold Necklace",
+    "category": "Chain with Pendant",
+    "description": "Beautiful handcrafted 24k gold-plated delicate gold necklace with detailed design. Durable and perfect for any special occasion.",
+    "price": 6500,
+    "discountedPrice": 6500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_delicate_gold_necklace_6500_28.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:27:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 37
+  },
+  {
+    "id": "p_seed_new_29",
+    "name": "Luxury Gold Bangle",
+    "category": "Bangles",
+    "description": "Beautiful handcrafted 24k gold-plated luxury gold bangle with detailed design. Durable and perfect for any special occasion.",
+    "price": 7000,
+    "discountedPrice": 7000,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_luxury_gold_bangle_7000_29.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:28:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 38
+  },
+  {
+    "id": "p_seed_new_30",
+    "name": "Premium Gold Bangle Set",
+    "category": "Bangles",
+    "description": "Beautiful handcrafted 24k gold-plated premium gold bangle set with detailed design. Durable and perfect for any special occasion.",
+    "price": 7000,
+    "discountedPrice": 7000,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_premium_gold_bangle_set_7000_30.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:29:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 39
+  },
+  {
+    "id": "p_seed_new_31",
+    "name": "Custom Size Gold Ring",
+    "category": "Rings",
+    "description": "Beautiful handcrafted 24k gold-plated custom size gold ring with detailed design. Durable and perfect for any special occasion.",
+    "price": 3500,
+    "discountedPrice": 3500,
+    "specialOffer": "",
+    "offerExpiry": "",
+    "images": [
+      "images/uploads/prod_custom_size_gold_ring_3500_31.jpg"
+    ],
+    "metal": "24K Gold Plated",
+    "gemstone": "None",
+    "inStock": true,
+    "featured": false,
+    "createdAt": "2026-07-11T12:30:00.000Z",
+    "weight": "5g",
+    "rating": 4.8,
+    "reviews": 40
+  }
 ];
 
 /* ── Auto-seed if Firestore is empty ─────────────────── */
 async function _seedIfEmpty() {
   const snap = await getDocs(collection(_db, COL));
-  if (snap.empty) {
+  // Detect old seeds and clear them
+  let hasOldSeed = false;
+  snap.forEach(d => {
+    if (d.id.startsWith('p_seed_') && !d.id.startsWith('p_seed_new_')) {
+      hasOldSeed = true;
+    }
+  });
+  if (hasOldSeed) {
+    console.log('[KGJ] Old seed detected, clearing collection...');
+    for (const d of snap.docs) {
+      await deleteDoc(doc(_db, COL, d.id));
+    }
+    console.log('[KGJ] Cleared. Seeding new products...');
+    for (const p of SEED) {
+      const { id, ...data } = p;
+      await setDoc(doc(_db, COL, id), data);
+    }
+    console.log('[KGJ] Seed complete.');
+    return SEED;
+  } else if (snap.empty) {
     console.log('[KGJ] Seeding products to Firestore...');
     for (const p of SEED) {
       const { id, ...data } = p;
