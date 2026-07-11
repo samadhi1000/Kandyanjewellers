@@ -681,3 +681,32 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
 ::-webkit-scrollbar-track { background: var(--dark-200); }
 ::-webkit-scrollbar-thumb { background: rgba(212,160,23,0.3); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(212,160,23,0.5); }
+
+/* ── StackUnleash Brand Styles ── */
+.su-logo-group:hover .su-logo-icon-wrapper {
+  transform: scale(1.1);
+}
+.gradient-text {
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(270deg, #00d8ff, #6366f1, #8b5cf6, #6366f1, #00d8ff) 0 0 / 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: gradient-flow 6s infinite;
+}
+@keyframes gradient-flow {
+  0% { background-position: 0; }
+  50% { background-position: 100%; }
+  100% { background-position: 0; }
+}
+.shine-text {
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(90deg, #ffffff73 0 30%, #fff 50%, #ffffff73 70% 100%) 0 0 / 200%;
+  -webkit-background-clip: text;
+  animation: textShine 4s linear infinite;
+  display: inline-block;
+}
+@keyframes textShine {
+  0% { background-position: 200%; }
+  100% { background-position: -200%; }
+}
+

@@ -184,9 +184,34 @@ const Components = {
             </ul>
           </div>
         </div>
-        <div class="footer-bottom">
-          <span>&copy; ${new Date().getFullYear()} ${s.siteName}. All rights reserved.</span>
-          <span>Designed with <i class="fas fa-heart" style="color:var(--ruby)"></i> in Kandy, Sri Lanka</span>
+        <div class="footer-bottom" style="display:flex; flex-direction:column; gap:1.5rem; align-items:center; opacity:0.95; border-top:1px solid rgba(255,255,255,0.06); padding-top:2rem; margin-top:2rem;">
+          <div style="display:flex; align-items:center; gap:2.5rem; justify-content:space-between; width:100%; flex-wrap:wrap;">
+            <!-- Logo block -->
+            <a href="https://www.stackunleash.com/" target="_blank" rel="noopener" class="su-logo-group" style="display:flex; align-items:center; gap:0.85rem; text-decoration:none; text-align:left;">
+              <div class="su-logo-icon-wrapper" style="transition: transform 0.3s ease; display: flex; align-items: center;">
+                <img src="${p}images/stackunleash-logo.png" alt="StackUnleash Logo" style="height:48px; width:auto; object-fit:contain;" />
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1;">
+                <span style="font-size:1.45rem; font-weight:900; letter-spacing:-0.01em; color:#fff; font-family:var(--font-sans), sans-serif; display:flex; align-items:center;">
+                  STACK<span class="gradient-text" style="font-weight:950; margin-left:1px;">UNLEASH</span>
+                </span>
+                <span class="shine-text" style="font-size:0.55rem; font-weight:900; letter-spacing:0.25em; text-transform:uppercase; margin-top:0.35rem; font-family:var(--font-sans), sans-serif;">
+                  Build &bull; Automate &bull; Scale
+                </span>
+              </div>
+            </a>
+            
+            <!-- Paragraph block -->
+            <p style="max-width:620px; font-size:0.825rem; color:var(--cream-300); opacity:0.8; line-height:1.6; margin:0; text-align:left; flex:1; min-width:280px;">
+              Meticulously crafted to deliver a seamless digital experience. Proudly designed with ❤️ in Kandy, Sri Lanka. Another quality design by StackUnleash—empowering brands through cutting-edge web technology.
+            </p>
+          </div>
+
+          <!-- Bottom Credits Row -->
+          <div style="display:flex; justify-content:space-between; align-items:center; width:100%; font-size:0.75rem; color:var(--cream-300); opacity:0.5; border-top:1px solid rgba(255,255,255,0.03); padding-top:1rem; flex-wrap:wrap; gap:0.75rem;">
+            <span>&copy; ${new Date().getFullYear()} ${s.siteName}. All rights reserved.</span>
+            <span>Proudly designed with <i class="fas fa-heart" style="color:var(--ruby)"></i> in Kandy, Sri Lanka</span>
+          </div>
         </div>
       </div>
     </footer>`;
