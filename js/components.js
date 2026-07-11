@@ -150,7 +150,7 @@ const Components = {
             <div class="footer-social">
               <a href="${s.facebook}" class="social-btn" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
               <a href="${s.instagram}" class="social-btn" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-              <a href="https://wa.me/${s.whatsapp.replace(/\D/g, '')}" class="social-btn" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+              <a href="https://wa.me/${(s.whatsapp || '').replace(/\D/g, '')}" class="social-btn" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
               <a href="mailto:${s.email}" class="social-btn" aria-label="Email"><i class="fas fa-envelope"></i></a>
             </div>
           </div>
@@ -178,7 +178,7 @@ const Components = {
             <h4>Contact</h4>
             <ul>
               <li><a href="tel:${s.phone}"><i class="fas fa-phone" style="width:14px;color:var(--gold-400)"></i> ${s.phone}</a></li>
-              <li><a href="https://wa.me/${s.whatsapp.replace(/\D/g, '')}" target="_blank"><i class="fab fa-whatsapp" style="width:14px;color:var(--gold-400)"></i> ${s.whatsapp}</a></li>
+              <li><a href="https://wa.me/${(s.whatsapp || '').replace(/\D/g, '')}" target="_blank"><i class="fab fa-whatsapp" style="width:14px;color:var(--gold-400)"></i> ${s.whatsapp || ''}</a></li>
               <li><a href="mailto:${s.email}"><i class="fas fa-envelope" style="width:14px;color:var(--gold-400)"></i> ${s.email}</a></li>
               <li style="display:flex;gap:0.5rem;align-items:flex-start"><i class="fas fa-map-marker-alt" style="width:14px;color:var(--gold-400);margin-top:3px;flex-shrink:0"></i><span>${s.address}</span></li>
             </ul>
@@ -292,36 +292,58 @@ const Components = {
    * Useful after fetching settings from Firestore
    */
   refresh(activePage = '') {
-    const navHolder = document.getElementById('nav-placeholder');
-    if (navHolder) navHolder.innerHTML = this.renderNav(activePage);
+    try {
+      const navHolder = document.getElementById('nav-placeholder');
+      if (navHolder) navHolder.innerHTML = this.renderNav(activePage);
 
-    const footerHolder = document.getElementById('footer-placeholder');
-    if (footerHolder) footerHolder.innerHTML = this.renderFooter();
+      const footerHolder = document.getElementById('footer-placeholder');
+      if (footerHolder) footerHolder.innerHTML = this.renderFooter();
 
-    this.applySettings();
-    this.initMobileNav();
-    this.initSearch();
-    console.log('[KGJ] UI Components Refreshed');
+      this.applySettings();
+      this.initMobileNav();
+      this.initSearch();
+      console.log('[KGJ] UI Components Refreshed');
+    } catch(e) {
+      console.error('[KGJ] Components.refresh error:', e);
+    }
   },
 
   init(activePage = '') {
-    // Inject nav
-    const navHolder = document.getElementById('nav-placeholder');
-    if (navHolder) navHolder.innerHTML = this.renderNav(activePage);
+    try {
+      // Inject nav
+      const navHolder = document.getElementById('nav-placeholder');
+      if (navHolder) navHolder.innerHTML = this.renderNav(activePage);
 
-    // Inject footer
-    const footerHolder = document.getElementById('footer-placeholder');
-    if (footerHolder) footerHolder.innerHTML = this.renderFooter();
+      // Inject footer
+      const footerHolder = document.getElementById('footer-placeholder');
+      if (footerHolder) footerHolder.innerHTML = this.renderFooter();
 
-    // Inject cart drawer
-    const cartHolder = document.getElementById('cart-placeholder');
-    if (cartHolder) cartHolder.innerHTML = this.renderCartDrawer();
+      // Inject cart drawer
+      const cartHolder = document.getElementById('cart-placeholder');
+      if (cartHolder) cartHolder.innerHTML = this.renderCartDrawer();
 
-    this.applySettings();
-    this.initMobileNav();
-    this.initSearch();
-    if (window.Cart) Cart.init();
-    if (window.ScrollEngine) ScrollEngine.init();
+      this.applySettings();
+      this.initMobileNav();
+      this.initSearch();
+      if (window.Cart) Cart.init();
+      if (window.ScrollEngine) ScrollEngine.init();
+    } catch(e) {
+      console.error('[KGJ] Components.init error:', e);
+      // Fallback: try re-rendering with clean defaults
+      try {
+        window._FSSettings = null;
+        const navHolder = document.getElementById('nav-placeholder');
+        if (navHolder) navHolder.innerHTML = this.renderNav(activePage);
+        const footerHolder = document.getElementById('footer-placeholder');
+        if (footerHolder) footerHolder.innerHTML = this.renderFooter();
+        const cartHolder = document.getElementById('cart-placeholder');
+        if (cartHolder) cartHolder.innerHTML = this.renderCartDrawer();
+        this.applySettings();
+        this.initMobileNav();
+        this.initSearch();
+        if (window.Cart) Cart.init();
+      } catch(e2) { console.error('[KGJ] Components.init fallback error:', e2); }
+    }
   },
 };
 

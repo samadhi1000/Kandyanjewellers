@@ -136,12 +136,15 @@ const KGJ = {
     // 1. Merge localStorage
     try {
       const saved = JSON.parse(localStorage.getItem(this.KEYS.settings) || '{}');
-      settings = { ...settings, ...saved };
+      // Filter out null/undefined values so defaults are preserved
+      const cleanSaved = Object.fromEntries(Object.entries(saved).filter(([, v]) => v != null && v !== ''));
+      settings = { ...settings, ...cleanSaved };
     } catch(e) {}
 
-    // 2. Merge Firestore cache
+    // 2. Merge Firestore cache (filter nulls too)
     if (window._FSSettings) {
-      settings = { ...settings, ...window._FSSettings };
+      const cleanFS = Object.fromEntries(Object.entries(window._FSSettings).filter(([, v]) => v != null && v !== ''));
+      settings = { ...settings, ...cleanFS };
       // Safety: If Firestore has no artisans, keep defaults
       if (!settings.artisans || settings.artisans.length === 0) {
         settings.artisans = defaults.artisans;
