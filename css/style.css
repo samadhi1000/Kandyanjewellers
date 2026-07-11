@@ -710,3 +710,33 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
   100% { background-position: -200%; }
 }
 
+/* ── Navbar & Footer Logo Shine Animation ── */
+.logo-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.logo-img-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 30%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.45);
+  transform: rotate(30deg);
+  transition: none;
+  animation: logo-shine 6s ease-in-out infinite;
+}
+@keyframes logo-shine {
+  0% { left: -60%; }
+  15% { left: 130%; }
+  100% { left: 130%; }
+}
+.logo:hover .logo-img-wrapper {
+  transform: scale(1.08);
+}
+
+
