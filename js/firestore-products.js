@@ -678,10 +678,11 @@ const SEED = [
   }
 ];
 
-/* ── Auto-seed if Firestore is empty ─────────────────── */
+/* ── Auto-seed / sync all products from SEED list ─────── */
 async function _seedIfEmpty() {
   const snap = await getDocs(collection(_db, COL));
-  // Detect old seeds and clear them
+
+  // Detect and remove old seed products (pre-new format)
   let hasOldSeed = false;
   snap.forEach(d => {
     if (d.id.startsWith('p_seed_') && !d.id.startsWith('p_seed_new_')) {
@@ -700,7 +701,10 @@ async function _seedIfEmpty() {
     }
     console.log('[KGJ] Seed complete.');
     return SEED;
-  } else if (snap.empty) {
+  }
+
+  if (snap.empty) {
+    // Collection is empty — seed everything
     console.log('[KGJ] Seeding products to Firestore...');
     for (const p of SEED) {
       const { id, ...data } = p;
@@ -709,18 +713,30 @@ async function _seedIfEmpty() {
     console.log('[KGJ] Seed complete.');
     return SEED;
   }
+
+  // Collection has data — upsert any SEED products that are missing
+  const existingIds = new Set(snap.docs.map(d => d.id));
+  const missing = SEED.filter(p => !existingIds.has(p.id));
+  if (missing.length > 0) {
+    console.log(`[KGJ] Adding ${missing.length} missing products to Firestore...`);
+    for (const p of missing) {
+      const { id, ...data } = p;
+      await setDoc(doc(_db, COL, id), data);
+    }
+    console.log('[KGJ] Missing products added.');
+    return SEED;
+  }
+
   return null;
 }
 
 /* ── Load all products from Firestore ────────────────── */
 async function fsLoadProducts() {
   try {
+    // Always sync missing seed products first
+    const synced = await _seedIfEmpty();
+
     let snap = await getDocs(collection(_db, COL));
-    if (snap.empty) {
-      console.log('[KGJ] Firestore empty, seeding defaults...');
-      await _seedIfEmpty();
-      snap = await getDocs(collection(_db, COL));
-    }
     const products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     products.sort((a,b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
 
