@@ -81,7 +81,7 @@ const Components = {
       <div class="nav-inner">
         <a href="${p}index.html" class="logo">
           ${s.siteName}
-          <span>Est. 1995 &bull; Quality Gems &amp; Jewellery</span>
+          <span>Est. 1995 &bull; Fine Gems &amp; Craftsmanship</span>
         </a>
         <div class="nav-links">
           ${links.map(l => `<a href="${l.href}" class="${activePage === l.key ? 'active' : ''}">${l.label}</a>`).join('')}
@@ -139,7 +139,7 @@ const Components = {
         <div class="footer-grid">
           <div class="footer-brand">
             <div class="logo-text">${s.siteName}</div>
-            <div class="logo-sub">Est. 1995 &bull; Quality Gems &amp; Jewellery &bull; Kandy</div>
+            <div class="logo-sub">Est. 1995 &bull; Fine Gems &amp; Craftsmanship &bull; Kandy</div>
             <p>Purveyors of exquisite Kandyan jewellery and certified precious gemstones for over three decades. Every piece tells a timeless story.</p>
             <div class="footer-social">
               <a href="${s.facebook}" class="social-btn" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
