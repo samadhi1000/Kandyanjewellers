@@ -200,22 +200,22 @@ const Components = {
           <div style="display:flex; align-items:center; gap:2.5rem; justify-content:space-between; width:100%; flex-wrap:wrap;">
             <!-- Logo block -->
             <a href="https://www.stackunleash.com/" target="_blank" rel="noopener" class="su-logo-group" style="display:flex; align-items:center; gap:0.85rem; text-decoration:none; text-align:left;">
-              <div class="su-logo-icon-wrapper" style="transition: transform 0.3s ease; display: flex; align-items: center;">
-                <img src="${p}images/stackunleash-logo.png" alt="StackUnleash Logo" style="height:48px; width:auto; object-fit:contain;" />
+              <div class="su-logo-icon-wrapper" style="transition: transform 0.3s ease; display: flex; align-items: center; filter: grayscale(1) brightness(1.2) sepia(1) hue-rotate(5deg) saturate(1.8);">
+                <img src="${p}images/stackunleash-logo.png" alt="StackUnleash Logo" style="height:38px; width:auto; object-fit:contain;" />
               </div>
-              <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1;">
-                <span style="font-size:1.45rem; font-weight:900; letter-spacing:-0.01em; color:#fff; font-family:var(--font-sans), sans-serif; display:flex; align-items:center;">
-                  STACK<span class="gradient-text" style="font-weight:950; margin-left:1px;">UNLEASH</span>
+              <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+                <span style="font-size:1.25rem; font-weight:800; letter-spacing:0.02em; color:#fff; font-family:var(--font-sans), sans-serif; display:flex; align-items:center;">
+                  STACK<span style="font-weight:900; margin-left:1px; color:var(--gold-400);">UNLEASH</span>
                 </span>
-                <span class="shine-text" style="font-size:0.55rem; font-weight:900; letter-spacing:0.25em; text-transform:uppercase; margin-top:0.35rem; font-family:var(--font-sans), sans-serif;">
+                <span style="font-size:0.55rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--cream-300); opacity:0.6; font-family:var(--font-sans), sans-serif;">
                   Build &bull; Automate &bull; Scale
                 </span>
               </div>
             </a>
             
-            <!-- Paragraph block -->
-            <p style="max-width:620px; font-size:0.825rem; color:var(--cream-300); opacity:0.8; line-height:1.6; margin:0; text-align:left; flex:1; min-width:280px;">
-              Meticulously crafted to deliver a seamless digital experience. Proudly designed with ❤️ in Kandy, Sri Lanka. Another quality design by StackUnleash—empowering brands through cutting-edge web technology.
+            <!-- Powered by text -->
+            <p style="font-size:0.85rem; color:var(--cream-300); opacity:0.85; margin:0; text-align:right; font-family:var(--font-sans), sans-serif; font-weight:500;">
+              Powered By <a href="https://www.stackunleash.com/" target="_blank" rel="noopener" style="color:var(--gold-400); text-decoration:none; font-weight:600; transition: color var(--transition-fast);" onmouseover="this.style.color='#f5c842'" onmouseout="this.style.color='var(--gold-400)'">StackUnleash</a>
             </p>
           </div>
 
