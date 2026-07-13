@@ -91,7 +91,7 @@ const Components = {
           </div>
           <div style="display:flex; flex-direction:column; line-height:1.2;">
             <span class="gradient-text" style="font-family: var(--font-serif); font-weight:700; font-size:1.45rem; display:inline-block;">${s.siteName}</span>
-            <span>Est. 1995 &bull; Fine Gems &amp; Craftsmanship</span>
+            <span class="logo-tagline">Est. 1995 &bull; Fine Gems &amp; Craftsmanship</span>
           </div>
         </a>
         <div class="nav-links">
