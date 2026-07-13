@@ -201,18 +201,23 @@
                     </div>
                     <div class="reveal-right">
                         <h2 class="display-sm" style="margin-bottom:2rem">Showroom Hours</h2>
-                        <div style="display:flex;flex-direction:column;gap:0.75rem">
-                            ${[
-                            {day:'Monday – Friday', hrs:'9:00 AM – 7:00 PM'},
-                            {day:'Saturday', hrs:'9:00 AM – 6:00 PM'},
-                            {day:'Sunday', hrs:'10:00 AM – 4:00 PM'},
-                            {day:'Public Holidays', hrs:'By appointment only'},
-                            ].map(h=>`
-                            <div
-                                style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md)">
-                                <span style="font-size:0.9rem;color:var(--cream-200)">${h.day}</span>
-                                <span style="font-size:0.875rem;color:var(--gold-400)">${h.hrs}</span>
-                            </div>`).join('')}
+                        <div style="display:flex;flex-direction:column;gap:0.75rem" id="hours-list">
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md)">
+                                <span style="font-size:0.9rem;color:var(--cream-200)">Monday – Friday</span>
+                                <span style="font-size:0.875rem;color:var(--gold-400)">9:00 AM – 7:00 PM</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md)">
+                                <span style="font-size:0.9rem;color:var(--cream-200)">Saturday</span>
+                                <span style="font-size:0.875rem;color:var(--gold-400)">9:00 AM – 6:00 PM</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md)">
+                                <span style="font-size:0.9rem;color:var(--cream-200)">Sunday</span>
+                                <span style="font-size:0.875rem;color:var(--gold-400)">10:00 AM – 4:00 PM</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-md)">
+                                <span style="font-size:0.9rem;color:var(--cream-200)">Public Holidays</span>
+                                <span style="font-size:0.875rem;color:var(--gold-400)">By appointment only</span>
+                            </div>
                         </div>
                         <div class="offer-banner"
                             style="margin-top:2rem;background:rgba(212,160,23,0.06);border:1px solid rgba(212,160,23,0.2);border-radius:var(--radius-md);padding:1.25rem;display:flex;gap:0.75rem;align-items:flex-start">
@@ -238,20 +243,35 @@
                 <p class="body-md" style="color:var(--cream-300);max-width:500px;margin:0 auto 3rem">Follow us on social
                     media for daily jewellery inspiration, behind-the-scenes craftsmanship, and exclusive offers.</p>
                 <div class="flex gap-4 justify-center" style="flex-wrap:wrap;margin-bottom:4rem">
-                    ${[
-                    {icon:'fab fa-facebook-f', label:'Facebook', href:'#'},
-                    {icon:'fab fa-instagram', label:'Instagram', href:'#'},
-                    {icon:'fab fa-whatsapp', label:'WhatsApp', href:'#'},
-                    {icon:'fab fa-youtube', label:'YouTube', href:'#'},
-                    ].map(s=>`
-                    <a href="${s.href}" target="_blank"
+                <div class="flex gap-4 justify-center" style="flex-wrap:wrap;margin-bottom:4rem" id="social-links">
+                    <a href="#" id="social-facebook" target="_blank" rel="noopener noreferrer"
                         style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:1.75rem 2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);min-width:130px;transition:all 0.3s;text-decoration:none"
                         onmouseover="this.style.borderColor='rgba(212,160,23,0.4)';this.style.background='rgba(212,160,23,0.08)'"
                         onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.04)'">
-                        <i class="${s.icon}" style="font-size:1.75rem;color:var(--gold-400)"></i>
-                        <span
-                            style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-300)">${s.label}</span>
-                    </a>`).join('')}
+                        <i class="fab fa-facebook-f" style="font-size:1.75rem;color:var(--gold-400)"></i>
+                        <span style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-300)">Facebook</span>
+                    </a>
+                    <a href="#" id="social-instagram" target="_blank" rel="noopener noreferrer"
+                        style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:1.75rem 2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);min-width:130px;transition:all 0.3s;text-decoration:none"
+                        onmouseover="this.style.borderColor='rgba(212,160,23,0.4)';this.style.background='rgba(212,160,23,0.08)'"
+                        onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.04)'">
+                        <i class="fab fa-instagram" style="font-size:1.75rem;color:var(--gold-400)"></i>
+                        <span style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-300)">Instagram</span>
+                    </a>
+                    <a href="#" id="social-whatsapp" target="_blank" rel="noopener noreferrer"
+                        style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:1.75rem 2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);min-width:130px;transition:all 0.3s;text-decoration:none"
+                        onmouseover="this.style.borderColor='rgba(212,160,23,0.4)';this.style.background='rgba(212,160,23,0.08)'"
+                        onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.04)'">
+                        <i class="fab fa-whatsapp" style="font-size:1.75rem;color:var(--gold-400)"></i>
+                        <span style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-300)">WhatsApp</span>
+                    </a>
+                    <a href="#" id="social-youtube" target="_blank" rel="noopener noreferrer"
+                        style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:1.75rem 2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);min-width:130px;transition:all 0.3s;text-decoration:none"
+                        onmouseover="this.style.borderColor='rgba(212,160,23,0.4)';this.style.background='rgba(212,160,23,0.08)'"
+                        onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.04)'">
+                        <i class="fab fa-youtube" style="font-size:1.75rem;color:var(--gold-400)"></i>
+                        <span style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-300)">YouTube</span>
+                    </a>
                 </div>
                 <a href="shop.html" class="btn btn-primary btn-lg"><i class="fas fa-gem"></i> Explore Our Collection</a>
             </div>
@@ -265,6 +285,28 @@
     <script src="js/cart.js"></script>
     <script src="js/components.js?v=1.5"></script>
     <script>
+        /* ── Security: XSS sanitiser (OWASP A03) ── */
+        function escHTML(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#x27;')
+                .replace(/\//g, '&#x2F;');
+        }
+
+        /* ── Security: Validate safe URLs (OWASP A03) ── */
+        function safeSocialURL(url) {
+            if (!url || typeof url !== 'string') return '#';
+            try {
+                const u = new URL(url);
+                if (!['https:', 'http:'].includes(u.protocol)) return '#';
+                return url;
+            } catch { return '#'; }
+        }
+
         async function initContact() {
             // 1. Wait for Firestore Settings module
             for (let i = 0; i < 20; i++) {
@@ -275,14 +317,24 @@
             // 2. Fetch and apply latest settings
             const s = await KGJ.getSettingsAsync();
             if (window.Components) Components.refresh('contact');
+
+            // 3. Apply contact info — using textContent (XSS safe, OWASP A03)
             const phoneEl = document.getElementById('contact-phone');
             const waEl = document.getElementById('contact-wa');
             const emailEl = document.getElementById('contact-email');
             const addrEl = document.getElementById('contact-address');
-            if (phoneEl) { phoneEl.textContent = s.phone; phoneEl.href = `tel:${s.phone}`; }
+            if (phoneEl) { phoneEl.textContent = s.phone; phoneEl.href = `tel:${s.phone.replace(/[^+\d]/g, '')}`; }
             if (waEl) { waEl.textContent = s.whatsapp; waEl.href = `https://wa.me/${s.whatsapp.replace(/\D/g, '')}`; }
             if (emailEl) { emailEl.textContent = s.email; emailEl.href = `mailto:${s.email}`; }
             if (addrEl) addrEl.textContent = s.address;
+
+            // 4. Wire up social links from settings safely
+            const fbEl = document.getElementById('social-facebook');
+            const igEl = document.getElementById('social-instagram');
+            const waLinkEl = document.getElementById('social-whatsapp');
+            if (fbEl && s.facebook) fbEl.href = safeSocialURL(s.facebook);
+            if (igEl && s.instagram) igEl.href = safeSocialURL(s.instagram);
+            if (waLinkEl && s.whatsapp) waLinkEl.href = safeSocialURL(`https://wa.me/${s.whatsapp.replace(/\D/g, '')}`);
 
             ScrollEngine.init();
         }
@@ -307,15 +359,37 @@
         adjustSnap();
         window.addEventListener('resize', adjustSnap);
 
+        /* ── Security: Input validation + XSS-safe form (OWASP A03, A05) ── */
         function submitContact(e) {
             e.preventDefault();
+            const form = e.target;
+            const inputs = form.querySelectorAll('input, textarea, select');
+            let valid = true;
+
+            inputs.forEach(input => {
+                // Strip script tags (extra safety on top of browser validation)
+                if (/<script|javascript:/i.test(input.value)) {
+                    input.value = '';
+                    valid = false;
+                }
+                // Max-length guard (OWASP A03)
+                if (input.value.length > 2000) {
+                    input.value = input.value.slice(0, 2000);
+                }
+            });
+
+            if (!valid) {
+                Cart.showToast('Invalid input detected. Please check your entries.', 'error');
+                return;
+            }
+
             const btn = document.getElementById('contact-submit-btn');
             btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px;margin:0 auto"></div>';
             btn.disabled = true;
             setTimeout(() => {
                 btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
                 btn.style.background = 'linear-gradient(135deg,var(--emerald),#2d8f5a)';
-                e.target.reset();
+                form.reset();
                 Cart.showToast('Your message has been sent! We\'ll reply within 24 hours.', 'success');
             }, 1500);
         }
