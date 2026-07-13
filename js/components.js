@@ -80,6 +80,7 @@ const Components = {
       { href: `${p}index.html`, label: 'Home', key: 'home' },
       { href: `${p}shop.html`, label: 'Shop', key: 'shop' },
       { href: `${p}about.html`, label: 'About', key: 'about' },
+      { href: `${p}news.html`, label: 'News', key: 'news' },
       { href: `${p}contact.html`, label: 'Contact', key: 'contact' },
     ];
     return `

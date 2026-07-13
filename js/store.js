@@ -149,6 +149,10 @@ const KGJ = {
       if (!settings.artisans || settings.artisans.length === 0) {
         settings.artisans = defaults.artisans;
       }
+      // Safety: If Firestore has no news, keep defaults
+      if (!settings.news || settings.news.length === 0) {
+        settings.news = defaults.news;
+      }
     }
     
     return settings;
@@ -237,6 +241,48 @@ const KGJ = {
         { name: 'Chamara Rajapaksha', role: 'Chief Executive Officer', icon: '💎', desc: 'Certified by GEMA, specialising in Sri Lankan sapphires, rubies, and cat\'s eye gems.', image: '' },
         { name: 'Dilini Rajapaksha', role: 'Director of Design', icon: '✨', desc: 'Brings contemporary Kandyan design to life, blending tradition with modern elegance.', image: '' },
         { name: 'R.M. Rajapaksha', role: 'Director of Operations', icon: '⚙️', desc: 'Ensuring the highest standards of quality and service across all our galleries.', image: '' }
+      ],
+      news: [
+        {
+          id: 'news_1',
+          image: 'images/uploads/news1.jpg',
+          title: 'Strength. Style. Signature. Boys Gold Chain Collection',
+          date: 'July 2026',
+          description: 'Explore our latest collection of premium quality, strong, and durable gold chains crafted for the modern man. A chain that speaks confidence without words.',
+          link: 'shop.html?cat=Chain with Pendant'
+        },
+        {
+          id: 'news_2',
+          image: 'images/uploads/news2.jpg',
+          title: 'Timeless Beauty of Nature: Exquisite Malachite Gemstones',
+          date: 'July 2026',
+          description: 'Crafted to perfection. 100% natural malachite gemstones, handcrafted with premium quality, custom designs, and absolute protection, balance, and transformation motifs.',
+          link: 'shop.html'
+        },
+        {
+          id: 'news_3',
+          image: 'images/uploads/news3.jpg',
+          title: 'Celebrate Your Special Moments with Elegance',
+          date: 'July 2026',
+          description: 'Engagement, anniversary, proposed rings, and wedding bands designed to make every moment unforgettable. Celebrate your special moments with our elegant gold rings collection.',
+          link: 'shop.html?cat=Rings'
+        },
+        {
+          id: 'news_4',
+          image: 'images/uploads/news4.jpg',
+          title: 'We Are Now Open at Port City Colombo!',
+          date: 'June 2026',
+          description: 'Discover the beauty of genuine gemstones and custom silver/gold jewellery at our new Port City Colombo stall. Thank you for supporting our local business!',
+          link: 'contact.html'
+        },
+        {
+          id: 'news_5',
+          image: 'images/uploads/news5.jpg',
+          title: 'Timeless Elegance & Everyday Luxury: Gipsy Earrings Collection',
+          date: 'May 2026',
+          description: 'Exquisite 22k gold plated, skin-friendly, lightweight hoop earrings with lifetime warranty and elegant gift box packaging. Trusted legacy since 1997.',
+          link: 'shop.html?cat=Earrings'
+        }
       ],
     };
   },

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="News, offers, and announcements from Kandyan Gem & Jewellers. Find our latest collections and updates.">
+    <title>News & Announcements | Kandyan Gem & Jewellers</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .news-page {
+            background: var(--dark-100);
+            min-height: 100vh;
+            padding-top: calc(var(--nav-height) + 3rem);
+            padding-bottom: 5rem;
+        }
+
+        .news-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        /* ── Search Bar ── */
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 3rem auto;
+            position: relative;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-400);
+            font-size: 0.95rem;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 160, 23, 0.2);
+            border-radius: 50px;
+            padding: 0.95rem 1.25rem 0.95rem 2.8rem;
+            font-size: 0.9rem;
+            color: var(--cream-100);
+            outline: none;
+            transition: all var(--transition-fast);
+            font-family: var(--font-sans);
+        }
+
+        .search-input:focus {
+            border-color: var(--gold-400);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 12px rgba(212, 160, 23, 0.15);
+        }
+
+        /* ── Grid Layout ── */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .news-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212, 160, 23, 0.35);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 160, 23, 0.04);
+        }
+
+        .news-img-wrapper {
+            width: 100%;
+            height: 380px;
+            overflow: hidden;
+            background: #0b0908;
+            position: relative;
+        }
+
+        .news-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .news-card:hover .news-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .news-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(20, 16, 12, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 160, 23, 0.3);
+            color: var(--gold-400);
+            padding: 0.35rem 0.85rem;
+            border-radius: 30px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .news-info {
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .news-date {
+            font-size: 0.75rem;
+            color: var(--gold-400);
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .news-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.35rem;
+            color: var(--cream-100);
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            transition: color var(--transition-fast);
+        }
+
+        .news-card:hover h3 {
+            color: var(--gold-300);
+        }
+
+        .news-desc {
+            font-size: 0.85rem;
+            color: var(--cream-300);
+            opacity: 0.7;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-more {
+            margin-top: auto;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gold-400);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color var(--transition-fast);
+        }
+
+        .news-card:hover .news-more {
+            color: var(--gold-200);
+        }
+
+        .news-card:hover .news-more i {
+            transform: translateX(4px);
+        }
+
+        .news-more i {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        /* ── Modal Lightbox ── */
+        .news-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .news-modal.show {
+            opacity: 1;
+        }
+
+        .news-modal-card {
+            background: var(--dark-200);
+            border: 1px solid rgba(212, 160, 23, 0.25);
+            border-radius: 20px;
+            max-width: 960px;
+            width: 100%;
+            max-height: 85vh;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .news-modal.show .news-modal-card {
+            transform: translateY(0);
+        }
+
+        .news-modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--cream-100);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all var(--transition-fast);
+        }
+
+        .news-modal-close:hover {
+            background: var(--gold-400);
+            color: var(--dark-100);
+            border-color: var(--gold-400);
+        }
+
+        .news-modal-img {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .news-modal-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .news-modal-body {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 85vh;
+        }
+
+        .news-modal-date {
+            font-size: 0.8rem;
+            color: var(--gold-400);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .news-modal-body h2 {
+            font-family: var(--font-serif);
+            font-size: 2.2rem;
+            color: var(--cream-100);
+            line-height: 1.25;
+            margin-bottom: 1.5rem;
+        }
+
+        .news-modal-desc {
+            font-size: 0.95rem;
+            color: var(--cream-200);
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            opacity: 0.85;
+            white-space: pre-line;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            margin-top: auto;
+        }
+
+        .btn-whatsapp:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            display: none;
+        }
+
+        .empty-state i {
+            font-size: 3.5rem;
+            color: var(--gold-400);
+            opacity: 0.4;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            color: var(--cream-100);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--cream-300);
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .news-modal-card {
+                grid-template-columns: 1fr;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            .news-modal-img {
+                height: 320px;
+                min-height: 320px;
+            }
+            .news-modal-body {
+                padding: 2rem;
+                max-height: none;
+            }
+            .news-modal-body h2 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="nav-placeholder"></div>
+    <div id="cart-placeholder"></div>
+
+    <main class="news-page">
+        <div class="container">
+            <!-- Header -->
+            <div class="news-header reveal">
+                <span class="subtitle">Latest Updates & Campaigns</span>
+                <div class="gold-divider" style="margin: 1rem auto">
+                    <div class="diamond"></div>
+                </div>
+                <h1 class="display-lg">News & Announcements</h1>
+            </div>
+
+            <!-- Search -->
+            <div class="search-container reveal">
+                <i class="fas fa-search"></i>
+                <input type="text" id="news-search" class="search-input" placeholder="Search news, offers, events...">
+            </div>
+
+            <!-- Grid -->
+            <div id="news-grid" class="news-grid">
+                <!-- Dynamic cards go here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state">
+                <i class="fas fa-newspaper"></i>
+                <h3>No announcements found</h3>
+                <p>Try searching for a different keyword.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Lightbox -->
+    <div id="news-modal" class="news-modal" role="dialog" aria-modal="true">
+        <div class="news-modal-card">
+            <button class="news-modal-close" onclick="closeLightbox()" aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="news-modal-img">
+                <img id="modal-img" src="" alt="Flyer">
+            </div>
+            <div class="news-modal-body">
+                <div id="modal-date" class="news-modal-date"><i class="far fa-calendar-alt"></i> JULY 2026</div>
+                <h2 id="modal-title">Announcement Title</h2>
+                <p id="modal-desc" class="news-modal-desc">Detailed Description...</p>
+                <a id="modal-whatsapp" href="#" target="_blank" class="btn-whatsapp">
+                    <i class="fab fa-whatsapp"></i> Inquire via WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/store.js?v=1.5"></script>
+    <script type="module" src="js/firestore-settings.js?v=1.5"></script>
+    <script src="js/scroll.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/components.js?v=1.5"></script>
+    <script>
+        // Init dynamic layout components
+        Components.init('news');
+
+        let allNews = [];
+
+        function renderNews(newsItems) {
+            const grid = document.getElementById('news-grid');
+            const empty = document.getElementById('empty-state');
+            
+            grid.innerHTML = '';
+            
+            if (!newsItems || newsItems.length === 0) {
+                empty.style.display = 'block';
+                return;
+            }
+            
+            empty.style.display = 'none';
+
+            newsItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'news-card reveal-scale';
+                card.onclick = () => openLightbox(item);
+                
+                card.innerHTML = `
+                    <div class="news-img-wrapper">
+                        <span class="news-badge">Campaign</span>
+                        <img src="${item.image}" alt="${item.title}" onerror="this.src='images/about-bg.jpg'">
+                    </div>
+                    <div class="news-info">
+                        <div class="news-date">
+                            <i class="far fa-calendar-alt"></i> ${item.date || 'July 2026'}
+                        </div>
+                        <h3>${item.title}</h3>
+                        <p class="news-desc">${item.description || ''}</p>
+                        <div class="news-more">
+                            Learn More <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Trigger scroll engine reveal
+            if (window.ScrollEngine) ScrollEngine.initReveal(true);
+        }
+
+        function openLightbox(item) {
+            document.getElementById('modal-img').src = item.image;
+            document.getElementById('modal-title').textContent = item.title;
+            document.getElementById('modal-date').innerHTML = `<i class="far fa-calendar-alt"></i> ${item.date || 'July 2026'}`;
+            document.getElementById('modal-desc').textContent = item.description;
+            
+            // Setup WhatsApp link
+            const whatsappText = encodeURIComponent(`Hi Kandyan Gem & Jewellers, I saw this announcement on your website:\n\n*${item.title}*\n\nCan I get more details?`);
+            document.getElementById('modal-whatsapp').href = `https://wa.me/94776065124?text=${whatsappText}`;
+
+            const modal = document.getElementById('news-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closeLightbox = function() {
+            const modal = document.getElementById('news-modal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on overlay click
+        document.getElementById('news-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('news-modal')) {
+                closeLightbox();
+            }
+        });
+
+        // Search logic
+        document.getElementById('news-search').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            if (!q) {
+                renderNews(allNews);
+                return;
+            }
+            const filtered = allNews.filter(n => 
+                n.title.toLowerCase().includes(q) || 
+                (n.description && n.description.toLowerCase().includes(q)) ||
+                (n.date && n.date.toLowerCase().includes(q))
+            );
+            renderNews(filtered);
+        });
+
+        // Fetch settings and news on load
+        async function initNewsPage() {
+            // Wait for settings
+            for (let i = 0; i < 20; i++) {
+                if (window.KGJ && KGJ.getSettings) break;
+                await new Promise(r => setTimeout(r, 50));
+            }
+            
+            const s = KGJ.getSettings();
+            allNews = s.news || [];
+            
+            // Sort news by date (or keep chronological)
+            renderNews(allNews);
+        }
+
+        initNewsPage();
+    </script>
+</body>
+
+</html>
