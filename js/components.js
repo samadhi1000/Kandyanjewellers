@@ -192,7 +192,7 @@ const Components = {
               <li><a href="tel:${s.phone}"><i class="fas fa-phone" style="width:14px;color:var(--gold-400)"></i> ${s.phone}</a></li>
               <li><a href="https://wa.me/${(s.whatsapp || '').replace(/\D/g, '')}" target="_blank"><i class="fab fa-whatsapp" style="width:14px;color:var(--gold-400)"></i> ${s.whatsapp || ''}</a></li>
               <li><a href="mailto:${s.email}"><i class="fas fa-envelope" style="width:14px;color:var(--gold-400)"></i> ${s.email}</a></li>
-              <li style="display:flex;gap:0.5rem;align-items:flex-start"><i class="fas fa-map-marker-alt" style="width:14px;color:var(--gold-400);margin-top:3px;flex-shrink:0"></i><span>${s.address}</span></li>
+              <li style="display:flex;gap:0.5rem;align-items:flex-start;font-size:0.78rem;line-height:1.45;color:var(--cream-300);opacity:0.75;"><i class="fas fa-map-marker-alt" style="width:14px;color:var(--gold-400);margin-top:3px;flex-shrink:0"></i><span>${s.address}</span></li>
             </ul>
           </div>
         </div>
