@@ -16,9 +16,7 @@
       background-image: url('images/hero.jpg');
     }
 
-    .parallax-hero .layer-2 {
-      background-image: url('images/gems-bg.jpg');
-    }
+
 
     /* Default about-teaser bg (overridden by JS if saved setting exists) */
     #about-bg {
@@ -265,7 +263,7 @@
   <!-- ── HERO (PARALLAX MULTI-LAYERED) ── -->
   <section class="parallax-hero" id="hero-section">
     <div class="layer layer-1" id="hero-bg" data-speed="0.5"></div>
-    <div class="layer layer-2" data-speed="0.2"></div>
+    <!-- Removed layer-2 overlay which was causing the gems background image to blend with the main hero background -->
 
     <div class="layer layer-3"></div>
     <div class="hero-particles" id="hero-particles"></div>
