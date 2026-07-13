@@ -187,7 +187,7 @@ const KGJ = {
       phone: '+94 81 234 5678',
       whatsapp: '+94 77 123 4567',
       email: 'info@kandyangemandjewellers.lk',
-      address: 'No. 42, Peradeniya Road, Kandy 20000, Sri Lanka',
+      address: '77 Madiwela Rd, Sri Jayawardenepura Kotte, Sri Lanka',
       facebook: 'https://facebook.com',
       instagram: 'https://instagram.com',
       heroBg: 'images/hero.jpg',
