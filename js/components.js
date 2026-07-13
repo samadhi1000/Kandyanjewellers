@@ -87,10 +87,10 @@ const Components = {
       <div class="nav-inner">
         <a href="${p}index.html" class="logo" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
           <div class="logo-img-wrapper" style="display:flex; align-items:center;">
-            <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" style="height:44px; width:44px; border-radius:50%; object-fit:cover; border: 1.5px solid var(--gold-400); display: block;" />
+            <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:44px; width:44px; border-radius:50%; object-fit:cover; display: block;" />
           </div>
-          <div style="display:flex; flex-direction:column;">
-            ${s.siteName}
+          <div style="display:flex; flex-direction:column; line-height:1.2;">
+            <span class="gradient-text" style="font-family: var(--font-serif); font-weight:700; font-size:1.45rem; display:inline-block;">${s.siteName}</span>
             <span>Est. 1995 &bull; Fine Gems &amp; Craftsmanship</span>
           </div>
         </a>
@@ -151,10 +151,10 @@ const Components = {
           <div class="footer-brand">
             <a href="${p}index.html" class="logo" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none; margin-bottom:1rem;">
               <div class="logo-img-wrapper" style="display:flex; align-items:center;">
-                <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" style="height:44px; width:44px; border-radius:50%; object-fit:cover; border: 1.5px solid var(--gold-400); display: block;" />
+                <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:44px; width:44px; border-radius:50%; object-fit:cover; display: block;" />
               </div>
-              <div style="display:flex; flex-direction:column; text-align:left;">
-                <span style="font-family:var(--font-serif); font-size:1.25rem; font-weight:700; color:var(--gold-400); line-height:1.2;">${s.siteName}</span>
+              <div style="display:flex; flex-direction:column; text-align:left; line-height:1.2;">
+                <span class="gradient-text" style="font-family:var(--font-serif); font-size:1.25rem; font-weight:700; display:inline-block;">${s.siteName}</span>
                 <span style="font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--cream-300); opacity:0.8; margin-top:2px;">Est. 1995 &bull; Kandy</span>
               </div>
             </a>

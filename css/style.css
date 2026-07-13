@@ -739,4 +739,21 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
   transform: scale(1.08);
 }
 
+/* ── Kandyan Gem Logo Border Gold Glow ── */
+.logo-img-animate {
+  border: 1.8px solid #d4a017 !important;
+  animation: logo-border-glow 4s infinite ease-in-out;
+}
+
+@keyframes logo-border-glow {
+  0%, 100% {
+    border-color: #d4a017 !important;
+    box-shadow: 0 0 5px rgba(212, 160, 23, 0.4);
+  }
+  50% {
+    border-color: #fff3cd !important;
+    box-shadow: 0 0 15px rgba(255, 243, 205, 0.8), 0 0 5px rgba(212, 160, 23, 0.4);
+  }
+}
+
 
