@@ -200,14 +200,14 @@ const Components = {
           <div style="display:flex; align-items:center; gap:2.5rem; justify-content:space-between; width:100%; flex-wrap:wrap;">
             <!-- Logo block -->
             <a href="https://www.stackunleash.com/" target="_blank" rel="noopener" class="su-logo-group" style="display:flex; align-items:center; gap:0.85rem; text-decoration:none; text-align:left;">
-              <div class="su-logo-icon-wrapper" style="transition: transform 0.3s ease; display: flex; align-items: center; filter: grayscale(1) brightness(1.2) sepia(1) hue-rotate(5deg) saturate(1.8);">
+              <div class="su-logo-icon-wrapper" style="transition: transform 0.3s ease; display: flex; align-items: center; filter: grayscale(1) brightness(1.2) sepia(1) hue-rotate(5deg) saturate(2.5) contrast(1.15);">
                 <img src="${p}images/stackunleash-logo.png" alt="StackUnleash Logo" style="height:38px; width:auto; object-fit:contain;" />
               </div>
               <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
                 <span style="font-size:1.25rem; font-weight:800; letter-spacing:0.02em; color:#fff; font-family:var(--font-sans), sans-serif; display:flex; align-items:center;">
-                  STACK<span style="font-weight:900; margin-left:1px; color:var(--gold-400);">UNLEASH</span>
+                  STACK<span class="gradient-text" style="font-weight:900; margin-left:1px;">UNLEASH</span>
                 </span>
-                <span style="font-size:0.55rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--cream-300); opacity:0.6; font-family:var(--font-sans), sans-serif;">
+                <span class="shine-text" style="font-size:0.55rem; font-weight:900; letter-spacing:0.18em; text-transform:uppercase; margin-top:0.25rem; font-family:var(--font-sans), sans-serif;">
                   Build &bull; Automate &bull; Scale
                 </span>
               </div>

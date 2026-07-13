@@ -688,7 +688,7 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
 }
 .gradient-text {
   -webkit-text-fill-color: transparent;
-  background: linear-gradient(270deg, #00d8ff, #6366f1, #8b5cf6, #6366f1, #00d8ff) 0 0 / 300% 300%;
+  background: linear-gradient(270deg, #d4a017, #fff3cd, #b38600, #fff3cd, #d4a017) 0 0 / 300% 300%;
   -webkit-background-clip: text;
   background-clip: text;
   animation: gradient-flow 6s infinite;
