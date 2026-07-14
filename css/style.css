@@ -44,7 +44,7 @@
   --radius-xl: 24px;
   --radius-pill: 999px;
 
-  --nav-height: 80px;
+  --nav-height: 90px;
   --z-nav: 1000;
   --z-cart: 1100;
   --z-modal: 1200;
@@ -160,7 +160,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--gold-400);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
   line-height: 1.1;
 }
 .navbar .logo span {
@@ -655,7 +655,7 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   :root {
-    --nav-height: 64px;
+    --nav-height: 72px;
   }
   .navbar .nav-inner {
     padding: 0 1rem;
@@ -665,14 +665,15 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
     white-space: nowrap !important;
   }
   .navbar .logo img {
-    height: 32px !important;
-    width: 32px !important;
+    height: 38px !important;
+    width: 38px !important;
   }
   .navbar .logo .logo-tagline {
     display: none !important;
   }
   .navbar .logo .gradient-text {
     font-size: 1.05rem !important;
+    letter-spacing: -0.015em !important;
   }
   .navbar a[href*="wishlist"] {
     display: none !important;
@@ -700,7 +701,8 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
 }
 @media (max-width: 480px) {
   .navbar .logo .gradient-text {
-    font-size: 0.9rem !important;
+    font-size: 0.85rem !important;
+    letter-spacing: -0.025em !important;
   }
   .nav-actions {
     gap: 0.25rem !important;
@@ -786,6 +788,42 @@ input[type="range"] { width: 100%; accent-color: var(--gold-400); }
   50% {
     border-color: #fff3cd !important;
     box-shadow: 0 0 15px rgba(255, 243, 205, 0.8), 0 0 5px rgba(212, 160, 23, 0.4);
+  }
+}
+
+/* ── Kandyan Gem Logo Particle Sparkle Animation ── */
+.logo-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #ffffff 20%, #d4a017 80%);
+  border-radius: 50%;
+  box-shadow: 0 0 5px #d4a017, 0 0 10px #fff3cd;
+  opacity: 0;
+  transform-origin: center;
+}
+
+.logo-particle.star {
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 0 3px #d4a017);
+  background: #ffffff;
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+}
+
+@keyframes particle-rise-sparkle {
+  0% {
+    transform: translate(var(--dx-start), var(--dy-start)) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: translate(var(--dx-mid), var(--dy-mid)) scale(1) rotate(90deg);
+  }
+  100% {
+    transform: translate(var(--dx-end), var(--dy-end)) scale(0) rotate(180deg);
+    opacity: 0;
   }
 }
 

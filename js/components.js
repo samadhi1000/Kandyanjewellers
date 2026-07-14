@@ -87,8 +87,9 @@ const Components = {
     <nav class="navbar" id="main-nav">
       <div class="nav-inner">
         <a href="${p}index.html" class="logo" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
-          <div class="logo-img-wrapper" style="display:flex; align-items:center;">
-            <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:44px; width:44px; border-radius:50%; object-fit:cover; display: block;" />
+          <div class="logo-img-wrapper" style="display:flex; align-items:center; position:relative;">
+            <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:50px; width:50px; border-radius:50%; object-fit:cover; display: block;" />
+            <div class="logo-particles-container" style="position:absolute; inset:-20px; pointer-events:none; z-index:10; overflow:visible;"></div>
           </div>
           <div style="display:flex; flex-direction:column; line-height:1.2;">
             <span class="gradient-text" style="font-family: var(--font-serif); font-weight:700; font-size:1.45rem; display:inline-block;">${s.siteName}</span>
@@ -151,8 +152,9 @@ const Components = {
         <div class="footer-grid">
           <div class="footer-brand">
             <a href="${p}index.html" class="logo" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none; margin-bottom:1rem;">
-              <div class="logo-img-wrapper" style="display:flex; align-items:center;">
-                <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:44px; width:44px; border-radius:50%; object-fit:cover; display: block;" />
+              <div class="logo-img-wrapper" style="display:flex; align-items:center; position:relative;">
+                <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:50px; width:50px; border-radius:50%; object-fit:cover; display: block;" />
+                <div class="logo-particles-container" style="position:absolute; inset:-20px; pointer-events:none; z-index:10; overflow:visible;"></div>
               </div>
               <div style="display:flex; flex-direction:column; text-align:left; line-height:1.2;">
                 <span class="gradient-text" style="font-family:var(--font-serif); font-size:1.25rem; font-weight:700; display:inline-block;">${s.siteName}</span>
@@ -325,10 +327,45 @@ const Components = {
     });
   },
 
-  /**
-   * Refresh Nav and Footer with latest settings
-   * Useful after fetching settings from Firestore
-   */
+    * Useful after fetching settings from Firestore
+    */
+  initLogoParticles() {
+    if (window.logoParticlesInterval) {
+      clearInterval(window.logoParticlesInterval);
+    }
+    window.logoParticlesInterval = setInterval(() => {
+      const containers = document.querySelectorAll('.logo-particles-container');
+      if (containers.length === 0) return;
+      containers.forEach(container => {
+        if (container.offsetWidth === 0 && container.offsetHeight === 0) return;
+        const logoImg = container.parentElement.querySelector('.logo-img-animate');
+        const radius = logoImg ? logoImg.offsetHeight / 2 : 25;
+        const particle = document.createElement('div');
+        const isStar = Math.random() > 0.65;
+        particle.className = `logo-particle ${isStar ? 'star' : ''}`;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 10 + Math.random() * 20;
+        const startX = Math.cos(angle) * radius;
+        const startY = Math.sin(angle) * radius;
+        const endX = Math.cos(angle) * (radius + speed);
+        const endY = Math.sin(angle) * (radius + speed);
+        particle.style.setProperty('--dx-start', `${startX}px`);
+        particle.style.setProperty('--dy-start', `${startY}px`);
+        particle.style.setProperty('--dx-mid', `${(startX + endX) / 2}px`);
+        particle.style.setProperty('--dy-mid', `${(startY + endY) / 2}px`);
+        particle.style.setProperty('--dx-end', `${endX}px`);
+        particle.style.setProperty('--dy-end', `${endY}px`);
+        const size = isStar ? (5 + Math.random() * 5) : (3 + Math.random() * 4);
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        const duration = 1.2 + Math.random() * 1.0;
+        particle.style.animation = `particle-rise-sparkle ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
+        container.appendChild(particle);
+        setTimeout(() => particle.remove(), duration * 1000);
+      });
+    }, 200);
+  },
+
   refresh(activePage = '') {
     try {
       const navHolder = document.getElementById('nav-placeholder');
@@ -340,6 +377,7 @@ const Components = {
       this.applySettings();
       this.initMobileNav();
       this.initSearch();
+      this.initLogoParticles();
       console.log('[KGJ] UI Components Refreshed');
     } catch(e) {
       console.error('[KGJ] Components.refresh error:', e);
@@ -363,6 +401,7 @@ const Components = {
       this.applySettings();
       this.initMobileNav();
       this.initSearch();
+      this.initLogoParticles();
       if (window.Cart) Cart.init();
       if (window.ScrollEngine) ScrollEngine.init();
     } catch(e) {
@@ -379,6 +418,7 @@ const Components = {
         this.applySettings();
         this.initMobileNav();
         this.initSearch();
+        this.initLogoParticles();
         if (window.Cart) Cart.init();
       } catch(e2) { console.error('[KGJ] Components.init fallback error:', e2); }
     }
