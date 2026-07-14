@@ -342,46 +342,47 @@ const Components = {
       if (containers.length === 0) return;
       containers.forEach(container => {
         if (container.offsetWidth === 0 && container.offsetHeight === 0) return;
+        
+        // 40% chance to skip spawning in this interval to reduce active stars
+        if (Math.random() > 0.6) return;
+        
         const logoImg = container.parentElement.querySelector('.logo-img-animate');
         const radius = logoImg ? logoImg.offsetHeight / 2 : 25;
         
-        // Spawn 1 or 2 stars sequentially to keep it elegant and balanced
-        const count = Math.random() > 0.5 ? 1 : 2;
-        for (let i = 0; i < count; i++) {
-          const particle = document.createElement('div');
-          particle.className = 'logo-particle star';
-          
-          const angle = Math.random() * Math.PI * 2;
-          // Spawn just outside the circular frame (2px to 10px beyond boundary)
-          const spawnDist = radius + 2 + Math.random() * 8;
-          
-          const startX = Math.cos(angle) * spawnDist;
-          const startY = Math.sin(angle) * spawnDist;
-          
-          // Tiny drift (only 2px to 4px) to keep them twinkling locally
-          const driftAngle = angle + (Math.random() - 0.5) * 0.3;
-          const driftDist = spawnDist + 1 + Math.random() * 3;
-          const endX = Math.cos(driftAngle) * driftDist;
-          const endY = Math.sin(driftAngle) * driftDist;
-          
-          particle.style.setProperty('--dx-start', `${startX}px`);
-          particle.style.setProperty('--dy-start', `${startY}px`);
-          particle.style.setProperty('--dx-end', `${endX}px`);
-          particle.style.setProperty('--dy-end', `${endY}px`);
-          
-          const size = 5 + Math.random() * 5; // size between 5px and 10px
-          particle.style.width = `${size}px`;
-          particle.style.height = `${size}px`;
-          
-          // Lifetime of 2.2s to 3.0s fits the 3 sparkle pulses perfectly
-          const duration = 2.2 + Math.random() * 0.8;
-          particle.style.animation = `star-sparkle-pulse ${duration}s ease-in-out forwards`;
-          
-          container.appendChild(particle);
-          setTimeout(() => particle.remove(), duration * 1000);
-        }
+        // Spawn exactly 1 star at a time for a clean, selective look
+        const particle = document.createElement('div');
+        particle.className = 'logo-particle star';
+        
+        const angle = Math.random() * Math.PI * 2;
+        // Spawn just outside the circular frame (2px to 8px beyond boundary)
+        const spawnDist = radius + 2 + Math.random() * 6;
+        
+        const startX = Math.cos(angle) * spawnDist;
+        const startY = Math.sin(angle) * spawnDist;
+        
+        // Tiny drift (only 2px to 4px) to keep them twinkling locally
+        const driftAngle = angle + (Math.random() - 0.5) * 0.3;
+        const driftDist = spawnDist + 1 + Math.random() * 3;
+        const endX = Math.cos(driftAngle) * driftDist;
+        const endY = Math.sin(driftAngle) * driftDist;
+        
+        particle.style.setProperty('--dx-start', `${startX}px`);
+        particle.style.setProperty('--dy-start', `${startY}px`);
+        particle.style.setProperty('--dx-end', `${endX}px`);
+        particle.style.setProperty('--dy-end', `${endY}px`);
+        
+        const size = 4 + Math.random() * 5; // size between 4px and 9px (slightly smaller for elegance)
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Increased lifetime (3.8s to 4.8s) to give them more time to sparkle slowly
+        const duration = 3.8 + Math.random() * 1.0;
+        particle.style.animation = `star-sparkle-pulse ${duration}s ease-in-out forwards`;
+        
+        container.appendChild(particle);
+        setTimeout(() => particle.remove(), duration * 1000);
       });
-    }, 450); // Emit stars slightly slower to keep the sparkle rhythm premium and selective
+    }, 900); // Increased interval to 900ms to reduce active star count significantly
   },
 
   refresh(activePage = '') {
