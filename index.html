@@ -303,10 +303,65 @@
     </div>
   </section>
 
-  <!-- ── CATEGORIES QUICK-NAV ── -->
-  <section style="padding:3.5rem 0;background:var(--dark-200)">
+  <!-- ── CATEGORIES CAROUSEL SECTION ── -->
+  <section class="collections-section gallery-section" style="padding: 5rem 0; background: var(--dark-200); border-bottom: 1px solid rgba(255,255,255,0.03);">
     <div class="container">
-      <div class="flex gap-3 justify-center" style="flex-wrap:wrap" id="cat-nav"></div>
+      <div class="gallery-nav">
+        <div>
+          <span class="subtitle" style="text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.75rem; color: var(--gold-400);">Our Collections</span>
+          <h2 class="display-md" style="margin-top: 0.5rem; font-family: var(--font-serif); color: var(--cream-100);">Shop by Category</h2>
+        </div>
+        <div class="flex gap-2">
+          <button class="gallery-arrow gallery-arrow-prev" aria-label="Previous Category"><i class="fas fa-chevron-left"></i></button>
+          <button class="gallery-arrow gallery-arrow-next" aria-label="Next Category"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+      
+      <div class="horizontal-gallery" id="category-carousel-gallery">
+        <div class="horizontal-gallery-track">
+          
+          <!-- Necklaces -->
+          <a href="shop.html?cat=Necklaces" class="cat-gallery-item">
+            <div class="img-container">
+              <img src="images/uploads/cat_necklaces.png" alt="Shop Necklaces & Pendants" />
+            </div>
+            <span class="label">Shop Necklaces & Pendants</span>
+          </a>
+          
+          <!-- Rings -->
+          <a href="shop.html?cat=Rings" class="cat-gallery-item">
+            <div class="img-container">
+              <img src="images/uploads/cat_rings.png" alt="Shop Rings & Bracelets" />
+            </div>
+            <span class="label">Shop Rings & Bracelets</span>
+          </a>
+          
+          <!-- Earrings -->
+          <a href="shop.html?cat=Earrings" class="cat-gallery-item">
+            <div class="img-container">
+              <img src="images/uploads/cat_earrings.png" alt="Shop Earrings" />
+            </div>
+            <span class="label">Shop Earrings</span>
+          </a>
+          
+          <!-- Bracelets -->
+          <a href="shop.html?cat=Bracelets" class="cat-gallery-item">
+            <div class="img-container">
+              <img src="images/uploads/cat_bracelets.png" alt="Shop Bracelets" />
+            </div>
+            <span class="label">Shop Bracelets</span>
+          </a>
+          
+          <!-- Bridal Sets -->
+          <a href="shop.html?cat=Bridal" class="cat-gallery-item">
+            <div class="img-container">
+              <img src="images/uploads/cat_bridal.png" alt="Shop Bridal Sets" />
+            </div>
+            <span class="label">Shop Bridal Sets</span>
+          </a>
+          
+        </div>
+      </div>
     </div>
   </section>
 
@@ -548,15 +603,7 @@
   <script>
     Components.init('home');
 
-    /* ── Category Quick Nav ── */
-    function renderCatNav() {
-      const cats = ['All', ...KGJ.getCategories()];
-      document.getElementById('cat-nav').innerHTML = cats.map(c => `
-      <a href="shop.html${c === 'All' ? '' : '?cat=' + c}" 
-        class="btn btn-ghost btn-sm" style="border-color:rgba(212,160,23,0.2)">
-        ${c}
-      </a>`).join('');
-    }
+    /* Category quick-nav replaced by premium image carousel */
 
     /* ── Featured Gallery ── */
     function renderFeatured() {
@@ -648,7 +695,6 @@
         await KGJ.fsLoadProducts();
       }
 
-      renderCatNav();
       renderFeatured();
       renderOffers();
       ScrollEngine.init();
