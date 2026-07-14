@@ -326,9 +326,9 @@ const Components = {
         </a>`).join('');
     });
   },
-
-    * Useful after fetching settings from Firestore
-    */
+  /**
+   * Initialize particle generator for logo gold sparkle
+   */
   initLogoParticles() {
     if (window.logoParticlesInterval) {
       clearInterval(window.logoParticlesInterval);
