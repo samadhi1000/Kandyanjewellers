@@ -88,8 +88,10 @@ const Components = {
       <div class="nav-inner">
         <a href="${p}index.html" class="logo" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none;">
           <div class="logo-img-wrapper" style="display:flex; align-items:center; position:relative;">
-            <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:50px; width:50px; border-radius:50%; object-fit:cover; display: block;" />
-            <div class="logo-particles-container" style="position:absolute; inset:-20px; pointer-events:none; z-index:10; overflow:visible;"></div>
+            <div class="logo-img-inner">
+              <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:50px; width:50px; border-radius:50%; object-fit:cover; display: block;" />
+            </div>
+            <div class="logo-particles-container" style="position:absolute; inset:-25px; pointer-events:none; z-index:10; overflow:visible;"></div>
           </div>
           <div style="display:flex; flex-direction:column; line-height:1.2;">
             <span class="gradient-text" style="font-family: var(--font-serif); font-weight:700; font-size:1.45rem; display:inline-block;">${s.siteName}</span>
@@ -153,8 +155,10 @@ const Components = {
           <div class="footer-brand">
             <a href="${p}index.html" class="logo" style="display:flex; align-items:center; gap:0.75rem; text-decoration:none; margin-bottom:1rem;">
               <div class="logo-img-wrapper" style="display:flex; align-items:center; position:relative;">
-                <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:50px; width:50px; border-radius:50%; object-fit:cover; display: block;" />
-                <div class="logo-particles-container" style="position:absolute; inset:-20px; pointer-events:none; z-index:10; overflow:visible;"></div>
+                <div class="logo-img-inner">
+                  <img src="${p}images/logo.jpg" alt="Kandyan Gem Logo" class="logo-img-animate" style="height:50px; width:50px; border-radius:50%; object-fit:cover; display: block;" />
+                </div>
+                <div class="logo-particles-container" style="position:absolute; inset:-25px; pointer-events:none; z-index:10; overflow:visible;"></div>
               </div>
               <div style="display:flex; flex-direction:column; text-align:left; line-height:1.2;">
                 <span class="gradient-text" style="font-family:var(--font-serif); font-size:1.25rem; font-weight:700; display:inline-block;">${s.siteName}</span>
@@ -340,30 +344,44 @@ const Components = {
         if (container.offsetWidth === 0 && container.offsetHeight === 0) return;
         const logoImg = container.parentElement.querySelector('.logo-img-animate');
         const radius = logoImg ? logoImg.offsetHeight / 2 : 25;
-        const particle = document.createElement('div');
-        const isStar = Math.random() > 0.65;
-        particle.className = `logo-particle ${isStar ? 'star' : ''}`;
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 10 + Math.random() * 20;
-        const startX = Math.cos(angle) * radius;
-        const startY = Math.sin(angle) * radius;
-        const endX = Math.cos(angle) * (radius + speed);
-        const endY = Math.sin(angle) * (radius + speed);
-        particle.style.setProperty('--dx-start', `${startX}px`);
-        particle.style.setProperty('--dy-start', `${startY}px`);
-        particle.style.setProperty('--dx-mid', `${(startX + endX) / 2}px`);
-        particle.style.setProperty('--dy-mid', `${(startY + endY) / 2}px`);
-        particle.style.setProperty('--dx-end', `${endX}px`);
-        particle.style.setProperty('--dy-end', `${endY}px`);
-        const size = isStar ? (5 + Math.random() * 5) : (3 + Math.random() * 4);
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        const duration = 1.2 + Math.random() * 1.0;
-        particle.style.animation = `particle-rise-sparkle ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
-        container.appendChild(particle);
-        setTimeout(() => particle.remove(), duration * 1000);
+        
+        // Spawn 1 or 2 stars sequentially to keep it elegant and balanced
+        const count = Math.random() > 0.5 ? 1 : 2;
+        for (let i = 0; i < count; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'logo-particle star';
+          
+          const angle = Math.random() * Math.PI * 2;
+          // Spawn just outside the circular frame (2px to 10px beyond boundary)
+          const spawnDist = radius + 2 + Math.random() * 8;
+          
+          const startX = Math.cos(angle) * spawnDist;
+          const startY = Math.sin(angle) * spawnDist;
+          
+          // Tiny drift (only 2px to 4px) to keep them twinkling locally
+          const driftAngle = angle + (Math.random() - 0.5) * 0.3;
+          const driftDist = spawnDist + 1 + Math.random() * 3;
+          const endX = Math.cos(driftAngle) * driftDist;
+          const endY = Math.sin(driftAngle) * driftDist;
+          
+          particle.style.setProperty('--dx-start', `${startX}px`);
+          particle.style.setProperty('--dy-start', `${startY}px`);
+          particle.style.setProperty('--dx-end', `${endX}px`);
+          particle.style.setProperty('--dy-end', `${endY}px`);
+          
+          const size = 5 + Math.random() * 5; // size between 5px and 10px
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          
+          // Lifetime of 2.2s to 3.0s fits the 3 sparkle pulses perfectly
+          const duration = 2.2 + Math.random() * 0.8;
+          particle.style.animation = `star-sparkle-pulse ${duration}s ease-in-out forwards`;
+          
+          container.appendChild(particle);
+          setTimeout(() => particle.remove(), duration * 1000);
+        }
       });
-    }, 200);
+    }, 450); // Emit stars slightly slower to keep the sparkle rhythm premium and selective
   },
 
   refresh(activePage = '') {
