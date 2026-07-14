@@ -5,6 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product | Kandyan Gem & Jewellers</title>
+
+    <!-- Open Graph / Facebook (dynamically updated per product via JS) -->
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="https://kandyangem.lk/product.html" />
+    <meta property="og:title" content="Kandyan Gem & Jewellers" id="og-title" />
+    <meta property="og:description" content="Handcrafted Kandyan jewellery and certified precious gemstones from Kandy, Sri Lanka." id="og-description" />
+    <meta property="og:image" content="https://kandyangem.lk/images/og-share.png" id="og-image" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Kandyan Gem & Jewellers" id="tw-title" />
+    <meta property="twitter:description" content="Handcrafted Kandyan jewellery and certified precious gemstones from Kandy, Sri Lanka." id="tw-description" />
+    <meta property="twitter:image" content="https://kandyangem.lk/images/og-share.png" id="tw-image" />
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -305,6 +318,16 @@
         function renderProduct(p) {
             currentProduct = p;
             document.title = `${p.name} | Kandyan Gem & Jewellers`;
+            // Dynamically update OG / Twitter tags per product
+            const productDesc = `${p.name} — ${p.category}. Handcrafted Kandyan jewellery from Kandy, Sri Lanka.`;
+            const productImg = p.images[0] ? `https://kandyangem.lk/${p.images[0]}` : 'https://kandyangem.lk/images/og-share.png';
+            const productUrl = `https://kandyangem.lk/product.html?id=${p.id}`;
+            document.getElementById('og-title')?.setAttribute('content', `${p.name} | Kandyan Gem & Jewellers`);
+            document.getElementById('og-description')?.setAttribute('content', productDesc);
+            document.getElementById('og-image')?.setAttribute('content', productImg);
+            document.getElementById('tw-title')?.setAttribute('content', `${p.name} | Kandyan Gem & Jewellers`);
+            document.getElementById('tw-description')?.setAttribute('content', productDesc);
+            document.getElementById('tw-image')?.setAttribute('content', productImg);
             const price = p.discountedPrice < p.price ? p.discountedPrice : p.price;
             const disc = p.discountedPrice < p.price ? Math.round((1 - p.discountedPrice / p.price) * 100) : 0;
 
