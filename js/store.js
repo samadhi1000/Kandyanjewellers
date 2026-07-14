@@ -2,6 +2,27 @@
    KANDYAN GEM & JEWELLERS — Data Store (localStorage)
    ===================================================== */
 
+/**
+ * Automatically corrects Sinhala conjunct consonants by injecting
+ * the Zero Width Joiner (ZWJ - U+200D) between hal-kireema and r/y.
+ */
+function fixSinhalaConjuncts(val) {
+  if (typeof val === 'string') {
+    return val
+      .replace(/\u0dca(?!\u200d)\u0dbb/g, '\u0dca\u200d\u0dbb')
+      .replace(/\u0dca(?!\u200d)\u0dba/g, '\u0dca\u200d\u0dba');
+  } else if (Array.isArray(val)) {
+    return val.map(item => fixSinhalaConjuncts(item));
+  } else if (val !== null && typeof val === 'object') {
+    const cleaned = {};
+    for (const key in val) {
+      cleaned[key] = fixSinhalaConjuncts(val[key]);
+    }
+    return cleaned;
+  }
+  return val;
+}
+
 const KGJ = {
 
   /* ── Keys ── */
@@ -24,7 +45,7 @@ const KGJ = {
   getProducts() {
     // Check for Firestore cache first (populated by firestore-products.js)
     if (window._FSProducts && Array.isArray(window._FSProducts) && window._FSProducts.length > 0) {
-      return window._FSProducts;
+      return fixSinhalaConjuncts(window._FSProducts);
     }
     let raw = localStorage.getItem(this.KEYS.products);
     if (!raw) {
@@ -34,7 +55,7 @@ const KGJ = {
     this._patchSeedImages();
     try {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) return fixSinhalaConjuncts(parsed);
     } catch(e) {}
     return [];
   },
@@ -42,7 +63,7 @@ const KGJ = {
   async getProductsAsync() {
     if (this.fsLoadProducts) {
       const products = await this.fsLoadProducts();
-      if (products && products.length > 0) return products;
+      if (products && products.length > 0) return fixSinhalaConjuncts(products);
     }
     return this.getProducts();
   },
@@ -155,13 +176,13 @@ const KGJ = {
       }
     }
     
-    return settings;
+    return fixSinhalaConjuncts(settings);
   },
 
   async getSettingsAsync() {
     if (this.fsLoadSettings) {
       const settings = await this.fsLoadSettings();
-      if (settings) return settings;
+      if (settings) return fixSinhalaConjuncts(settings);
     }
     return this.getSettings();
   },
