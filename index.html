@@ -303,63 +303,34 @@
     </div>
   </section>
 
-  <!-- ── CATEGORIES CAROUSEL SECTION ── -->
-  <section class="collections-section gallery-section" style="padding: 5rem 0; background: var(--dark-200); border-bottom: 1px solid rgba(255,255,255,0.03);">
+  <!-- ── AUTOMATED SCROLLING MARQUEE ── -->
+  <section style="padding: 4.5rem 0 3.5rem; background: var(--dark-200); border-bottom: 1px solid rgba(255,255,255,0.03); overflow: hidden;">
     <div class="container">
-      <div class="gallery-nav">
-        <div>
-          <span class="subtitle" style="text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.75rem; color: var(--gold-400);">Our Collections</span>
-          <h2 class="display-md" style="margin-top: 0.5rem; font-family: var(--font-serif); color: var(--cream-100);">Shop by Category</h2>
-        </div>
-        <div class="flex gap-2">
-          <button class="gallery-arrow gallery-arrow-prev" aria-label="Previous Category"><i class="fas fa-chevron-left"></i></button>
-          <button class="gallery-arrow gallery-arrow-next" aria-label="Next Category"><i class="fas fa-chevron-right"></i></button>
-        </div>
+      <div style="margin-bottom: 2rem; text-align: center;">
+        <span class="subtitle" style="text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.75rem; color: var(--gold-400);">Artisanal Gallery</span>
+        <h2 class="display-md" style="margin-top: 0.5rem; font-family: var(--font-serif); color: var(--cream-100);">Signature Craftsmanship</h2>
       </div>
-      
-      <div class="horizontal-gallery" id="category-carousel-gallery">
-        <div class="horizontal-gallery-track">
-          
-          <!-- Necklaces -->
-          <a href="shop.html?cat=Necklaces" class="cat-gallery-item">
-            <div class="img-container">
-              <img src="images/uploads/cat_necklaces.png" alt="Shop Necklaces & Pendants" />
-            </div>
-            <span class="label">Shop Necklaces & Pendants</span>
-          </a>
-          
-          <!-- Rings -->
-          <a href="shop.html?cat=Rings" class="cat-gallery-item">
-            <div class="img-container">
-              <img src="images/uploads/cat_rings.png" alt="Shop Rings & Bracelets" />
-            </div>
-            <span class="label">Shop Rings & Bracelets</span>
-          </a>
-          
-          <!-- Earrings -->
-          <a href="shop.html?cat=Earrings" class="cat-gallery-item">
-            <div class="img-container">
-              <img src="images/uploads/cat_earrings.png" alt="Shop Earrings" />
-            </div>
-            <span class="label">Shop Earrings</span>
-          </a>
-          
-          <!-- Bracelets -->
-          <a href="shop.html?cat=Bracelets" class="cat-gallery-item">
-            <div class="img-container">
-              <img src="images/uploads/cat_bracelets.png" alt="Shop Bracelets" />
-            </div>
-            <span class="label">Shop Bracelets</span>
-          </a>
-          
-          <!-- Bridal Sets -->
-          <a href="shop.html?cat=Bridal" class="cat-gallery-item">
-            <div class="img-container">
-              <img src="images/uploads/cat_bridal.png" alt="Shop Bridal Sets" />
-            </div>
-            <span class="label">Shop Bridal Sets</span>
-          </a>
-          
+    </div>
+    
+    <div class="marquee-container">
+      <div class="marquee-track">
+        <!-- Group 1 -->
+        <div class="marquee-group">
+          <div class="marquee-card"><img src="images/uploads/cat_necklaces.png" alt="Delicate gold pendant necklace draped over a branch" /></div>
+          <div class="marquee-card"><img src="images/uploads/carousel_bracelet_hand.jpg" alt="Gold and gem bracelets styled on a hand" /></div>
+          <div class="marquee-card"><img src="images/uploads/carousel_swan_pendant.jpg" alt="Intricate gold swan pendant resting on a branch" /></div>
+          <div class="marquee-card"><img src="images/uploads/cat_rings.png" alt="Solitaire diamond wedding ring on smooth river pebbles" /></div>
+          <div class="marquee-card"><img src="images/uploads/cat_earrings.png" alt="Gold stud earrings embedded with diamonds on bark" /></div>
+          <div class="marquee-card"><img src="images/uploads/cat_bracelets.png" alt="Luxury gold chain bracelet with filigree on white sand" /></div>
+        </div>
+        <!-- Group 2 (Duplicate for infinite seamless scrolling loop) -->
+        <div class="marquee-group" aria-hidden="true">
+          <div class="marquee-card"><img src="images/uploads/cat_necklaces.png" alt="Delicate gold pendant necklace draped over a branch" /></div>
+          <div class="marquee-card"><img src="images/uploads/carousel_bracelet_hand.jpg" alt="Gold and gem bracelets styled on a hand" /></div>
+          <div class="marquee-card"><img src="images/uploads/carousel_swan_pendant.jpg" alt="Intricate gold swan pendant resting on a branch" /></div>
+          <div class="marquee-card"><img src="images/uploads/cat_rings.png" alt="Solitaire diamond wedding ring on smooth river pebbles" /></div>
+          <div class="marquee-card"><img src="images/uploads/cat_earrings.png" alt="Gold stud earrings embedded with diamonds on bark" /></div>
+          <div class="marquee-card"><img src="images/uploads/cat_bracelets.png" alt="Luxury gold chain bracelet with filigree on white sand" /></div>
         </div>
       </div>
     </div>
