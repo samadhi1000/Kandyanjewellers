@@ -318,11 +318,13 @@
 
         function buildFilters() {
             const products = KGJ.getProducts();
-            const cats = [...new Set(products.map(p => p.category))];
+            const cats = [...new Set(products.map(p => p.category).filter(Boolean))];
             const metals = [...new Set(products.map(p => p.metal).filter(Boolean))];
             const gems = [...new Set(products.map(p => p.gemstone).filter(Boolean))];
 
-            const urlCat = new URLSearchParams(window.location.search).get('cat');
+            let urlCat = new URLSearchParams(window.location.search).get('cat');
+            if (urlCat === 'Bracelets') urlCat = 'Bracelet';
+            if (urlCat === 'Necklaces') urlCat = 'Chain with Pendant';
 
             document.getElementById('cat-filters').innerHTML = cats.map(c => `
       <div class="filter-item">

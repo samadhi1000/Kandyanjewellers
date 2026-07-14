@@ -682,26 +682,7 @@ const SEED = [
 async function _seedIfEmpty() {
   const snap = await getDocs(collection(_db, COL));
 
-  // Detect and remove old seed products (pre-new format)
-  let hasOldSeed = false;
-  snap.forEach(d => {
-    if (d.id.startsWith('p_seed_') && !d.id.startsWith('p_seed_new_')) {
-      hasOldSeed = true;
-    }
-  });
-  if (hasOldSeed) {
-    console.log('[KGJ] Old seed detected, clearing collection...');
-    for (const d of snap.docs) {
-      await deleteDoc(doc(_db, COL, d.id));
-    }
-    console.log('[KGJ] Cleared. Seeding new products...');
-    for (const p of SEED) {
-      const { id, ...data } = p;
-      await setDoc(doc(_db, COL, id), data);
-    }
-    console.log('[KGJ] Seed complete.');
-    return SEED;
-  }
+  // Migration phase completed. Database preserves all edits.
 
   if (snap.empty) {
     // Collection is empty — seed everything
